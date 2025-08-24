@@ -1,0 +1,60 @@
+"use client";
+
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
+import WeightsGridPanel from ".";
+import CharacterSetPanel from "../character-set";
+import FontInfoPanel from "../font-info";
+
+export default function CollectionHorizontal() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  // Panels: 1) Weights, 2) Character Set, 3) Font Info, 4) Spacer (pause)
+  const PANELS = 4;
+  // Reduce height to prevent excessive vertical scroll
+  const sectionHeight = `calc(${PANELS * 0.75} * 100vh)`;
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  // Horizontal translate across the first 3 panels only
+  const x = useTransform(
+    scrollYProgress,
+    [0, 0.75], // Complete horizontal scroll by 75% of total scroll
+    ["0vw", `-${(3 - 1) * 100}vw`]
+  );
+
+  return (
+    <section
+      ref={sectionRef}
+      style={{ height: sectionHeight }}
+      className="relative"
+    >
+      {/* Sticky viewport that stays fixed after horizontal scroll */}
+      <div className="sticky top-0 h-[100vh] w-[100vw] overflow-hidden">
+        {/* Background track (horizontal) */}
+        <motion.div style={{ x }} className="flex h-full">
+          {/* Panel 1: Weights Grid */}
+          <div className="h-[100vh] w-[100vw] shrink-0 bg-white">
+            <WeightsGridPanel />
+          </div>
+
+          {/* Panel 2: Character Set */}
+          <div className="h-[100vh] w-[100vw] shrink-0 grid place-items-center bg-[#f7f7f7]">
+            <CharacterSetPanel />
+          </div>
+
+          {/* Panel 3: Font Info */}
+          <div className="h-[100vh] w-[100vw] shrink-0 grid place-items-center bg-[#efefef]">
+            <FontInfoPanel />
+          </div>
+
+          {/* Panel 4: Spacer (visual pause) */}
+          <div className="h-[100vh] w-[100vw] shrink-0 bg-[#eaeaea]" />
+        </motion.div>
+      </div>
+    </section>
+  );
+}
