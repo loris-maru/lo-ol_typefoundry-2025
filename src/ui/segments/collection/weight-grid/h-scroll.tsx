@@ -11,8 +11,7 @@ export default function CollectionHorizontal() {
 
   // Panels: 1) Weights, 2) Character Set, 3) Font Info, 4) Spacer (pause)
   const PANELS = 4;
-  // Reduce height to prevent excessive vertical scroll
-  const sectionHeight = `calc(${PANELS * 0.75} * 100vh)`;
+  const sectionHeight = `calc(${PANELS} * 100vh)`;
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,

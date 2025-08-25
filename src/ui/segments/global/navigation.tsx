@@ -1,3 +1,5 @@
+"use client";
+
 import { useMenuStore } from "@/states/menu";
 import { useShopStore } from "@/states/shop";
 import { FiMenu } from "react-icons/fi";

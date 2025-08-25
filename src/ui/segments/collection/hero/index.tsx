@@ -48,7 +48,7 @@ export default function VideoHero({ videoSrc }: { videoSrc: string }) {
 
         {/* Small info block behind the video (top-4 left-4) */}
         <div className="fixed top-4 left-4 z-[-1] pointer-events-none">
-          <div className="pointer-events-auto rounded-md border border-black bg-white/95 text-black shadow-sm backdrop-blur-sm">
+          <div className="pointer-events-auto border border-black bg-white/95 text-black shadow-sm backdrop-blur-sm">
             <div className="divide-y divide-black text-xs leading-tight">
               <div className="px-3 py-2">Total of 76 fonts</div>
               <div className="px-3 py-2">3 Axis</div>

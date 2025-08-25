@@ -3,25 +3,22 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import { FiGlobe } from "react-icons/fi";
+import { usePlaygroundStore } from "../../../../states/playground";
+import PlaygroundHeader from "./header";
+import TextBlock from "./text-block";
 
-/**
- * Standalone Playground component:
- * - Sticky container animates width 50vw -> 100vw as its top reaches top of viewport
- * - Background #F5F5F5, padding 40px (p-10)
- * - Big editable text using your "Fuzar" typeface (make sure it's loaded via @font-face)
- * - Toggleable menu (32x32 button with FiGlobe) for wght / wdth / slnt / line-height / reverse colors
- */
 export default function Playground(_: { progress?: number }) {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   // Menu + type tester state
   const [menuOpen, setMenuOpen] = useState(false);
-  const [specimen, setSpecimen] = useState("THE QUICK BROWN FOX\n0123456789");
   const [wght, setWght] = useState(700);
   const [wdth, setWdth] = useState(100);
   const [slnt, setSlnt] = useState(0);
   const [lh, setLh] = useState(1.1);
-  const [reverse, setReverse] = useState(false);
+
+  // Playground state
+  const { activeBlocks, addBlock, updateBlock } = usePlaygroundStore();
 
   const variation = `'wght' ${wght}, 'wdth' ${wdth}, 'slnt' ${slnt}`;
 
@@ -56,7 +53,45 @@ export default function Playground(_: { progress?: number }) {
           style={{ width, height, borderRadius: radius, overflowY }}
         >
           <div className="relative flex flex-col h-full w-full gap-4">
-            <Header />
+            <PlaygroundHeader />
+
+            {/* Text blocks */}
+            <div className="space-y-6 w-full">
+              {activeBlocks.map((block, index) => (
+                <div key={block.id}>
+                  <TextBlock block={block} onUpdate={updateBlock} />
+                  {/* Add divider between different column sections */}
+                  {index < activeBlocks.length - 1 &&
+                    activeBlocks[index + 1] &&
+                    activeBlocks[index + 1].columns !== block.columns && (
+                      <div className="my-8 border-t border-gray-200" />
+                    )}
+                </div>
+              ))}
+            </div>
+
+            {/* Add one more block container */}
+            <div className="flex flex-col items-center justify-center py-8 mt-8">
+              <div className="text-center mb-6">
+                <h3 className="text-lg font-medium text-gray-700 mb-2">
+                  Add one more block
+                </h3>
+                <p className="text-sm text-gray-500">
+                  Choose the column layout for your new block
+                </p>
+              </div>
+              <div className="flex gap-3">
+                {[1, 2, 3].map((cols) => (
+                  <button
+                    key={cols}
+                    onClick={() => addBlock(cols as 1 | 2 | 3)}
+                    className="px-6 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-700 font-medium hover:border-gray-400 hover:bg-gray-50 transition-colors"
+                  >
+                    {cols} Column{cols > 1 ? "s" : ""}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             {/* Menu toggle button (32x32) */}
             <button
@@ -109,92 +144,23 @@ export default function Playground(_: { progress?: number }) {
                     />
                   </label>
                   <label className="block">
-                    <span className="mb-1 block">
-                      Line-height ({lh.toFixed(2)})
-                    </span>
+                    <span className="mb-1 block">Line Height ({lh})</span>
                     <input
                       type="range"
                       min={0.8}
-                      max={1.8}
-                      step={0.01}
+                      max={2.5}
+                      step={0.1}
                       value={lh}
                       onChange={(e) => setLh(+e.target.value)}
                       className="w-full"
                     />
                   </label>
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={reverse}
-                      onChange={(e) => setReverse(e.target.checked)}
-                    />
-                    <span>Reverse colors</span>
-                  </label>
                 </div>
               </div>
             )}
-
-            {/* Editable big text specimen */}
-            <div
-              className={`relative mt-16 flex-1 rounded-xl ${
-                reverse ? "bg-black text-white" : "bg-white text-black"
-              } p-6`}
-              style={{
-                fontFamily: "Fuzar, ui-sans-serif, system-ui",
-              }}
-            >
-              <div
-                contentEditable
-                suppressContentEditableWarning
-                onInput={(e) =>
-                  setSpecimen((e.target as HTMLDivElement).innerText)
-                }
-                className="min-h-[40vh] whitespace-pre-wrap focus:outline-none"
-                style={{
-                  fontVariationSettings: variation as unknown as string,
-                  lineHeight: lh,
-                  fontSize: "min(12vw, 120px)",
-                  fontWeight: 1,
-                }}
-              >
-                {specimen}
-              </div>
-            </div>
           </div>
         </motion.div>
       </motion.div>
-
-      <style jsx global>{`
-        .no-scrollbar {
-          -ms-overflow-style: none; /* IE and Edge */
-          scrollbar-width: none; /* Firefox */
-        }
-        .no-scrollbar::-webkit-scrollbar {
-          display: none; /* Chrome, Safari, Opera */
-        }
-      `}</style>
     </section>
-  );
-}
-
-/** Simple inline header to avoid external imports **/
-function Header() {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-left text-neutral-400 text-sm">
-      <div>
-        <p>
-          Typeface: <span className="text-neutral-600">Fuzar</span>
-        </p>
-        <p>Designer: Your Name</p>
-      </div>
-      <div>
-        <p>Release: 2025</p>
-        <p>License: Desktop / Web / App</p>
-      </div>
-      <div>
-        <p>Languages: Latin, Extended</p>
-        <p>Features: Stylistic sets, ligatures</p>
-      </div>
-    </div>
   );
 }
