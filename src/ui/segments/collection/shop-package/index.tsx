@@ -1,13 +1,11 @@
-import { motion, useScroll } from "framer-motion";
-import { useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 
 export default function ShopPackages() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [hoveredPackage, setHoveredPackage] = useState<string | null>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
+  const isInView = useInView(sectionRef, {
+    amount: 0.6, // Trigger when 60% of the section is visible
+    once: false, // Allow multiple triggers
   });
 
   const packages = [
@@ -22,6 +20,7 @@ export default function ShopPackages() {
         { weight: "Medium", italic: "Medium Italic" },
         { weight: "Semibold", italic: "Semibold Italic" },
       ],
+      videoBg: "/videos/small-package.mp4", // You'll need to add these video files
     },
     {
       key: "M",
@@ -36,6 +35,7 @@ export default function ShopPackages() {
         { weight: "Bold", italic: "Bold Italic" },
         { weight: "ExtraBold", italic: "ExtraBold Italic" },
       ],
+      videoBg: "/videos/medium-package.mp4",
     },
     {
       key: "L",
@@ -52,110 +52,97 @@ export default function ShopPackages() {
         { weight: "ExtraBold", italic: "ExtraBold Italic" },
         { weight: "Black", italic: "Black Italic" },
       ],
+      videoBg: "/videos/large-package.mp4",
     },
   ];
 
   return (
     <section
       ref={sectionRef}
-      className="relative h-[100vh] w-[100vw] flex bg-[#eaeaea]"
+      className="relative h-[100vh] w-[100vw] flex bg-[#eaeaea] overflow-hidden"
     >
-      {packages.map((pkg, i) => {
-        const isHovered = hoveredPackage === pkg.key;
-        const width = isHovered ? "60vw" : "20vw";
+      {packages.map((pkg, i) => (
+        <div key={pkg.key} className="relative flex-1 h-full">
+          {/* Video Background */}
+          <div className="absolute inset-0 w-full h-full">
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover"
+            >
+              <source src={pkg.videoBg} type="video/mp4" />
+              {/* Fallback background color if video fails to load */}
+              <div className="w-full h-full bg-gradient-to-br from-blue-900 to-purple-900" />
+            </video>
+          </div>
 
-        return (
+          {/* Black Overlay Container */}
           <motion.div
-            key={pkg.key}
-            initial={{ y: 500, opacity: 1 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            exit={{ y: 500, opacity: 1 }}
-            transition={{
-              delay: i * 0.2, // 0s, 0.2s, 0.4s delays
-              duration: 0.8,
-              type: "spring",
-              stiffness: 100,
-              damping: 20,
+            className="absolute inset-0 bg-black z-50"
+            initial={{ y: 0 }}
+            animate={{
+              y: isInView ? "100%" : 0,
             }}
-            viewport={{ once: false, margin: "-100px" }}
-            style={{ width: hoveredPackage ? width : "33.33vw" }}
-            className="group relative h-[80vh] bg-black text-white overflow-hidden p-6 transition-all duration-500 ease-out rounded-2xl mx-2"
-            onMouseEnter={() => setHoveredPackage(pkg.key)}
-            onMouseLeave={() => setHoveredPackage(null)}
-          >
-            {/* Default State - Top Aligned */}
-            <div className="relative h-full flex flex-col justify-start -mt-[60px]">
-              {/* Large Package Letter and Price - Top Left */}
-              <div className="relative flex items-baseline gap-4">
-                <div className="text-[20vw] leading-none font-black select-none">
-                  {pkg.key}
+            transition={{
+              duration: 0.8,
+              ease: "easeInOut",
+              delay: i * 0.2, // Staggered animation: left to right
+            }}
+          />
+
+          {/* Content Container */}
+          <div className="relative z-20 h-full flex flex-col justify-between py-3 px-6 text-white text-left">
+            {/* Top Section - Package Abbreviation */}
+            <div>
+              <div className="text-[24vw] leading-none font-black font-fuzar">
+                {pkg.key}
+              </div>
+              {/* Middle Section - Package Full Name */}
+              <div>
+                <div className="relative -top-10 text-6xl font-normal font-sans">
+                  {pkg.name}
                 </div>
-                {/* Price that slides in from bottom on hover */}
-                <motion.div
-                  initial={{ y: "100%", opacity: 0 }}
-                  animate={{
-                    y: isHovered ? 0 : "100%",
-                    opacity: isHovered ? 1 : 0,
-                  }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
-                  className="relative flex items-baseline gap-2 -mt-[30px]"
-                >
-                  {/* Dollar sign in circular container */}
-                  <div className="relative -top-[146px] border border-solid border-white rounded-full w-20 h-20 flex items-center justify-center">
-                    <span className="text-[68px] font-normal text-white">
-                      $
-                    </span>
-                  </div>
-                  {/* Price number */}
-                  <span className="text-[20vw] font-bold text-white leading-none">
-                    {pkg.price.replace("$", "")}
-                  </span>
-                </motion.div>
               </div>
-
-              {/* Package Name - Below Letter */}
-              <div className="text-6xl font-normal font-sans">{pkg.name}</div>
             </div>
-            {/* Buy Button - Lower Right */}
-            {isHovered && (
-              <div className="absolute bottom-1 right-10">
-                <button className="bg-transparent text-white font-semibold text-6xl rounded-[80px] px-16 py-8 border-4 border-white hover:bg-white hover:text-black transition-colors duration-300">
-                  Buy
-                </button>
-              </div>
-            )}
 
-            {/* Hover State - Font List Slides In from Bottom */}
-            {isHovered && (
-              <motion.div
-                initial={{ y: "100%" }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-                className="absolute bottom-0 left-0 w-full bg-black/90 p-6 rounded-b-2xl"
-              >
+            {/* Bottom Section - Price and Font List */}
+            <div className="space-y-6">
+              {/* Font List Container */}
+              <div className="flex flex-row max-h-48 overflow-y-auto">
                 <div className="space-y-2">
                   {pkg.fonts.map((font, index) => (
                     <motion.div
                       key={font.weight}
-                      initial={{ y: 20, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{
+                        opacity: isInView ? 1 : 0,
+                        y: isInView ? 0 : 10,
+                      }}
                       transition={{
-                        delay: index * 0.1,
-                        duration: 0.3,
+                        delay: isInView ? i * 0.2 + index * 0.1 : 0,
+                        duration: 0.4,
                         ease: "easeOut",
                       }}
-                      className="flex text-[20px] text-white font-normal font-sans"
+                      className="flex text-sm text-white font-normal font-sans"
                     >
-                      <span className="font-normal w-40">{font.weight}</span>
-                      <span className="font-italic w-40">{font.italic}</span>
+                      <span className="block w-24 font-medium">
+                        {font.weight}
+                      </span>
+                      <span className="font-light italic">{font.italic}</span>
                     </motion.div>
                   ))}
                 </div>
-              </motion.div>
-            )}
-          </motion.div>
-        );
-      })}
+              </div>
+              {/* Price */}
+              <div>
+                <div className="text-6xl font-bold font-sans">{pkg.price}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
     </section>
   );
 }

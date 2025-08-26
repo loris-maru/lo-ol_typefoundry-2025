@@ -30,22 +30,6 @@ export default function WeightsGridPanel() {
     offset: ["start end", "end start"],
   });
 
-  // Calculate card sizes - only width changes on hover
-  const getCardSize = (index: number) => {
-    if (hovered === null) {
-      // Default: each card takes 33.33vw x 33.33vh
-      return { width: "33.33vw", height: "33.33vh" };
-    }
-
-    if (hovered === index) {
-      // Hovered card: 60vw width, same height
-      return { width: "60vw", height: "33.33vh" };
-    } else {
-      // Non-hovered cards: smaller width to make room, same height
-      return { width: "20vw", height: "33.33vh" };
-    }
-  };
-
   // Transform scroll progress to card scale (0 to 1 at 80% scroll)
   const cardScale = useTransform(scrollYProgress, [0.8, 1], [0, 1]);
 
@@ -64,26 +48,22 @@ export default function WeightsGridPanel() {
         </h1>
       </div>
 
-      {/* Fixed 3-column layout to prevent wrapping */}
-      <div className="relative z-10 w-full h-full grid grid-cols-3 grid-rows-3 gap-1 p-0">
+      {/* Simple 3x3 CSS Grid layout */}
+      <div className="relative z-10 w-full h-full grid grid-cols-3 grid-rows-3 gap-[2px] p-0">
         {Array.from({ length: 9 }, (_, idx) => {
-          const weight = WEIGHTS[idx] as WeightDef;
-          const cardSize = getCardSize(idx);
           return (
             <SingleWeightCard
               key={idx}
-              weight={weight}
-              wdth={wdthUI[idx] ?? 100}
+              weight={WEIGHTS[idx]}
+              wdth={wdthUI[idx] ?? 900}
               onWdthChange={(val: number) =>
                 setWdthUI((s) => ({ ...s, [idx]: val }))
               }
-              isHovered={hovered === idx}
+              isHovered={hovered}
               onHover={(isHovered: boolean) =>
                 setHovered(isHovered ? idx : null)
               }
-              width={cardSize.width}
-              height={cardSize.height}
-              scrollScale={cardScale}
+              index={idx}
             />
           );
         })}
@@ -108,7 +88,6 @@ export default function WeightsGridPanel() {
           border-radius: 50%;
           background: var(--thumb-bg);
           border: 2px solid #ffffff;
-          margin-top: calc((var(--track-height) - var(--thumb-size)) / 2);
           cursor: pointer;
         }
         .slider-wdth-white::-moz-range-track {

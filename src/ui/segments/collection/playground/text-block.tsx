@@ -71,7 +71,7 @@ export default function TextBlock({ block, onUpdate }: TextBlockProps) {
                 newContent[index] = e.target.value;
                 onUpdate(block.id, "text", newContent.join(" "));
               }}
-              className="w-full resize-none border-none outline-none font-fuzar"
+              className="w-full h-auto resize-none border-none outline-none font-fuzar overflow-hidden"
               style={{
                 fontSize: `${block.fontSize}px`,
                 lineHeight: block.leading,
