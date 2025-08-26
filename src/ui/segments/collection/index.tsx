@@ -3,6 +3,7 @@
 import VideoHero from "./hero";
 import Playground from "./playground";
 // adjust path if Playground is separate
+import DiscoverMoreCollections from "./discover-more";
 import ShopPackages from "./shop-package";
 import CollectionHorizontal from "./weight-grid/h-scroll";
 
@@ -24,6 +25,11 @@ export default function CollectionPage() {
       {/* Shop Packages section - scrolls vertically after horizontal section */}
       <section className="relative h-[100vh] w-full bg-transparent z-10">
         <ShopPackages />
+      </section>
+
+      {/* Discover More Collections section */}
+      <section className="relative h-[100vh] w-full bg-transparent z-10">
+        <DiscoverMoreCollections />
       </section>
 
       {/* Footer */}

@@ -1,3 +1,5 @@
+"use client";
+
 import { PACKAGES } from "@/app/content/PACKAGES";
 import { useInView } from "framer-motion";
 import { useRef } from "react";

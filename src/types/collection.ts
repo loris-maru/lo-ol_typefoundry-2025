@@ -8,3 +8,9 @@ export type TextBlock = {
   slant: number; // Font slant in degrees (-12° to 0°)
   columns: 1 | 2 | 3; // Column layout for the block
 };
+
+export type CollectionCardProps = {
+  name: string;
+  color: string;
+  index: number;
+};

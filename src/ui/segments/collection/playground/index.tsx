@@ -46,7 +46,7 @@ export default function Playground(_: { progress?: number }) {
         style={{ opacity: earlyOpacity, pointerEvents: earlyPointer }}
       >
         <motion.div
-          className="font-fuzar relative flex w-full flex-col items-start justify-start overscroll-auto no-scrollbar bg-[#F5F5F5] p-10"
+          className="font-fuzar relative flex w-full flex-col items-start justify-start overscroll-auto no-scrollbar bg-[#F5F5F5] p-10 scrollbar-hide"
           style={{ width, height, borderRadius: radius, overflowY }}
         >
           <div className="relative flex flex-col h-full w-full gap-4">
@@ -148,6 +148,17 @@ export default function Playground(_: { progress?: number }) {
           </div>
         </motion.div>
       </motion.div>
+
+      <style jsx>{`
+        /* Hide scrollbars for all browsers */
+        .scrollbar-hide {
+          -ms-overflow-style: none; /* Internet Explorer 10+ */
+          scrollbar-width: none; /* Firefox */
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none; /* Safari and Chrome */
+        }
+      `}</style>
     </section>
   );
 }

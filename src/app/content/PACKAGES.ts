@@ -18,7 +18,8 @@ export const PACKAGES: Package[] = [
       { weight: "Medium", italic: "Medium Italic" },
       { weight: "Semibold", italic: "Semibold Italic" },
     ],
-    videoBg: "/videos/small-package.mp4", // You'll need to add these video files
+    videoBg:
+      "https://player.vimeo.com/progressive_redirect/playback/1108969691/rendition/1440p/file.mp4?loc=external&log_user=0&signature=092023c86b728f8b5c502191d62b3e27d92d6596507089a7b18820097988c448", // You'll need to add these video files
   },
   {
     key: "M",
@@ -33,7 +34,8 @@ export const PACKAGES: Package[] = [
       { weight: "Bold", italic: "Bold Italic" },
       { weight: "ExtraBold", italic: "ExtraBold Italic" },
     ],
-    videoBg: "/videos/medium-package.mp4",
+    videoBg:
+      "https://player.vimeo.com/progressive_redirect/playback/1108969691/rendition/1440p/file.mp4?loc=external&log_user=0&signature=092023c86b728f8b5c502191d62b3e27d92d6596507089a7b18820097988c448",
   },
   {
     key: "L",
@@ -50,6 +52,7 @@ export const PACKAGES: Package[] = [
       { weight: "ExtraBold", italic: "ExtraBold Italic" },
       { weight: "Black", italic: "Black Italic" },
     ],
-    videoBg: "/videos/large-package.mp4",
+    videoBg:
+      "https://player.vimeo.com/progressive_redirect/playback/1108969691/rendition/1440p/file.mp4?loc=external&log_user=0&signature=092023c86b728f8b5c502191d62b3e27d92d6596507089a7b18820097988c448",
   },
 ];

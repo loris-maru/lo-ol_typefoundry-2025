@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "keen-slider/keen-slider.min.css";
 
 @font-face {
   font-family: "Fuzar";

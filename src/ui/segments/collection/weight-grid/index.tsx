@@ -34,7 +34,7 @@ export default function WeightGrid() {
           gridTemplateColumns: columns,
           gridTemplateRows: rows,
           transition:
-            "grid-template-columns 600ms cubic-bezier(.2,.8,.2,1), grid-template-rows 600ms cubic-bezier(.2,.8,.2,1)",
+            "grid-template-columns 600ms cubic-bezier(.2,.8,.2,1), grid-template-rows 600ms cubic-bezier(.2,.8,.2,1) divide-x divide-y divide-gray-300 border border-gray-300",
         }}
         onMouseLeave={() => setHovered(null)}
       >
