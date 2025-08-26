@@ -2,7 +2,6 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
-import { FiGlobe } from "react-icons/fi";
 import { usePlaygroundStore } from "../../../../states/playground";
 import PlaygroundHeader from "./header";
 import TextBlock from "./text-block";
@@ -19,8 +18,6 @@ export default function Playground(_: { progress?: number }) {
 
   // Playground state
   const { activeBlocks, addBlock, updateBlock } = usePlaygroundStore();
-
-  const variation = `'wght' ${wght}, 'wdth' ${wdth}, 'slnt' ${slnt}`;
 
   // Local scroll progress to drive width/height/radius
   const { scrollYProgress: localProgress } = useScroll({
@@ -92,16 +89,6 @@ export default function Playground(_: { progress?: number }) {
                 ))}
               </div>
             </div>
-
-            {/* Menu toggle button (32x32) */}
-            <button
-              type="button"
-              aria-label="Open type controls"
-              onClick={() => setMenuOpen((v) => !v)}
-              className="absolute right-4 top-4 grid h-8 w-8 place-items-center rounded-md border border-black/20 bg-white shadow-sm"
-            >
-              <FiGlobe className="h-4 w-4" />
-            </button>
 
             {/* Controls menu */}
             {menuOpen && (

@@ -1,4 +1,4 @@
-type WeightDef = { name: string; value: number; abbr: string };
+export type WeightDef = { name: string; value: number; abbr: string };
 
 export const WEIGHTS: WeightDef[] = [
   { name: "Thin", value: 100, abbr: "Th" },

@@ -1,6 +1,6 @@
 "use client";
 
-import { useScroll, useTransform } from "framer-motion";
+import { useScroll } from "framer-motion";
 import { useRef } from "react";
 
 export default function PlaygroundHeader() {
@@ -9,18 +9,6 @@ export default function PlaygroundHeader() {
     target: headerRef,
     offset: ["start start", "end start"],
   });
-
-  // Transform scroll progress to text slide-in animation
-  const normalizeSlide = useTransform(
-    scrollYProgress,
-    [0.8, 1.0],
-    ["100%", "0%"]
-  );
-  const fontSpiritSlide = useTransform(
-    scrollYProgress,
-    [0.8, 1.0],
-    ["100%", "0%"]
-  );
 
   // Debug: log scroll progress
   console.log("Scroll progress:", scrollYProgress);

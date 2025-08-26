@@ -27,7 +27,7 @@ export default function CollectionPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-24 text-center text-sm text-neutral-400 bg-white">
+      <footer className="relative z-[200] py-24 text-center text-sm text-neutral-400 bg-white">
         © {new Date().getFullYear()} Your Foundry
       </footer>
     </main>
