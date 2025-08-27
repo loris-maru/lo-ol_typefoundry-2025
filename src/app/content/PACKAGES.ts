@@ -12,11 +12,8 @@ export const PACKAGES: Package[] = [
     name: "Small",
     price: "$59",
     fonts: [
-      { weight: "Thin", italic: "Thin Italic" },
-      { weight: "Light", italic: "Light Italic" },
       { weight: "Regular", italic: "Regular Italic" },
-      { weight: "Medium", italic: "Medium Italic" },
-      { weight: "Semibold", italic: "Semibold Italic" },
+      { weight: "Bold", italic: "Bold Italic" },
     ],
     videoBg:
       "https://player.vimeo.com/progressive_redirect/playback/1108969691/rendition/1440p/file.mp4?loc=external&log_user=0&signature=092023c86b728f8b5c502191d62b3e27d92d6596507089a7b18820097988c448", // You'll need to add these video files
@@ -26,11 +23,9 @@ export const PACKAGES: Package[] = [
     name: "Medium",
     price: "$119",
     fonts: [
-      { weight: "Thin", italic: "Thin Italic" },
       { weight: "Light", italic: "Light Italic" },
       { weight: "Regular", italic: "Regular Italic" },
       { weight: "Medium", italic: "Medium Italic" },
-      { weight: "Semibold", italic: "Semibold Italic" },
       { weight: "Bold", italic: "Bold Italic" },
       { weight: "ExtraBold", italic: "ExtraBold Italic" },
     ],

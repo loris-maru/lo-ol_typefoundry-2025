@@ -9,7 +9,7 @@ export default function TwoColumnSection() {
     "We hope that our website gives you a glimpse of a future where type design fully embraces digital. Of course, this is just the beginning...";
 
   return (
-    <div className="space-y-6 w-full">
+    <div className="w-full">
       <div className="grid grid-cols-2 gap-6">
         <TypeTesterBlock
           defaultFontSize={30}

@@ -23,7 +23,7 @@ export default function CollectionPage() {
       <CollectionHorizontal />
 
       {/* Shop Packages section - scrolls vertically after horizontal section */}
-      <section className="relative h-[100vh] w-full bg-transparent z-10">
+      <section className="relative h-[100vh] w-screen bg-[#efefef] z-10">
         <ShopPackages />
       </section>
 

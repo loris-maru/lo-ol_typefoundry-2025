@@ -11,7 +11,7 @@ export default function ThreeColumnSection() {
     'The Matterhorn and Switzerland are inseparably linked to each other. The pyramid shaped colossus of a mountain, which is very difficult to climb, is said to be the most-photographed mountain in the world. The Klein-Matterhorn ("Little Matterhorn"), which can be reached via a funicular, lies adjacent to the Matterhorn.';
 
   return (
-    <div className="space-y-6 w-full">
+    <div className="w-full">
       <div className="grid grid-cols-3 gap-6">
         <TypeTesterBlock
           defaultFontSize={20}

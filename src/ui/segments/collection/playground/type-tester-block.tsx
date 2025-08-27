@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
+import SettingMenu from "./setting-menu";
 
 interface TypeTesterBlockProps {
   defaultFontSize: number;
@@ -112,7 +113,7 @@ export default function TypeTesterBlock({
     <div className={`${getColumnClass()} relative`} ref={wrapperRef}>
       {/* Type Tester Block */}
       <div>
-        <div className="mb-4">
+        <div>
           <textarea
             ref={textareaRef}
             value={textareaValue}
@@ -132,6 +133,9 @@ export default function TypeTesterBlock({
 
         {/* Settings Menu Toggle */}
         <button
+          name="setting-menu-toggle"
+          aria-label="Toggle Settings Menu"
+          type="button"
           onClick={() => setMenuOpen(!menuOpen)}
           className="absolute right-4 top-4 z-20 w-8 h-8 rounded-lg border border-black/10 bg-white flex items-center justify-center hover:bg-gray-50 transition-colors"
         >
@@ -159,74 +163,22 @@ export default function TypeTesterBlock({
         {/* Settings Menu */}
         {menuOpen && (
           <motion.div
-            className="absolute right-4 top-14 z-20 w-64 rounded-lg border border-black/10 bg-white p-3 shadow-lg"
+            className="absolute right-4 top-14 z-20 w-64"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.1 }}
           >
-            <div className="space-y-3 text-sm">
-              <label className="block">
-                <span className="mb-1 block">Weight ({wght})</span>
-                <input
-                  type="range"
-                  min="100"
-                  max="900"
-                  step="1"
-                  value={wght}
-                  onChange={(e) => setWght(Number(e.target.value))}
-                  className="w-full"
-                />
-              </label>
-              <label className="block">
-                <span className="mb-1 block">Width ({wdth})</span>
-                <input
-                  type="range"
-                  min="100"
-                  max="900"
-                  step="1"
-                  value={wdth}
-                  onChange={(e) => setWdth(Number(e.target.value))}
-                  className="w-full"
-                />
-              </label>
-              <label className="block">
-                <span className="mb-1 block">Slant ({slnt})</span>
-                <input
-                  type="range"
-                  min="-15"
-                  max="0"
-                  step="1"
-                  value={slnt}
-                  onChange={(e) => setSlnt(Number(e.target.value))}
-                  className="w-full"
-                />
-              </label>
-              <label className="block">
-                <span className="mb-1 block">Line Height ({lh})</span>
-                <input
-                  type="range"
-                  min="0.8"
-                  max="2"
-                  step="0.05"
-                  value={lh}
-                  onChange={(e) => setLh(Number(e.target.value))}
-                  className="w-full"
-                />
-              </label>
-              <label className="block">
-                <span className="mb-1 block">Font Size ({fontSize}px)</span>
-                <input
-                  type="range"
-                  min="12"
-                  max="120"
-                  step="1"
-                  value={fontSize}
-                  onChange={(e) => setFontSize(Number(e.target.value))}
-                  className="w-full"
-                />
-              </label>
-            </div>
+            <SettingMenu
+              wght={wght}
+              setWght={setWght}
+              wdth={wdth}
+              setWdth={setWdth}
+              slnt={slnt}
+              setSlnt={setSlnt}
+              lh={lh}
+              setLh={setLh}
+            />
           </motion.div>
         )}
       </div>

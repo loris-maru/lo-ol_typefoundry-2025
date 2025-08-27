@@ -49,13 +49,13 @@ export default function Playground(_: { progress?: number }) {
               <OneColumnSection />
 
               {/* Divider */}
-              <div className="my-8 border-t border-gray-200" />
+              <div className="my-2 border-t border-gray-200" />
 
               {/* Two Column Section */}
               <TwoColumnSection />
 
               {/* Divider */}
-              <div className="my-8 border-t border-gray-200" />
+              <div className="my-2 border-t border-gray-200" />
 
               {/* Three Column Section */}
               <ThreeColumnSection />

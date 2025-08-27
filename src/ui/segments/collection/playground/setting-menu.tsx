@@ -18,10 +18,10 @@ export default function SettingMenu({
   setLh: (value: number) => void;
 }) {
   return (
-    <div className="absolute right-4 top-14 z-20 w-64 rounded-lg border border-black/10 bg-white p-3 shadow-lg">
-      <div className="space-y-3 text-sm">
+    <div className="absolute right-0 z-20 w-64 rounded-lg border border-black/10 bg-white p-3 shadow-lg">
+      <div className="space-y-3 text-sm font-normal">
         <label className="block">
-          <span className="mb-1 block">Weight ({wght})</span>
+          <span className="mb-1 block font-sans">Weight ({wght})</span>
           <input
             type="range"
             min={100}
@@ -33,11 +33,11 @@ export default function SettingMenu({
           />
         </label>
         <label className="block">
-          <span className="mb-1 block">Width ({wdth})</span>
+          <span className="mb-1 block font-sans">Width ({wdth})</span>
           <input
             type="range"
-            min={75}
-            max={125}
+            min={100}
+            max={900}
             step={1}
             value={wdth}
             onChange={(e) => setWdth(+e.target.value)}
@@ -45,11 +45,11 @@ export default function SettingMenu({
           />
         </label>
         <label className="block">
-          <span className="mb-1 block">Slant ({slnt})</span>
+          <span className="mb-1 block font-sans">Slant ({slnt})</span>
           <input
             type="range"
-            min={-12}
-            max={0}
+            min={0}
+            max={90}
             step={1}
             value={slnt}
             onChange={(e) => setSlnt(+e.target.value)}
@@ -57,7 +57,7 @@ export default function SettingMenu({
           />
         </label>
         <label className="block">
-          <span className="mb-1 block">Line Height ({lh})</span>
+          <span className="mb-1 block font-sans">Line Height ({lh})</span>
           <input
             type="range"
             min={0.8}

@@ -7,7 +7,7 @@ export default function OneColumnSection() {
     "Our goal is to connect both typographic cultures and share our knowledge of calligraphy, sketching, exploration and type design.";
 
   return (
-    <div className="space-y-6 w-full">
+    <div className="w-full">
       <div className="grid grid-cols-1 gap-6">
         <TypeTesterBlock
           defaultFontSize={64}
