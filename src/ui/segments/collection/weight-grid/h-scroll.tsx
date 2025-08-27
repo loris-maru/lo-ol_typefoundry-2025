@@ -3,11 +3,16 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 // import WeightsGridPanel from ".";
+import { typeface } from "@/types/typefaces";
 import WeightGrid from ".";
 import CharacterSetPanel from "../character-set";
 import FontInfoPanel from "../font-info";
 
-export default function CollectionHorizontal() {
+export default function CollectionHorizontal({
+  content,
+}: {
+  content: typeface;
+}) {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   // Panels: 1) Weights, 2) Character Set, 3) Font Info, 4) Spacer (pause)
@@ -38,8 +43,7 @@ export default function CollectionHorizontal() {
         <motion.div style={{ x }} className="flex h-full">
           {/* Panel 1: Weights Grid */}
           <div className="h-[100vh] w-[100vw] shrink-0 bg-white">
-            <WeightGrid />
-            {/* <WeightsGridPanel /> */}
+            <WeightGrid content={content} />
           </div>
 
           {/* Panel 2: Character Set */}

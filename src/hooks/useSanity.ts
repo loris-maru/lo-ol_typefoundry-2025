@@ -1,6 +1,6 @@
 "use client";
 
-import { sanity } from "@/api/sanity";
+import { sanityServer } from "@/api/sanity";
 import useSWR, { SWRConfiguration } from "swr";
 
 /**
@@ -28,7 +28,7 @@ export function useSanity<T = unknown>(
     q: string,
     p: Record<string, unknown>
   ) => {
-    return sanity.fetch<T>(q, p);
+    return sanityServer.fetch<T>(q, p);
   };
 
   const {

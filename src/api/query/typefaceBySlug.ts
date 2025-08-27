@@ -22,7 +22,20 @@ export const typefaceBySlugQuery = `
         mobileHeaderVideo,
         introduction,
         isItAHangulCharacterSet,
-        muxDesktopVideo,
+        "muxDesktopVideo": muxDesktopVideo.asset->{
+          _id,
+          assetId,
+          playbackId,
+          status,
+          data
+        },
+        "muxMobileVideo": muxMobileVideo.asset->{
+          _id,
+          assetId,
+          playbackId,
+          status,
+          data
+        },
         "specimen": pdfSpecimen.asset->url,
         "seoImage": seoImage.asset->url,
         seoKeywords,
@@ -35,25 +48,11 @@ export const typefaceBySlugQuery = `
         "uprightTTFVar": uprightTTFVarFile.asset->url,
         "varFont": variableFontUpright.asset->url,
         "videoImageDesktop": videoImageDesktop.asset->url,
-        "videoImageMobile": videoImageMobile.asset -> url,
+        "videoImageMobile": videoImageMobile.asset->url,
         weightList,
+        "designers": designers[]->{
+          ...,
+          "portrait": portrait.asset->url
+        }
 }
 `;
-
-// In usage
-
-// "use client";
-// import { useSanity } from "@/hooks/useSanity";
-// import { typefaceBySlugQuery } from "@/queries/typefaceBySlug";
-
-// export default function Typeface({ slug }: { slug: string }) {
-//   const { data, isLoading, error } = useSanity(
-//     typefaceBySlugQuery,
-//     { slug } // passed into $slug
-//   );
-
-//   if (isLoading) return <p>Loading…</p>;
-//   if (error) return <p>Something went wrong</p>;
-
-//   return <div>{data?.name}</div>;
-// }

@@ -1,5 +1,6 @@
 "use client";
 
+import { typeface } from "@/types/typefaces";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import PlaygroundHeader from "./header";
@@ -7,7 +8,7 @@ import OneColumnSection from "./one-column-section";
 import ThreeColumnSection from "./three-column-section";
 import TwoColumnSection from "./two-column-section";
 
-export default function Playground(_: { progress?: number }) {
+export default function Playground({ content }: { content: typeface }) {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   // Local scroll progress to drive width/height/radius
@@ -31,34 +32,34 @@ export default function Playground(_: { progress?: number }) {
   );
 
   return (
-    <section ref={sectionRef} className="relative w-full h-[200vh]">
+    <section ref={sectionRef} className="relative w-full">
       <motion.div
-        className="sticky top-0 z-20 flex items-center justify-center h-screen"
+        className="sticky top-0 z-20 flex items-center justify-center min-h-screen"
         style={{ opacity: earlyOpacity, pointerEvents: earlyPointer }}
       >
         <motion.div
           className="font-fuzar relative flex w-full flex-col items-start justify-start overscroll-auto no-scrollbar bg-[#F5F5F5] p-10 scrollbar-hide"
           style={{ width, height, borderRadius: radius, overflowY }}
         >
-          <div className="relative flex flex-col h-full w-full gap-4">
-            <PlaygroundHeader />
+          <div className="relative flex flex-col w-full gap-4">
+            <PlaygroundHeader content={content} />
 
             {/* Column Sections */}
-            <div className="space-y-8 w-full mt-3">
+            <div className="w-full mt-3">
               {/* One Column Section */}
-              <OneColumnSection />
+              <OneColumnSection content={content} />
 
               {/* Divider */}
-              <div className="my-2 border-t border-gray-200" />
+              <div className="my-4 border-t border-gray-200" />
 
               {/* Two Column Section */}
-              <TwoColumnSection />
+              <TwoColumnSection content={content} />
 
               {/* Divider */}
-              <div className="my-2 border-t border-gray-200" />
+              <div className="my-4 border-t border-gray-200" />
 
               {/* Three Column Section */}
-              <ThreeColumnSection />
+              <ThreeColumnSection content={content} />
             </div>
           </div>
         </motion.div>

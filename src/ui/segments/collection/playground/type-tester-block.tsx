@@ -1,5 +1,7 @@
 "use client";
 
+import { typeface } from "@/types/typefaces";
+import { cn } from "@/utils/classNames";
 import { motion } from "framer-motion";
 import {
   useCallback,
@@ -8,9 +10,10 @@ import {
   useRef,
   useState,
 } from "react";
+import SettingButton from "./setting-button";
 import SettingMenu from "./setting-menu";
 
-interface TypeTesterBlockProps {
+export type TypeTesterBlockProps = {
   defaultFontSize: number;
   defaultWeight: number;
   defaultLineHeight: number;
@@ -18,7 +21,8 @@ interface TypeTesterBlockProps {
   defaultSlant: number;
   defaultText: string;
   columns: 1 | 2 | 3;
-}
+  content: typeface;
+};
 
 export default function TypeTesterBlock({
   defaultFontSize,
@@ -28,16 +32,18 @@ export default function TypeTesterBlock({
   defaultSlant,
   defaultText,
   columns,
+  content,
 }: TypeTesterBlockProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [wght, setWght] = useState(defaultWeight);
   const [wdth, setWdth] = useState(defaultWidth);
-  const [slnt, setSlnt] = useState(defaultSlant);
+  const [slnt, setSlant] = useState(defaultSlant);
   const [lh, setLh] = useState(defaultLineHeight);
   const [fontSize, setFontSize] = useState(defaultFontSize);
-  const [textareaValue, setTextareaValue] = useState("");
+  const [editableContent, setEditableContent] = useState(defaultText);
+  const [showPlaceholder, setShowPlaceholder] = useState(true);
 
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const editableRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
 
@@ -45,18 +51,21 @@ export default function TypeTesterBlock({
   const minHeightPx = Math.max(0, fontSize * lh * 2);
 
   const autosize = useCallback(() => {
-    const el = textareaRef.current;
+    const el = editableRef.current;
     if (!el) return;
-    // Reset first so shrink works on deletion or style changes
-    el.style.height = "0px"; // or "auto"
-    const next = Math.max(el.scrollHeight, minHeightPx);
-    el.style.height = `${next}px`;
+
+    // Set min height to ensure proper sizing
+    el.style.minHeight = `${minHeightPx}px`;
+
+    // Auto-expand height based on content
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
   }, [minHeightPx]);
 
   // Resize when content changes
   useLayoutEffect(() => {
     autosize();
-  }, [textareaValue, autosize]);
+  }, [editableContent, autosize]);
 
   // Resize when typography/axes change
   useLayoutEffect(() => {
@@ -92,8 +101,26 @@ export default function TypeTesterBlock({
     };
   }, [autosize]);
 
-  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setTextareaValue(e.target.value);
+  const handleContentChange = (e: React.FormEvent<HTMLDivElement>) => {
+    const newContent = e.currentTarget.textContent || "";
+    setEditableContent(newContent);
+    setShowPlaceholder(newContent.length === 0);
+  };
+
+  const handleFocus = () => {
+    setShowPlaceholder(false);
+  };
+
+  const handleBlur = () => {
+    setShowPlaceholder(editableContent.length === 0);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    // Handle Enter key to create new lines
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      document.execCommand("insertLineBreak");
+    }
   };
 
   const getColumnClass = () => {
@@ -109,58 +136,39 @@ export default function TypeTesterBlock({
     }
   };
 
+  const fontFamily = content?.name
+    ? `"${content.name}", ui-sans-serif, system-ui`
+    : "ui-sans-serif, system-ui";
+
   return (
-    <div className={`${getColumnClass()} relative`} ref={wrapperRef}>
-      {/* Type Tester Block */}
+    <div className={cn("relative", getColumnClass())} ref={wrapperRef}>
       <div>
         <div>
-          <textarea
-            ref={textareaRef}
-            value={textareaValue}
-            onChange={handleTextareaChange}
-            rows={1}
-            className="w-full resize-none border-0 focus:ring-0 text-black placeholder-black overflow-hidden whitespace-pre-wrap"
-            placeholder={defaultText}
-            style={{
-              fontFamily: "Fuzar, ui-sans-serif, system-ui",
-              fontVariationSettings: `'wght' ${wght}, 'wdth' ${wdth}, 'slnt' ${slnt}`,
-              fontSize: `${fontSize}px`,
-              lineHeight: lh, // number is fine in React CSSProperties
-              minHeight: `${minHeightPx}px`,
-            }}
-          />
+          <div className="relative">
+            <div
+              ref={editableRef}
+              contentEditable
+              suppressContentEditableWarning
+              onInput={handleContentChange}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              onKeyDown={handleKeyDown}
+              className="w-full resize-none border-0 focus:ring-0 text-black overflow-hidden whitespace-pre-wrap outline-none cursor-text"
+              style={{
+                fontFamily: fontFamily,
+                fontVariationSettings: `'wght' ${wght}, 'wdth' ${wdth}, 'slnt' ${slnt}`,
+                fontSize: `${fontSize}px`,
+                lineHeight: lh,
+                minHeight: `${minHeightPx}px`,
+              }}
+            >
+              {defaultText}
+            </div>
+          </div>
         </div>
 
-        {/* Settings Menu Toggle */}
-        <button
-          name="setting-menu-toggle"
-          aria-label="Toggle Settings Menu"
-          type="button"
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="absolute right-4 top-4 z-20 w-8 h-8 rounded-lg border border-black/10 bg-white flex items-center justify-center hover:bg-gray-50 transition-colors"
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-            />
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-          </svg>
-        </button>
+        <SettingButton showMenu={menuOpen} setShowMenu={setMenuOpen} />
 
-        {/* Settings Menu */}
         {menuOpen && (
           <motion.div
             className="absolute right-4 top-14 z-20 w-64"
@@ -175,7 +183,7 @@ export default function TypeTesterBlock({
               wdth={wdth}
               setWdth={setWdth}
               slnt={slnt}
-              setSlnt={setSlnt}
+              setSlnt={setSlant}
               lh={lh}
               setLh={setLh}
             />

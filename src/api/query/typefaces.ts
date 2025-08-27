@@ -1,4 +1,4 @@
-*[_type == "typefaces"][] {
+export const typefaces = `*[_type == "typefaces"][] {
         _id,
         name,
         "slug": slug.current,
@@ -21,7 +21,20 @@
         mobileHeaderVideo,
         introduction,
         isItAHangulCharacterSet,
-        muxDesktopVideo,
+        "muxDesktopVideo": muxDesktopVideo.asset->{
+          _id,
+          assetId,
+          playbackId,
+          status,
+          data
+        },
+        "muxMobileVideo": muxMobileVideo.asset->{
+          _id,
+          assetId,
+          playbackId,
+          status,
+          data
+        },
         "specimen": pdfSpecimen.asset->url,
         "seoImage": seoImage.asset->url,
         seoKeywords,
@@ -34,6 +47,10 @@
         "uprightTTFVar": uprightTTFVarFile.asset->url,
         "varFont": variableFontUpright.asset->url,
         "videoImageDesktop": videoImageDesktop.asset->url,
-        "videoImageMobile": videoImageMobile.asset -> url,
+        "videoImageMobile": videoImageMobile.asset->url,
         weightList,
-}
+        "designers": designers[]->{
+          ...,
+          "portrait": portrait.asset->url
+        }
+}`;

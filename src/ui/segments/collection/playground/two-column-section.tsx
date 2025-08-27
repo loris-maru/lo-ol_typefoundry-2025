@@ -1,8 +1,9 @@
 "use client";
 
+import { typeface } from "@/types/typefaces";
 import TypeTesterBlock from "./type-tester-block";
 
-export default function TwoColumnSection() {
+export default function TwoColumnSection({ content }: { content: typeface }) {
   const text1 =
     "Typefaces and the technologies used to bring them to life on screen are already incredibly advanced and have been mastered by many designers...";
   const text2 =
@@ -19,6 +20,7 @@ export default function TwoColumnSection() {
           defaultSlant={0}
           defaultText={text1}
           columns={2}
+          content={content}
         />
         <TypeTesterBlock
           defaultFontSize={30}
@@ -28,6 +30,7 @@ export default function TwoColumnSection() {
           defaultSlant={0}
           defaultText={text2}
           columns={2}
+          content={content}
         />
       </div>
     </div>

@@ -1,9 +1,23 @@
 "use client";
 
+import { typeface } from "@/types/typefaces";
+import slugify from "@/utils/slugify";
+import { useFont } from "@react-hooks-library/core";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useRef } from "react";
 
-export default function VideoHero({ videoSrc }: { videoSrc: string }) {
+export default function VideoHero({
+  content,
+  isMobile,
+}: {
+  content: typeface;
+  isMobile: boolean;
+}) {
+  const fontName = slugify(content.name);
+  const fontUrl = content.varFont;
+
+  const { error, loaded, font } = useFont(fontName, fontUrl);
+
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -16,6 +30,9 @@ export default function VideoHero({ videoSrc }: { videoSrc: string }) {
     [0, 0.3, 0.6],
     ["100vw", "20vw", "16vw"]
   );
+
+  const borderRadius = useTransform(scrollYProgress, [0, 0.3, 0.6], [0, 8, 14]);
+
   const height = useTransform(
     scrollYProgress,
     [0, 0.3, 0.6],
@@ -35,21 +52,39 @@ export default function VideoHero({ videoSrc }: { videoSrc: string }) {
   });
   const groupScale = useTransform(widthVW, (w) => (w >= 50 ? 1 : w / 50));
 
+  const familyAbbreviation = content.name.slice(0, 2);
+
+  if (error) {
+    return <div>Error loading font</div>;
+  }
+
+  if (!loaded) {
+    return <div>Loading Font</div>;
+  }
+
   return (
     <section ref={wrapperRef} className="relative h-[260vh]">
       <div className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none">
         {/* Background title behind the video */}
         <div className="fixed inset-0 z-[-1] flex items-center justify-center pointer-events-none">
-          <div className="text-center font-black leading-[0.85] text-black select-none w-full">
-            <div className="text-[20vw] w-full">Fuzar</div>
+          <div
+            className="text-center leading-[0.85] text-black select-none w-full"
+            style={{
+              fontFamily: fontName,
+              fontVariationSettings: `'wght' ${fuWeight
+                .get()
+                .toFixed(1)}, 'wdth' 900, 'slnt' 0, 'opsz' 900`,
+            }}
+          >
+            <div className="text-[20vw] w-full">{content.name}</div>
             <div className="text-[20vw] w-full">Collection</div>
           </div>
         </div>
 
         {/* Small info block behind the video (top-4 left-4) */}
         <div className="fixed top-4 left-4 z-[-1] pointer-events-none">
-          <div className="pointer-events-auto border border-black bg-white/95 text-black shadow-sm backdrop-blur-sm">
-            <div className="divide-y divide-black text-xs leading-tight">
+          <div className="pointer-events-auto border border-black text-black shadow-sm backdrop-blur-sm">
+            <div className="divide-y divide-black text-xs leading-tight font-kronik font-medium">
               <div className="px-3 py-2">Total of 76 fonts</div>
               <div className="px-3 py-2">3 Axis</div>
               <div className="px-3 py-2">Weight, Width, Slant</div>
@@ -58,8 +93,8 @@ export default function VideoHero({ videoSrc }: { videoSrc: string }) {
         </div>
 
         <motion.div
-          style={{ width, height, scale, opacity }}
-          className="relative rounded-2xl overflow-hidden shadow-2xl will-change-transform"
+          style={{ width, height, scale, opacity, borderRadius }}
+          className="relative  overflow-hidden shadow-2xl will-change-transform"
         >
           <motion.div
             className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center text-center"
@@ -67,28 +102,32 @@ export default function VideoHero({ videoSrc }: { videoSrc: string }) {
           >
             <motion.div
               style={{
-                fontFamily: "Fuzar, ui-sans-serif, system-ui",
-                fontVariationSettings: `'wght' ${fuWeight.get().toFixed(1)}`,
+                fontFamily: fontName,
+                fontVariationSettings: `'wght' ${fuWeight
+                  .get()
+                  .toFixed(1)}, 'wdth' 900, 'slnt' 0, 'opsz' 900`,
               }}
-              className="text-[32vw] font-black leading-[0.9] text-white"
+              className="text-[32vw] leading-[0.9] text-white"
             >
-              Fu
+              {familyAbbreviation}
             </motion.div>
 
-            <div className="mt-1 text-white leading-[1] text-[22px]">
-              <div>Discover a new</div>
+            <div className="mt-1 text-white leading-[1] text-[22px] font-kronik">
+              <div className="mb-2">Discover a new</div>
               <div>sans-serif typeface</div>
             </div>
           </motion.div>
 
-          <video
-            src={videoSrc}
-            className="h-full w-full object-cover"
-            autoPlay
-            muted
-            playsInline
-            loop
-          />
+          <div className="relative w-full h-full bg-black">
+            <video
+              src={content.headerVideo}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover"
+            />
+          </div>
         </motion.div>
       </div>
 

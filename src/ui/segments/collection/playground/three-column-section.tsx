@@ -1,8 +1,9 @@
 "use client";
 
+import { typeface } from "@/types/typefaces";
 import TypeTesterBlock from "./type-tester-block";
 
-export default function ThreeColumnSection() {
+export default function ThreeColumnSection({ content }: { content: typeface }) {
   const text1 =
     "The Eiger village of Grindelwald in the Bernese Oberland lies embedded in a welcoming and green hollow, surrounded by a commanding mountainscape with the Eiger north face and the Wetterhorn. This mountainscape and the numerous lookout points and activities make Grindelwald one of the most popular and cosmopolitan holiday and excursion destinations in Switzerland, and the largest ski resort in the Jungfrau region.";
   const text2 =
@@ -21,6 +22,7 @@ export default function ThreeColumnSection() {
           defaultSlant={0}
           defaultText={text1}
           columns={3}
+          content={content}
         />
         <TypeTesterBlock
           defaultFontSize={20}
@@ -30,6 +32,7 @@ export default function ThreeColumnSection() {
           defaultSlant={0}
           defaultText={text2}
           columns={3}
+          content={content}
         />
         <TypeTesterBlock
           defaultFontSize={20}
@@ -39,6 +42,7 @@ export default function ThreeColumnSection() {
           defaultSlant={0}
           defaultText={text3}
           columns={3}
+          content={content}
         />
       </div>
     </div>

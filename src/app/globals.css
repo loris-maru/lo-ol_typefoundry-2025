@@ -10,8 +10,17 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Kronik";
+  src: url("/fonts/KronikGrotesk_GX.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --font-fuzar: "Fuzar", sans-serif;
+  --font-kronik: "Kronik", sans-serif;
 }
 
 html,
@@ -24,4 +33,22 @@ body {
 }
 html {
   scroll-behavior: smooth;
+}
+
+[contenteditable][data-placeholder]:empty:before {
+  content: attr(data-placeholder);
+  color: #9ca3af;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+[contenteditable][data-placeholder]:focus:empty:before {
+  display: none;
+}
+
+[contenteditable][data-placeholder]:not(:empty):before {
+  display: none;
 }

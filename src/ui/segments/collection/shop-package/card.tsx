@@ -1,8 +1,11 @@
 import { Package } from "@/app/content/PACKAGES";
 import { useShopStore } from "@/states/shop";
+import { typeface } from "@/types/typefaces";
+import slugify from "@/utils/slugify";
 import { motion } from "framer-motion";
 
 export type PackageCardType = {
+  content: typeface;
   isInView: boolean;
   pkg: Package;
   idx: number;
@@ -11,6 +14,7 @@ export type PackageCardType = {
 };
 
 export default function PackageCard({
+  content,
   isInView,
   pkg,
   idx,
@@ -22,6 +26,8 @@ export default function PackageCard({
   const handleBuyClick = () => {
     setShopOpen(true);
   };
+
+  const fontFamily = slugify(content.name);
 
   return (
     <motion.div
@@ -86,8 +92,9 @@ export default function PackageCard({
         {/* Top Section - Package Abbreviation */}
         <div>
           <div
-            className="text-[14vw] leading-none font-fuzar transition-all duration-300 ease-in-out"
+            className="text-[14vw] leading-none transition-all duration-300 ease-in-out"
             style={{
+              fontFamily: fontFamily,
               fontVariationSettings: `'wght' ${
                 isHovered ? 900 : 300
               }, 'wdth' 900`,
@@ -107,7 +114,7 @@ export default function PackageCard({
           >
             {/* Font List Container */}
             <div>
-              <div className="text-base text-white font-normal font-sans">
+              <div className="text-base text-white font-normal font-kronik">
                 {pkg.fonts.map((font, index) => (
                   <span key={font.weight}>
                     {font.weight}, {font.italic}
@@ -119,7 +126,12 @@ export default function PackageCard({
 
             {/* Price and Buy Button */}
             <div className="flex flex-row justify-between items-center">
-              <div className="text-5xl font-bold font-sans">{pkg.price}</div>
+              <div
+                className="text-5xl font-bold"
+                style={{ fontFamily: fontFamily }}
+              >
+                {pkg.price}
+              </div>
               <button
                 type="button"
                 onClick={handleBuyClick}

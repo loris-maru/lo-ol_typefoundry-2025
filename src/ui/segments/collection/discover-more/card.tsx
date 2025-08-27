@@ -1,26 +1,30 @@
 "use client";
 
 import { COLLECTION_DETAILS } from "@/app/content/COLLECTION_DETAILS";
+import { typeface } from "@/types/typefaces";
 import { CursorTextCircle } from "@/ui/molecules/collection/discover-collection-cursor";
+import VideoPlayerMux from "@/ui/molecules/global/video-player";
+import slugify from "@/utils/slugify";
+import { useFont } from "@react-hooks-library/core";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
+import { BounceLoader } from "react-spinners";
+import { useMediaQuery } from "usehooks-ts";
 import CollectionDetailsCard from "./collection-details-card";
 
 interface CollectionCardProps {
-  name: string;
-  color: string;
+  content: typeface;
   index: number;
   isActive: boolean;
 }
 
 export default function CollectionCard({
-  name,
-  color,
+  content,
   index,
   isActive,
 }: CollectionCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isNameHovered, setIsNameHovered] = useState(false);
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [isNameHovered, setIsNameHovered] = useState<boolean>(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -29,6 +33,66 @@ export default function CollectionCard({
 
   const animTime = 0.4;
   const collectionNameId = `collection-name-${index}`;
+
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
+  const familyName = slugify(content.name);
+  const fontFile = content.varFont;
+
+  const { loaded, error, font } = useFont(familyName, fontFile);
+
+  if (error) {
+    return (
+      <div className="relative w-screen h-screen flex items-center justify-center text-red-700 text-lg">
+        Error loading font
+      </div>
+    );
+  }
+
+  if (!loaded) {
+    return (
+      <div className="relative w-screen h-screen flex flex-col items-center justify-center bg-white">
+        {/* Large Bounce Loader with different transparency levels */}
+        <div className="flex items-center justify-center space-x-2 mb-8">
+          <BounceLoader
+            color="rgba(0, 0, 0, 0.1)"
+            size={80}
+            speedMultiplier={0.8}
+          />
+          <BounceLoader
+            color="rgba(0, 0, 0, 0.3)"
+            size={80}
+            speedMultiplier={0.6}
+          />
+          <BounceLoader
+            color="rgba(0, 0, 0, 0.5)"
+            size={80}
+            speedMultiplier={0.4}
+          />
+          <BounceLoader
+            color="rgba(0, 0, 0, 0.7)"
+            size={80}
+            speedMultiplier={0.2}
+          />
+          <BounceLoader
+            color="rgba(0, 0, 0, 0.9)"
+            size={80}
+            speedMultiplier={0.1}
+          />
+        </div>
+
+        {/* Loading text */}
+        <div className="text-center">
+          <h2 className="text-2xl font-medium text-black/60 mb-2">
+            Loading {content.name}
+          </h2>
+          <p className="text-sm text-black/40">
+            Preparing your typography playground...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -42,13 +106,13 @@ export default function CollectionCard({
             {isActive && (
               <motion.div
                 key={`collection-${index}`}
-                className="absolute left-1/2 mb-8 -translate-x-1/2 flex flex-col items-center justify-center text-white z-20"
-                initial={{ opacity: 0, y: -50 }}
-                animate={{ opacity: 1, y: isHovered ? -10 : 30 }}
+                className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center justify-center text-white z-20"
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: isHovered ? -50 : 10 }}
                 exit={{ opacity: 0, y: 50 }}
                 transition={{ duration: animTime }}
               >
-                <div className="text-5xl font-medium text-white cursor-pointer">
+                <div className="text-3xl font-normal text-white cursor-pointer font-kronik">
                   Collection
                 </div>
               </motion.div>
@@ -72,13 +136,16 @@ export default function CollectionCard({
                 <div
                   id={collectionNameId}
                   style={{
-                    fontVariationSettings: `'wght' ${isHovered ? 900 : 400}`,
+                    fontFamily: familyName,
+                    fontVariationSettings: `'wght' ${
+                      isHovered ? 900 : 400
+                    }, 'wdth' 900, 'opsz' 900`,
                   }}
-                  className="text-[20vw] text-white font-bold font-fuzar leading-none text-center transition-all duration-300 ease-in-out cursor-pointer"
+                  className="text-[16vw] text-white font-bold font-fuzar leading-[0.8] text-center transition-all duration-300 ease-in-out cursor-pointer"
                   onMouseEnter={() => setIsNameHovered(true)}
                   onMouseLeave={() => setIsNameHovered(false)}
                 >
-                  {name}
+                  {content.name}
                 </div>
               </motion.div>
             )}
@@ -141,13 +208,14 @@ export default function CollectionCard({
                 }}
                 transition={{ duration: animTime }}
               />
-              <video
-                src="https://player.vimeo.com/progressive_redirect/playback/1108969674/rendition/1440p/file.mp4?loc=external&log_user=0&signature=4ef76770a8a89f999ac37353efa85b095099cb61ba388044c8d910336f67a2c0"
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="relative z-0 w-full h-full object-cover"
+              <VideoPlayerMux
+                title={content?.name}
+                autoplay={isHovered}
+                playbackId={
+                  isMobile
+                    ? content.muxMobileVideo.playbackId
+                    : content.muxDesktopVideo.playbackId
+                }
               />
             </div>
           </motion.div>

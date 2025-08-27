@@ -1,16 +1,21 @@
 import { WeightDef } from "@/app/content/WEIGHTS-LIST";
+import slugify from "@/utils/slugify";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
 export default function WeightCard({
   content,
+  hasWidth,
   onMouseEnter,
   onMouseLeave,
+  familyAbbreviation,
   idx,
 }: {
   content: WeightDef;
+  hasWidth: boolean;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
+  familyAbbreviation: string;
   idx: number;
 }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -26,6 +31,8 @@ export default function WeightCard({
     onMouseLeave();
   };
 
+  const fontFamily = slugify(content.name);
+
   return (
     <div
       className="relative overflow-hidden p-6 border border-solid border-white"
@@ -33,27 +40,29 @@ export default function WeightCard({
       onMouseLeave={handleMouseLeave}
     >
       {/* Card surface */}
-      <div className="absolute inset-0 bg-black  shadow-[inset_0_0_0_1px_rgba(0,0,0,0.06)]" />
+      <div className="absolute inset-0 bg-black shadow-[inset_0_0_0_1px_rgba(0,0,0,0.06)]" />
 
       {/* Content */}
       <div className="relative z-10 h-full w-full flex flex-col justify-between text-white">
         <div>
           <div className="w-full flex flex-row gap-x-2">
             <div
-              className="text-6xl w-36 h-36 rounded-full border border-solid border-white flex items-center justify-center font-fuzar"
+              className="text-6xl w-36 h-36 rounded-full border border-solid border-white flex items-center justify-center"
               style={{
+                fontFamily: fontFamily,
                 fontVariationSettings: `'wght' ${content.value}, 'wdth' ${widthValue}`,
               }}
             >
               {content.abbr}
             </div>
             <div
-              className="text-6xl w-36 h-36 rounded-full bg-white text-black flex items-center justify-center font-fuzar"
+              className="text-6xl w-36 h-36 rounded-full bg-white text-black flex items-center justify-center"
               style={{
+                fontFamily: fontFamily,
                 fontVariationSettings: `'wght' ${content.value}, 'wdth' ${widthValue}`,
               }}
             >
-              Fu
+              {familyAbbreviation}
             </div>
           </div>
 
@@ -62,8 +71,9 @@ export default function WeightCard({
             <div className="relative -top-4 text-[5.5vw] whitespace-nowrap overflow-hidden">
               {/* Weight Name - Slides in first */}
               <motion.span
-                className="inline-block mr-6 font-fuzar text-[7.6vw]"
+                className="inline-block mr-6 text-[7.6vw]"
                 style={{
+                  fontFamily: fontFamily,
                   fontVariationSettings: `'wght' ${content.value}, 'wdth' ${widthValue}`,
                 }}
                 initial={{ y: "100%", opacity: 0 }}
@@ -75,8 +85,9 @@ export default function WeightCard({
 
               {/* Weight Value - Slides in second with delay */}
               <motion.span
-                className="font-fuzar text-[7.6vw]"
+                className="text-[7.6vw]"
                 style={{
+                  fontFamily: fontFamily,
                   fontVariationSettings: `'wght' ${content.value}, 'wdth' ${widthValue}`,
                 }}
                 initial={{ y: "100%", opacity: 0 }}
@@ -93,7 +104,7 @@ export default function WeightCard({
           <div className="text-base font-medium">#{idx + 1}</div>
 
           {/* Width Slider - Only visible on hover */}
-          {isHovered && (
+          {isHovered && hasWidth && (
             <div className="flex flex-row items-center gap-2">
               <span className="text-sm text-white/80">Width:</span>
               <input

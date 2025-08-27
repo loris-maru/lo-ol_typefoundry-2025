@@ -1,8 +1,9 @@
 "use client";
 
+import { typeface } from "@/types/typefaces";
 import TypeTesterBlock from "./type-tester-block";
 
-export default function OneColumnSection() {
+export default function OneColumnSection({ content }: { content: typeface }) {
   const text =
     "Our goal is to connect both typographic cultures and share our knowledge of calligraphy, sketching, exploration and type design.";
 
@@ -17,6 +18,7 @@ export default function OneColumnSection() {
           defaultSlant={0}
           defaultText={text}
           columns={1}
+          content={content}
         />
       </div>
     </div>

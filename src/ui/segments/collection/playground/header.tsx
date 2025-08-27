@@ -1,9 +1,11 @@
 "use client";
 
+import { typeface } from "@/types/typefaces";
+import slugify from "@/utils/slugify";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRef } from "react";
 
-export default function PlaygroundHeader() {
+export default function PlaygroundHeader({ content }: { content: typeface }) {
   const headerRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -16,9 +18,9 @@ export default function PlaygroundHeader() {
         exit={{ opacity: 0, y: 50 }}
         transition={{ duration: 0.6, ease: "easeInOut" }}
       >
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-left text-neutral-500 text-sm border-y border-solid border-neutral-200 py-4 font-sans">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-left text-neutral-500 text-sm border-y border-solid border-neutral-200 py-4 font-kronik">
           <div>
-            <p>Typeface: Fuzar</p>
+            <p>Typeface: {content.name}</p>
             <p>Designer: Noheul Lee</p>
           </div>
           <div>
@@ -31,10 +33,13 @@ export default function PlaygroundHeader() {
           </div>
         </div>
         <motion.h2
-          className="text-[16vw] font-fuzar font-black leading-[1] mt-2"
+          className="text-[14vw] leading-[1] mt-2"
           style={{ fontVariationSettings: "'wght' 900, 'wdth' 900" }}
         >
           <motion.div
+            style={{
+              fontFamily: slugify(content.name),
+            }}
             className="overflow-hidden"
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -43,7 +48,10 @@ export default function PlaygroundHeader() {
             Normalize
           </motion.div>
           <motion.div
-            className="overflow-hidden"
+            style={{
+              fontFamily: slugify(content.name),
+            }}
+            className="overflow-hidden pb-8"
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}

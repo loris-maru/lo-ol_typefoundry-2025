@@ -1,10 +1,11 @@
 "use client";
 
 import { WeightDef, WEIGHTS } from "@/app/content/WEIGHTS-LIST";
+import { typeface } from "@/types/typefaces";
 import { useMemo, useState } from "react";
 import WeightCard from "./card";
 
-export default function WeightGrid() {
+export default function WeightGrid({ content }: { content: typeface }) {
   const [hovered, setHovered] = useState<number | null>(null);
 
   const hoveredCol = hovered === null ? null : hovered % 3;
@@ -26,6 +27,8 @@ export default function WeightGrid() {
     return h.join(" ");
   }, [hoveredRow]);
 
+  const familyAbbreviation = content.name.slice(0, 2);
+
   return (
     <section className="relative h-screen w-screen overflow-hidden bg-white">
       <div
@@ -42,6 +45,8 @@ export default function WeightGrid() {
           <WeightCard
             key={`${card.abbr}-${card.value}`}
             content={card}
+            hasWidth={content.has_wdth}
+            familyAbbreviation={familyAbbreviation}
             onMouseEnter={() => setHovered(idx)}
             onMouseLeave={() => setHovered(null)}
             idx={idx}
