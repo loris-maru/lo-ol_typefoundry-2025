@@ -93,6 +93,7 @@ export function CursorTextCircle({
     <div
       ref={containerRef}
       style={{
+        borderRadius: "50%",
         position: "fixed",
         left: 0,
         top: 0,
@@ -120,13 +121,14 @@ export function CursorTextCircle({
           will-change: transform;
         }
         .rotating {
-          animation: spin 1.2s linear infinite;
+          animation: spin 8s linear infinite;
         }
         .label {
           font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
             Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
           font-size: ${fontSize}px;
           letter-spacing: 2px;
+          fill: black;
         }
       `}</style>
 

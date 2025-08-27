@@ -1,3 +1,14 @@
+"use client";
+
+export type CollectionDetailsCardProps = {
+  cell1: string;
+  cell2: string;
+  cell3: string;
+  cell4: string;
+  cell5: string;
+  cell6: string;
+};
+
 export default function CollectionDetailsCard({
   cell1,
   cell2,
@@ -5,37 +16,15 @@ export default function CollectionDetailsCard({
   cell4,
   cell5,
   cell6,
-}: {
-  cell1: string;
-  cell2: string;
-  cell3: string;
-  cell4: string;
-  cell5: string;
-  cell6: string;
-}) {
+}: CollectionDetailsCardProps) {
   return (
-    <div className="grid grid-cols-3 grid-rows-2 gap-4 p-6 bg-black/80 backdrop-blur-sm rounded-lg border border-white">
-      {/* Row 1 */}
-      <div className="text-center border-r border-b border-white/50 pb-2 pr-2">
-        <div className="text-white text-base font-sans">{cell1}</div>
-      </div>
-      <div className="text-center border-r border-b border-white/50 pb-2 pr-2">
-        <div className="text-white text-base font-sans">{cell2}</div>
-      </div>
-      <div className="text-center border-b border-white/50 pb-2">
-        <div className="text-white text-base font-sans">{cell3}</div>
-      </div>
-
-      {/* Row 2 */}
-      <div className="text-center border-r border-white/50 pr-2">
-        <div className="text-white text-base font-sans">{cell4}</div>
-      </div>
-      <div className="text-center border-r border-white/50 pr-2">
-        <div className="text-white text-base font-sans">{cell5}</div>
-      </div>
-      <div className="text-center">
-        <div className="text-white text-base font-sans">{cell6}</div>
-      </div>
+    <div className="grid grid-cols-3 grid-rows-2 w-[36vw] h-[80px] border border-white divide-x divide-y divide-white text-white">
+      <div className="w-full h-full flex items-center px-3">{cell1}</div>
+      <div className="w-full h-full flex items-center px-3">{cell2}</div>
+      <div className="w-full h-full flex items-center px-3">{cell3}</div>
+      <div className="w-full h-full flex items-center px-3">{cell4}</div>
+      <div className="w-full h-full flex items-center px-3">{cell5}</div>
+      <div className="w-full h-full flex items-center px-3">{cell6}</div>
     </div>
   );
 }

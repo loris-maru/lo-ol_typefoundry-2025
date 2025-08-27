@@ -8,7 +8,7 @@ import { useState } from "react";
 import CollectionCard from "./card";
 
 export default function DiscoverMoreCollections() {
-  const [_, setCurrentSlide] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(0);
   const [sliderRef, instanceRef] = useKeenSlider({
     initial: 0,
     slideChanged(slider) {
@@ -20,7 +20,7 @@ export default function DiscoverMoreCollections() {
       perView: 1,
       spacing: 0,
     },
-    dragSpeed: 0.8,
+    dragSpeed: 0.2,
     rubberband: false,
   });
 
@@ -46,6 +46,7 @@ export default function DiscoverMoreCollections() {
                 name={collection}
                 color={COLORS[index % COLORS.length]}
                 index={index}
+                isActive={index === currentSlide}
               />
             </div>
           ))}
