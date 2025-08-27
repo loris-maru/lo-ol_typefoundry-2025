@@ -40,7 +40,7 @@ export default function WeightCard({
         <div>
           <div className="w-full flex flex-row gap-x-2">
             <div
-              className="text-6xl w-36 h-36 rounded-full border border-solid border-white flex items-center justify-center"
+              className="text-6xl w-36 h-36 rounded-full border border-solid border-white flex items-center justify-center font-fuzar"
               style={{
                 fontVariationSettings: `'wght' ${content.value}, 'wdth' ${widthValue}`,
               }}
@@ -48,7 +48,7 @@ export default function WeightCard({
               {content.abbr}
             </div>
             <div
-              className="text-6xl w-36 h-36 rounded-full bg-white text-black flex items-center justify-center"
+              className="text-6xl w-36 h-36 rounded-full bg-white text-black flex items-center justify-center font-fuzar"
               style={{
                 fontVariationSettings: `'wght' ${content.value}, 'wdth' ${widthValue}`,
               }}
@@ -62,7 +62,7 @@ export default function WeightCard({
             <div className="relative -top-4 text-[5.5vw] whitespace-nowrap overflow-hidden">
               {/* Weight Name - Slides in first */}
               <motion.span
-                className="inline-block mr-6"
+                className="inline-block mr-6 font-fuzar text-[7.6vw]"
                 style={{
                   fontVariationSettings: `'wght' ${content.value}, 'wdth' ${widthValue}`,
                 }}
@@ -75,6 +75,7 @@ export default function WeightCard({
 
               {/* Weight Value - Slides in second with delay */}
               <motion.span
+                className="font-fuzar text-[7.6vw]"
                 style={{
                   fontVariationSettings: `'wght' ${content.value}, 'wdth' ${widthValue}`,
                 }}

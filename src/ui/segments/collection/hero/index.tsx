@@ -19,7 +19,7 @@ export default function VideoHero({ videoSrc }: { videoSrc: string }) {
   const height = useTransform(
     scrollYProgress,
     [0, 0.3, 0.6],
-    ["100vh", "100vh", "60vh"]
+    ["100vh", "100vh", "40vh"]
   );
   const scale = useTransform(scrollYProgress, [0.6, 0.9, 1], [1, 0.3, 0.1]);
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 1]);

@@ -29,12 +29,12 @@ export default function WeightGrid() {
   return (
     <section className="relative h-screen w-screen overflow-hidden bg-white">
       <div
-        className="grid h-full w-full"
+        className="grid h-full w-full border border-white divide-x divide-y divide-white"
         style={{
           gridTemplateColumns: columns,
           gridTemplateRows: rows,
           transition:
-            "grid-template-columns 600ms cubic-bezier(.2,.8,.2,1), grid-template-rows 600ms cubic-bezier(.2,.8,.2,1) divide-x divide-y divide-gray-300 border border-gray-300",
+            "grid-template-columns 600ms cubic-bezier(.2,.8,.2,1), grid-template-rows 600ms cubic-bezier(.2,.8,.2,1)",
         }}
         onMouseLeave={() => setHovered(null)}
       >
