@@ -1,5 +1,4 @@
 import { WeightDef } from "@/app/content/WEIGHTS-LIST";
-import slugify from "@/utils/slugify";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
@@ -9,6 +8,7 @@ export default function WeightCard({
   onMouseEnter,
   onMouseLeave,
   familyAbbreviation,
+  fontName,
   idx,
 }: {
   content: WeightDef;
@@ -16,6 +16,7 @@ export default function WeightCard({
   onMouseEnter: () => void;
   onMouseLeave: () => void;
   familyAbbreviation: string;
+  fontName: string;
   idx: number;
 }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -30,8 +31,6 @@ export default function WeightCard({
     setIsHovered(false);
     onMouseLeave();
   };
-
-  const fontFamily = slugify(content.name);
 
   return (
     <div
@@ -49,7 +48,7 @@ export default function WeightCard({
             <div
               className="text-6xl w-36 h-36 rounded-full border border-solid border-white flex items-center justify-center"
               style={{
-                fontFamily: fontFamily,
+                fontFamily: fontName,
                 fontVariationSettings: `'wght' ${content.value}, 'wdth' ${widthValue}`,
               }}
             >
@@ -58,7 +57,7 @@ export default function WeightCard({
             <div
               className="text-6xl w-36 h-36 rounded-full bg-white text-black flex items-center justify-center"
               style={{
-                fontFamily: fontFamily,
+                fontFamily: fontName,
                 fontVariationSettings: `'wght' ${content.value}, 'wdth' ${widthValue}`,
               }}
             >
@@ -73,7 +72,7 @@ export default function WeightCard({
               <motion.span
                 className="inline-block mr-6 text-[7.6vw]"
                 style={{
-                  fontFamily: fontFamily,
+                  fontFamily: fontName,
                   fontVariationSettings: `'wght' ${content.value}, 'wdth' ${widthValue}`,
                 }}
                 initial={{ y: "100%", opacity: 0 }}
@@ -87,7 +86,7 @@ export default function WeightCard({
               <motion.span
                 className="text-[7.6vw]"
                 style={{
-                  fontFamily: fontFamily,
+                  fontFamily: fontName,
                   fontVariationSettings: `'wght' ${content.value}, 'wdth' ${widthValue}`,
                 }}
                 initial={{ y: "100%", opacity: 0 }}

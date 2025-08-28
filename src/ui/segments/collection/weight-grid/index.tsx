@@ -2,6 +2,7 @@
 
 import { WeightDef, WEIGHTS } from "@/app/content/WEIGHTS-LIST";
 import { typeface } from "@/types/typefaces";
+import slugify from "@/utils/slugify";
 import { useMemo, useState } from "react";
 import WeightCard from "./card";
 
@@ -28,6 +29,7 @@ export default function WeightGrid({ content }: { content: typeface }) {
   }, [hoveredRow]);
 
   const familyAbbreviation = content.name.slice(0, 2);
+  const fontFamily = slugify(content.name);
 
   return (
     <section className="relative h-screen w-screen overflow-hidden bg-white">
@@ -47,6 +49,7 @@ export default function WeightGrid({ content }: { content: typeface }) {
             content={card}
             hasWidth={content.has_wdth}
             familyAbbreviation={familyAbbreviation}
+            fontName={fontFamily}
             onMouseEnter={() => setHovered(idx)}
             onMouseLeave={() => setHovered(null)}
             idx={idx}

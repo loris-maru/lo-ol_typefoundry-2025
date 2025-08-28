@@ -7,6 +7,7 @@ import VideoPlayerMux from "@/ui/molecules/global/video-player";
 import slugify from "@/utils/slugify";
 import { useFont } from "@react-hooks-library/core";
 import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
 import { useState } from "react";
 import { BounceLoader } from "react-spinners";
 import { useMediaQuery } from "usehooks-ts";
@@ -100,7 +101,7 @@ export default function CollectionCard({
       onMouseMove={handleMouseMove}
     >
       <motion.div className="relative z-20 w-full h-full flex items-center justify-center">
-        <div>
+        <Link href={`/collection/${content.slug}`}>
           {/* Text Overlay - Above the video container */}
           <AnimatePresence mode="wait">
             {isActive && (
@@ -175,7 +176,7 @@ export default function CollectionCard({
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </Link>
 
         {/* Info Grid - Below the collection name */}
       </motion.div>

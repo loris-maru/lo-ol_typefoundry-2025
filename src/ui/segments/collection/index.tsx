@@ -6,11 +6,11 @@ import Playground from "./playground";
 import { typeface } from "@/types/typefaces";
 import slugify from "@/utils/slugify";
 import { useFont } from "@react-hooks-library/core";
-import { BounceLoader } from "react-spinners";
+import { useEffect, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import DiscoverMoreCollections from "./discover-more";
+import CollectionHorizontal from "./horizontal-scroll-block";
 import ShopPackages from "./shop-package";
-import CollectionHorizontal from "./weight-grid/h-scroll";
 
 export default function CollectionPage({
   content,
@@ -21,9 +21,56 @@ export default function CollectionPage({
 }) {
   const fontName = slugify(content.name);
   const fontUrl = content.varFont;
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [fakeProgress, setFakeProgress] = useState(0);
 
-  const { error, loaded, font } = useFont(fontName, fontUrl);
+  const { error, loaded: fontLoaded, font } = useFont(fontName, fontUrl);
   const isMobile = useMediaQuery("(max-width: 768px)");
+
+  // Combined loading state
+  const isFullyLoaded = fontLoaded && videoLoaded;
+
+  // Fake progress animation
+  useEffect(() => {
+    if (!isFullyLoaded) {
+      const startTime = Date.now();
+      const duration = 4000;
+
+      const animateProgress = () => {
+        // Check if both are loaded - if so, stop animation
+        if (fontLoaded && videoLoaded) {
+          return;
+        }
+
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min((elapsed / duration) * 100, 100);
+        setFakeProgress(progress);
+
+        if (progress < 100 && !(fontLoaded && videoLoaded)) {
+          requestAnimationFrame(animateProgress);
+        }
+      };
+
+      requestAnimationFrame(animateProgress);
+    }
+  }, [isFullyLoaded, fontLoaded, videoLoaded]);
+
+  // Fallback timer to prevent infinite loading
+  useEffect(() => {
+    if (fontLoaded && !videoLoaded) {
+      const timer = setTimeout(() => {
+        console.log("Video loading timeout - proceeding anyway");
+        setVideoLoaded(true);
+      }, 3000); // 5 second timeout
+
+      return () => clearTimeout(timer);
+    }
+  }, [fontLoaded, videoLoaded]);
+
+  // Debug logging
+  useEffect(() => {
+    console.log("Loading state:", { fontLoaded, videoLoaded, fakeProgress });
+  }, [fontLoaded, videoLoaded, fakeProgress]);
 
   if (error) {
     return (
@@ -33,46 +80,36 @@ export default function CollectionPage({
     );
   }
 
-  if (!loaded) {
+  if (!isFullyLoaded) {
     return (
-      <div className="relative w-screen h-screen flex flex-col items-center justify-center bg-white">
-        {/* Large Bounce Loader with different transparency levels */}
-        <div className="flex items-center justify-center space-x-2 mb-8">
-          <BounceLoader
-            color="rgba(0, 0, 0, 0.1)"
-            size={80}
-            speedMultiplier={0.8}
-          />
-          <BounceLoader
-            color="rgba(0, 0, 0, 0.3)"
-            size={80}
-            speedMultiplier={0.6}
-          />
-          <BounceLoader
-            color="rgba(0, 0, 0, 0.5)"
-            size={80}
-            speedMultiplier={0.4}
-          />
-          <BounceLoader
-            color="rgba(0, 0, 0, 0.7)"
-            size={80}
-            speedMultiplier={0.2}
-          />
-          <BounceLoader
-            color="rgba(0, 0, 0, 0.9)"
-            size={80}
-            speedMultiplier={0.1}
+      <div className="relative w-screen h-screen p-6 bg-black text-white font-kronik overflow-hidden">
+        {/* Progress Bar Background */}
+        <div className="absolute inset-0 bg-black">
+          {/* Progress Bar */}
+          <div
+            className="absolute bottom-0 left-0 h-full transition-all duration-100 ease-out"
+            style={{
+              width: `${fakeProgress}vw`,
+              background: "rgba(139, 92, 246, 1)",
+            }}
           />
         </div>
 
-        {/* Loading text */}
-        <div className="text-center">
-          <h2 className="text-2xl font-medium text-black/60 mb-2">
-            Loading {content.name}
-          </h2>
-          <p className="text-sm text-black/40">
-            Preparing your typography playground...
-          </p>
+        {/* Loading text with progress indicators */}
+        <div className="relative z-10 text-left text-[10vw] text-white font-black leading-[1.05]">
+          <div>Loading {content.name}</div>
+          <div>
+            {!fontLoaded &&
+              !videoLoaded &&
+              "Preparing your typography playground..."}
+            {fontLoaded && !videoLoaded && "Loading video content..."}
+            {fontLoaded && videoLoaded && "Almost ready..."}
+          </div>
+        </div>
+
+        {/* Progress percentage indicator */}
+        <div className="absolute bottom-6 right-6 text-violet-400 text-2xl font-bold z-10">
+          {Math.round(fakeProgress)}%
         </div>
       </div>
     );
@@ -81,7 +118,11 @@ export default function CollectionPage({
   return (
     <main className="w-full">
       {/* Hero section */}
-      <VideoHero content={content} isMobile={isMobile} />
+      <VideoHero
+        content={content}
+        isMobile={isMobile}
+        onVideoLoaded={() => setVideoLoaded(true)}
+      />
 
       {/* Playground section */}
       <Playground content={content} />

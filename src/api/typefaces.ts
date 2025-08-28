@@ -9,63 +9,19 @@ export async function getAllTypefaces(): Promise<typeface[]> {
 export async function getTypefaceBySlug(
   slug: string
 ): Promise<typeface | null> {
-  // Update the query to properly handle slug.current
-  const query = `*[_type == "typefaces" && slug.current == $slug][0] {
-    _id,
-    name,
-    "slug": slug.current,
-    description,
-    pricePerFont,
-    customFontPrice,
-    variableFontPrice,
-    hangulCharacterSet,
-    hasHangul,
-    has_MONO,
-    has_SERF,
-    has_STEN,
-    has_italic,
-    has_opsz,
-    has_packages,
-    has_slnt,
-    has_wdth,
-    hlsMobileHeaderVideo,
-    mobileHeaderVideo,
-    introduction,
-    isItAHangulCharacterSet,
-    "specimen": pdfSpecimen.asset->url,
-    "seoImage": seoImage.asset->url,
-    seoKeywords,
-    seoTitle,
-    singleFontList,
-    supportedLanguages,
-    "thumbnailImage": thumbnailImage.asset->url,
-    totalGlyphs,
-    "trialFont": trialFontPackage.asset->url,
-    "uprightTTFVar": uprightTTFVarFile.asset->url,
-    "varFont": variableFontUpright.asset->url,
-    "videoImageDesktop": videoImageDesktop.asset->url,
-    "videoImageMobile": videoImageMobile.asset->url,
-    weightList,
-    "muxDesktopVideo": muxDesktopVideo.asset->{
-      _id,
-      assetId,
-      playbackId,
-      status,
-      data
-    },
-    "muxMobileVideo": muxMobileVideo.asset->{
-      _id,
-      assetId,
-      playbackId,
-      status,
-      data
-    },
-    mobileHeaderVideo,
-        headerVideo,
-  }`;
+  try {
+    // Use the existing typefaces query but filter by slug
+    const query = `*[_type == "typefaces" && slug.current == $slug][0] ${typefaces.replace(
+      '*[_type == "typefaces"][]',
+      ''
+    )}`;
 
-  const result = await sanityFetch<typeface>(query, { slug });
-  return result || null;
+    const result = await sanityFetch<typeface>(query, { slug });
+    return result || null;
+  } catch (error) {
+    console.error('Error in getTypefaceBySlug:', error);
+    return null;
+  }
 }
 
 export async function getFeaturedTypefaces(

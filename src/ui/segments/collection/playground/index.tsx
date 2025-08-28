@@ -2,7 +2,8 @@
 
 import { typeface } from "@/types/typefaces";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import AddBlock from "./add-block";
 import PlaygroundHeader from "./header";
 import OneColumnSection from "./one-column-section";
 import ThreeColumnSection from "./three-column-section";
@@ -10,6 +11,11 @@ import TwoColumnSection from "./two-column-section";
 
 export default function Playground({ content }: { content: typeface }) {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [sections, setSections] = useState([
+    { type: "one", id: 1 },
+    { type: "two", id: 2 },
+    { type: "three", id: 3 },
+  ]);
 
   // Local scroll progress to drive width/height/radius
   const { scrollYProgress: localProgress } = useScroll({
@@ -31,6 +37,24 @@ export default function Playground({ content }: { content: typeface }) {
     y < 80 ? ("none" as const) : ("auto" as const)
   );
 
+  const addSection = (type: "one" | "two" | "three") => {
+    const newId = Math.max(...sections.map((s) => s.id)) + 1;
+    setSections([...sections, { type, id: newId }]);
+  };
+
+  const renderSection = (section: { type: string; id: number }) => {
+    switch (section.type) {
+      case "one":
+        return <OneColumnSection key={section.id} content={content} />;
+      case "two":
+        return <TwoColumnSection key={section.id} content={content} />;
+      case "three":
+        return <ThreeColumnSection key={section.id} content={content} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <section ref={sectionRef} className="relative w-full">
       <motion.div
@@ -41,26 +65,24 @@ export default function Playground({ content }: { content: typeface }) {
           className="font-fuzar relative flex w-full flex-col items-start justify-start overscroll-auto no-scrollbar bg-[#F5F5F5] p-10 scrollbar-hide"
           style={{ width, height, borderRadius: radius, overflowY }}
         >
-          <div className="relative flex flex-col w-full gap-4">
+          <div className="relative flex flex-col w-full gap-4 pb-16">
             <PlaygroundHeader content={content} />
 
             {/* Column Sections */}
             <div className="w-full mt-3">
-              {/* One Column Section */}
-              <OneColumnSection content={content} />
-
-              {/* Divider */}
-              <div className="my-4 border-t border-gray-200" />
-
-              {/* Two Column Section */}
-              <TwoColumnSection content={content} />
-
-              {/* Divider */}
-              <div className="my-4 border-t border-gray-200" />
-
-              {/* Three Column Section */}
-              <ThreeColumnSection content={content} />
+              {sections.map((section) => (
+                <div key={section.id}>
+                  {renderSection(section)}
+                  {/* Divider between sections */}
+                  {section.id < sections.length && (
+                    <div className="my-4 border-t border-gray-200" />
+                  )}
+                </div>
+              ))}
             </div>
+
+            {/* Add Section Block */}
+            <AddBlock addSection={addSection} />
           </div>
         </motion.div>
         <style jsx>{`

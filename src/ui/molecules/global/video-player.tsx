@@ -8,13 +8,21 @@ export default function VideoPlayerMux({
   preload = "none",
   bgOpacity = 1,
   autoplay = true,
+  onLoaded,
 }: {
   title: string;
   playbackId: string;
   preload?: string;
   bgOpacity?: number;
   autoplay?: boolean;
+  onLoaded?: () => void;
 }) {
+  const handleVideoReady = () => {
+    if (onLoaded) {
+      onLoaded();
+    }
+  };
+
   return (
     <MuxPlayer
       title={title}
@@ -24,14 +32,24 @@ export default function VideoPlayerMux({
       autoPlay={autoplay}
       loop={true}
       preload={preload}
+      onLoadedData={handleVideoReady}
+      onCanPlay={handleVideoReady}
+      onCanPlayThrough={handleVideoReady}
+      onLoadedMetadata={handleVideoReady}
       style={{
         width: "100%",
         height: "100%",
-        objectFit: "fill",
+        objectFit: "cover",
         opacity: bgOpacity,
-        transform: "scale(1.3)",
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
       }}
       className="w-full h-full"
+      primaryColor="#000000"
+      secondaryColor="#ffffff"
     />
   );
 }

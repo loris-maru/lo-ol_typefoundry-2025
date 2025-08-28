@@ -4,21 +4,24 @@ import { typeface } from "@/types/typefaces";
 import slugify from "@/utils/slugify";
 import { useFont } from "@react-hooks-library/core";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 export default function VideoHero({
   content,
   isMobile,
+  onVideoLoaded,
 }: {
   content: typeface;
   isMobile: boolean;
+  onVideoLoaded: () => void;
 }) {
   const fontName = slugify(content.name);
   const fontUrl = content.varFont;
 
-  const { error, loaded, font } = useFont(fontName, fontUrl);
+  const { error, loaded: fontLoaded, font } = useFont(fontName, fontUrl);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: wrapperRef,
@@ -54,11 +57,17 @@ export default function VideoHero({
 
   const familyAbbreviation = content.name.slice(0, 2);
 
+  const handleVideoLoad = () => {
+    console.log("Video loaded in VideoHero, calling onVideoLoaded");
+    setVideoLoaded(true);
+    onVideoLoaded();
+  };
+
   if (error) {
     return <div>Error loading font</div>;
   }
 
-  if (!loaded) {
+  if (!fontLoaded) {
     return <div>Loading Font</div>;
   }
 
@@ -94,7 +103,7 @@ export default function VideoHero({
 
         <motion.div
           style={{ width, height, scale, opacity, borderRadius }}
-          className="relative  overflow-hidden shadow-2xl will-change-transform"
+          className="relative overflow-hidden shadow-2xl will-change-transform"
         >
           <motion.div
             className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center text-center"
@@ -118,15 +127,35 @@ export default function VideoHero({
             </div>
           </motion.div>
 
-          <div className="relative w-full h-full bg-black">
-            <video
-              src={content.headerVideo}
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="w-full h-full object-cover"
-            />
+          <div className="relative w-full h-full bg-black overflow-hidden">
+            {content.headerVideo ? (
+              <video
+                src={content.headerVideo}
+                autoPlay
+                muted
+                loop
+                playsInline
+                onLoadedData={handleVideoLoad}
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{
+                  minWidth: "100%",
+                  minHeight: "100%",
+                  maxWidth: "100%",
+                  maxHeight: "100%",
+                }}
+              />
+            ) : (
+              // Fallback to static image if no video
+              <div
+                className="absolute inset-0 w-full h-full bg-cover bg-center"
+                style={{
+                  backgroundImage: `url(${
+                    content.videoImageDesktop || content.thumbnailImage
+                  })`,
+                }}
+                onLoad={handleVideoLoad}
+              />
+            )}
           </div>
         </motion.div>
       </div>

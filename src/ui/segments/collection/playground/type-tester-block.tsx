@@ -2,6 +2,7 @@
 
 import { typeface } from "@/types/typefaces";
 import { cn } from "@/utils/classNames";
+import slugify from "@/utils/slugify";
 import { motion } from "framer-motion";
 import {
   useCallback,
@@ -136,9 +137,7 @@ export default function TypeTesterBlock({
     }
   };
 
-  const fontFamily = content?.name
-    ? `"${content.name}", ui-sans-serif, system-ui`
-    : "ui-sans-serif, system-ui";
+  const fontFamily = slugify(content.name);
 
   return (
     <div className={cn("relative", getColumnClass())} ref={wrapperRef}>

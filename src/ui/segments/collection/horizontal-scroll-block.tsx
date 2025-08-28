@@ -4,9 +4,9 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 // import WeightsGridPanel from ".";
 import { typeface } from "@/types/typefaces";
-import WeightGrid from ".";
-import CharacterSetPanel from "../character-set";
-import FontInfoPanel from "../font-info";
+import CharacterSetPanel from "./character-set";
+import FontInfoPanel from "./font-info";
+import WeightGrid from "./weight-grid";
 
 export default function CollectionHorizontal({
   content,

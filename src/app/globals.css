@@ -52,3 +52,22 @@ html {
 [contenteditable][data-placeholder]:not(:empty):before {
   display: none;
 }
+
+/* Force MuxPlayer to fill container */
+mux-player {
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  object-fit: cover !important;
+}
+
+/* Override any Mux default styles */
+mux-player video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}

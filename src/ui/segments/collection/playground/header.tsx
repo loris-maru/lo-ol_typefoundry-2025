@@ -2,64 +2,77 @@
 
 import { typeface } from "@/types/typefaces";
 import slugify from "@/utils/slugify";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 
 export default function PlaygroundHeader({ content }: { content: typeface }) {
   const headerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(headerRef, {
+    amount: 0.7,
+    once: false,
+  });
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key="playground-header"
-        ref={headerRef}
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 50 }}
-        transition={{ duration: 0.6, ease: "easeInOut" }}
-      >
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-left text-neutral-500 text-sm border-y border-solid border-neutral-200 py-4 font-kronik">
-          <div>
-            <p>Typeface: {content.name}</p>
-            <p>Designer: Noheul Lee</p>
-          </div>
-          <div>
-            <p>Release: 2024</p>
-            <p>License: Desktop / Web / App</p>
-          </div>
-          <div>
-            <p>Languages: Latin, Extended</p>
-            <p>Features: Stylistic sets, ligatures</p>
-          </div>
+    <motion.div
+      key="playground-header"
+      id="playground-header"
+      className="relative"
+      ref={headerRef}
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 50 }}
+      transition={{ duration: 0.6, ease: "easeInOut" }}
+    >
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-left text-neutral-500 text-sm border-y border-solid border-neutral-200 py-4 font-kronik">
+        <div>
+          <p>Typeface: {content.name}</p>
+          <p>Designer: Noheul Lee</p>
         </div>
-        <motion.h2
-          className="text-[14vw] leading-[1] mt-2"
-          style={{ fontVariationSettings: "'wght' 900, 'wdth' 900" }}
+        <div>
+          <p>Release: 2024</p>
+          <p>License: Desktop / Web / App</p>
+        </div>
+        <div>
+          <p>Languages: Latin, Extended</p>
+          <p>Features: Stylistic sets, ligatures</p>
+        </div>
+      </div>
+      <motion.div
+        id="playground-header-title"
+        className="relative mt-2"
+        style={{ fontVariationSettings: "'wght' 900, 'wdth' 900" }}
+      >
+        <div
+          style={{
+            fontFamily: slugify(content.name),
+          }}
+          className="relative overflow-hidden h-[24vh]"
         >
-          <motion.div
-            style={{
-              fontFamily: slugify(content.name),
-            }}
-            className="overflow-hidden"
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
+          <motion.span
+            className="absolute text-[14vw] leading-[1] "
+            initial={{ y: 300 }}
+            animate={{ y: isInView ? 0 : 300 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
           >
             Normalize
-          </motion.div>
-          <motion.div
-            style={{
-              fontFamily: slugify(content.name),
-            }}
-            className="overflow-hidden pb-8"
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
+          </motion.span>
+        </div>
+        <div
+          style={{
+            fontFamily: slugify(content.name),
+          }}
+          className="relative overflow-hidden h-[24vh]"
+        >
+          <motion.span
+            className="absolute text-[14vw] leading-[1] "
+            initial={{ y: 300 }}
+            animate={{ y: isInView ? 0 : 300 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
           >
             Font Spirit
-          </motion.div>
-        </motion.h2>
+          </motion.span>
+        </div>
       </motion.div>
-    </AnimatePresence>
+    </motion.div>
   );
 }
