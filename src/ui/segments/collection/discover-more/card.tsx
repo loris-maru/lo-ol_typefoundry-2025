@@ -7,7 +7,7 @@ import VideoPlayerMux from "@/ui/molecules/global/video-player";
 import slugify from "@/utils/slugify";
 import { useFont } from "@react-hooks-library/core";
 import { AnimatePresence, motion } from "framer-motion";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { BounceLoader } from "react-spinners";
 import { useMediaQuery } from "usehooks-ts";
@@ -17,19 +17,33 @@ interface CollectionCardProps {
   content: typeface;
   index: number;
   isActive: boolean;
+  onNavigate?: () => void; // Callback to trigger navigation animation
 }
 
 export default function CollectionCard({
   content,
   index,
   isActive,
+  onNavigate,
 }: CollectionCardProps) {
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [isNameHovered, setIsNameHovered] = useState<boolean>(false);
+  const [isNavigating, setIsNavigating] = useState<boolean>(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const router = useRouter();
 
   const handleMouseMove = (e: React.MouseEvent) => {
     setMousePosition({ x: e.clientX, y: e.clientY });
+  };
+
+  const handleNavigate = async () => {
+    setIsNavigating(true);
+
+    // Wait for animation to complete
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // Navigate to collection page
+    router.push(`/collection/${content.slug}`);
   };
 
   const animTime = 0.4;
@@ -60,26 +74,6 @@ export default function CollectionCard({
             size={80}
             speedMultiplier={0.8}
           />
-          <BounceLoader
-            color="rgba(0, 0, 0, 0.3)"
-            size={80}
-            speedMultiplier={0.6}
-          />
-          <BounceLoader
-            color="rgba(0, 0, 0, 0.5)"
-            size={80}
-            speedMultiplier={0.4}
-          />
-          <BounceLoader
-            color="rgba(0, 0, 0, 0.7)"
-            size={80}
-            speedMultiplier={0.2}
-          />
-          <BounceLoader
-            color="rgba(0, 0, 0, 0.9)"
-            size={80}
-            speedMultiplier={0.1}
-          />
         </div>
 
         {/* Loading text */}
@@ -101,15 +95,21 @@ export default function CollectionCard({
       onMouseMove={handleMouseMove}
     >
       <motion.div className="relative z-20 w-full h-full flex items-center justify-center">
-        <Link href={`/collection/${content.slug}`}>
+        <button
+          onClick={handleNavigate}
+          className="relative z-20 w-full h-full flex items-center justify-center"
+        >
           {/* Text Overlay - Above the video container */}
           <AnimatePresence mode="wait">
             {isActive && (
               <motion.div
                 key={`collection-${index}`}
-                className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center justify-center text-white z-20"
+                className="absolute left-1/2 -translate-x-1/2 top-1/4 -translate-y-1/2 flex flex-col items-center justify-center text-white z-20"
                 initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: isHovered ? -50 : 10 }}
+                animate={{
+                  opacity: isNavigating ? 0 : 1,
+                  y: isHovered ? -50 : 10,
+                }}
                 exit={{ opacity: 0, y: 50 }}
                 transition={{ duration: animTime }}
               >
@@ -126,6 +126,7 @@ export default function CollectionCard({
                 key={`name-${index}`}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
+                className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 flex flex-col items-center justify-center"
                 initial={{ opacity: 0, y: 100 }}
                 animate={{
                   opacity: 1,
@@ -146,7 +147,7 @@ export default function CollectionCard({
                   onMouseEnter={() => setIsNameHovered(true)}
                   onMouseLeave={() => setIsNameHovered(false)}
                 >
-                  {content.name}
+                  {isNavigating ? content.name.substring(0, 2) : content.name}
                 </div>
               </motion.div>
             )}
@@ -156,27 +157,27 @@ export default function CollectionCard({
             {isActive && (
               <motion.div
                 key={`details-${index}`}
-                className="relative z-20 w-full flex items-center justify-center"
+                className="absolute left-1/2 -translate-x-1/2 bottom-1/4 translate-y-1/2 flex items-center justify-center"
                 initial={{ opacity: 0, y: 50 }}
                 animate={{
-                  top: isHovered ? "-36px" : "20px",
-                  opacity: isHovered ? 1 : 0,
+                  opacity: isHovered && !isNavigating ? 1 : 0,
+                  y: isHovered ? 0 : 20,
                 }}
                 exit={{ opacity: 0, y: -50 }}
                 transition={{ duration: animTime, delay: 0.2 }}
               >
                 <CollectionDetailsCard
-                  cell1={COLLECTION_DETAILS.cell1}
-                  cell2={COLLECTION_DETAILS.cell2}
-                  cell3={COLLECTION_DETAILS.cell3}
+                  cell1={content.category}
+                  cell2={`${content.axis} axis`}
+                  cell3={`${content.totalGlyphs} glyphs`}
                   cell4={COLLECTION_DETAILS.cell4}
-                  cell5={COLLECTION_DETAILS.cell5}
-                  cell6={COLLECTION_DETAILS.cell6}
+                  cell5="Latin"
+                  cell6={`${content.hasHangul ? "Hangul" : "No Hangul"}`}
                 />
               </motion.div>
             )}
           </AnimatePresence>
-        </Link>
+        </button>
 
         {/* Info Grid - Below the collection name */}
       </motion.div>
@@ -190,9 +191,9 @@ export default function CollectionCard({
             animate={{
               scale: 1,
               opacity: 1,
-              width: isHovered ? "80vw" : "23vw",
-              height: isHovered ? "70vh" : "80vh",
-              borderRadius: isHovered ? "0px" : "40vw",
+              width: isNavigating ? "100vw" : isHovered ? "70vh" : "23vw",
+              height: isNavigating ? "100vh" : isHovered ? "70vh" : "80vh",
+              borderRadius: isNavigating ? 0 : isHovered ? "50vw" : "40vw",
             }}
             exit={{ scale: 0, opacity: 0 }}
             transition={{ duration: animTime }}
@@ -201,15 +202,16 @@ export default function CollectionCard({
               <motion.div
                 className="absolute z-[5] w-full h-full bottom-0"
                 style={{
-                  background:
-                    "linear-gradient(0deg,rgba(0, 0, 0, 1) 1%, rgba(255, 94, 0, 1) 89%)",
+                  background: `linear-gradient(0deg,rgba(0, 0, 0, 1) 1%, #${content.color} 89%)`,
                 }}
                 animate={{
+                  opacity: isNavigating ? 0 : 1,
                   height: isHovered ? 0 : "100%",
                 }}
                 transition={{ duration: animTime }}
               />
               <VideoPlayerMux
+                className="scale-200"
                 title={content?.name}
                 autoplay={isHovered}
                 playbackId={

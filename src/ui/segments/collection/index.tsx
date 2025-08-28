@@ -130,13 +130,16 @@ export default function CollectionPage({
       {/* Horizontal scrolling section (Weights, Character Set, Font Info) */}
       <CollectionHorizontal content={content} />
 
-      {/* Shop Packages section - scrolls vertically after horizontal section */}
-      <section className="relative h-[100vh] w-screen bg-[#efefef] z-10">
+      {/* Shop Packages section - becomes fixed when scrolled to */}
+      <section className="relative h-screen w-screen bg-transparent">
         <ShopPackages content={content} />
       </section>
 
-      {/* Discover More Collections section */}
-      <section className="relative h-[100vh] w-full bg-transparent z-10">
+      {/* Spacer to maintain scroll position when ShopPackage becomes fixed */}
+      <div className="h-screen w-full bg-transparent" />
+
+      {/* Discover More Collections section - scrolls over ShopPackage */}
+      <section className="relative h-screen w-full bg-transparent z-30">
         <DiscoverMoreCollections content={allTypefaces} />
       </section>
 

@@ -74,6 +74,10 @@ export type designers = {
 export type typeface = {
   _id: string;
   name: string;
+  color: string;
+  category: string;
+  axis: number;
+  axisNames: string[];
   slug: string;
   description: string;
   pricePerFont: number;

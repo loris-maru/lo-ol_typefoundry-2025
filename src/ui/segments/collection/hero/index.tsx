@@ -94,9 +94,13 @@ export default function VideoHero({
         <div className="fixed top-4 left-4 z-[-1] pointer-events-none">
           <div className="pointer-events-auto border border-black text-black shadow-sm backdrop-blur-sm">
             <div className="divide-y divide-black text-xs leading-tight font-kronik font-medium">
-              <div className="px-3 py-2">Total of 76 fonts</div>
-              <div className="px-3 py-2">3 Axis</div>
-              <div className="px-3 py-2">Weight, Width, Slant</div>
+              <div className="px-3 py-2">{content.name} Collection</div>
+              <div className="px-3 py-2">
+                Total of {content.singleFontList.length} fonts
+              </div>
+              <div className="px-3 py-2">
+                Axis: {content.axisNames.join(", ")}
+              </div>
             </div>
           </div>
         </div>

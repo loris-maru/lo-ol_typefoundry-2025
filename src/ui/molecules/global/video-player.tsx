@@ -4,6 +4,7 @@ import MuxPlayer from "@mux/mux-player-react";
 
 export default function VideoPlayerMux({
   title,
+  className,
   playbackId,
   preload = "none",
   bgOpacity = 1,
@@ -11,6 +12,7 @@ export default function VideoPlayerMux({
   onLoaded,
 }: {
   title: string;
+  className?: string;
   playbackId: string;
   preload?: string;
   bgOpacity?: number;
@@ -47,7 +49,7 @@ export default function VideoPlayerMux({
         right: 0,
         bottom: 0,
       }}
-      className="w-full h-full"
+      className={className}
       primaryColor="#000000"
       secondaryColor="#ffffff"
     />

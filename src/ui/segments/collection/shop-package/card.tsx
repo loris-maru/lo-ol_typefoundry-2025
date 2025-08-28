@@ -8,6 +8,7 @@ export type PackageCardType = {
   content: typeface;
   isInView: boolean;
   pkg: Package;
+  videoUrl: string;
   idx: number;
   isHovered: boolean;
   onHoverChange: (isHovered: boolean) => void;
@@ -18,6 +19,7 @@ export default function PackageCard({
   isInView,
   pkg,
   idx,
+  videoUrl,
   isHovered,
   onHoverChange,
 }: PackageCardType) {
@@ -31,7 +33,7 @@ export default function PackageCard({
 
   return (
     <motion.div
-      className="relative w-full h-full rounded-2xl overflow-hidden"
+      className="relative w-full h-[60vh] rounded-2xl overflow-hidden"
       onMouseEnter={() => onHoverChange(true)}
       onMouseLeave={() => onHoverChange(false)}
       animate={{
@@ -43,6 +45,7 @@ export default function PackageCard({
       {/* Video Background */}
       <div className="absolute z-0 inset-0 w-full h-full">
         <video
+          src={videoUrl}
           ref={(el) => {
             if (el) {
               if (isHovered) {
@@ -56,11 +59,7 @@ export default function PackageCard({
           muted
           playsInline
           className="w-full h-full object-cover"
-        >
-          <source src={pkg.videoBg} type="video/mp4" />
-          {/* Fallback background color if video fails to load */}
-          <div className="w-full h-full bg-gradient-to-br from-blue-900 to-purple-900" />
-        </video>
+        />
 
         {/* Blur Effect - dissolves on hover */}
         <motion.div
