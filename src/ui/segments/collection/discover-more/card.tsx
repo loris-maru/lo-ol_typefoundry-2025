@@ -17,7 +17,7 @@ interface CollectionCardProps {
   content: typeface;
   index: number;
   isActive: boolean;
-  onNavigate?: () => void; // Callback to trigger navigation animation
+  onNavigate?: () => void;
 }
 
 export default function CollectionCard({

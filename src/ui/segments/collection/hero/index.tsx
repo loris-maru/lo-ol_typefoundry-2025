@@ -77,12 +77,10 @@ export default function VideoHero({
         {/* Background title behind the video */}
         <div className="fixed inset-0 z-[-1] flex items-center justify-center pointer-events-none">
           <div
-            className="text-center leading-[0.85] text-black select-none w-full"
+            className="flex flex-col items-center text-center leading-[0.85] text-black select-none w-full"
             style={{
               fontFamily: fontName,
-              fontVariationSettings: `'wght' ${fuWeight
-                .get()
-                .toFixed(1)}, 'wdth' 900, 'slnt' 0, 'opsz' 900`,
+              fontVariationSettings: `'wght' 900, 'wdth' 900, 'slnt' 0, 'opsz' 900`,
             }}
           >
             <div className="text-[20vw] w-full">{content.name}</div>
@@ -127,7 +125,7 @@ export default function VideoHero({
 
             <div className="mt-1 text-white leading-[1] text-[22px] font-kronik">
               <div className="mb-2">Discover a new</div>
-              <div>sans-serif typeface</div>
+              <div>{content.category} typeface</div>
             </div>
           </motion.div>
 

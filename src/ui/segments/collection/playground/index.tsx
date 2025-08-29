@@ -17,11 +17,14 @@ export default function Playground({ content }: { content: typeface }) {
     { type: "three", id: 3 },
   ]);
 
-  // Global scroll progress to drive width/height/radius
-  const { scrollYProgress } = useScroll();
+  // Scroll progress based on PlaygroundHeader reaching the top
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "start start"],
+  });
 
-  const width = useTransform(scrollYProgress, [0, 0.3], ["50vw", "100vw"]);
-  const radius = useTransform(scrollYProgress, [0, 0.3], ["50px", "0px"]);
+  const width = useTransform(scrollYProgress, [0, 1], ["50vw", "100vw"]);
+  const radius = useTransform(scrollYProgress, [0, 1], ["50px", "0px"]);
 
   // Early fade-in on first part of page scroll (optional polish)
   const { scrollY } = useScroll();
@@ -59,7 +62,9 @@ export default function Playground({ content }: { content: typeface }) {
           style={{ width, borderRadius: radius }}
         >
           <div className="relative flex flex-col w-full gap-4 pb-16">
-            <PlaygroundHeader content={content} />
+            <div ref={sectionRef}>
+              <PlaygroundHeader content={content} />
+            </div>
 
             {/* Column Sections */}
             <div className="w-full mt-3">

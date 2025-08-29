@@ -127,7 +127,10 @@ export default function PackageCard({
             <div className="flex flex-row justify-between items-center">
               <div
                 className="text-5xl font-bold"
-                style={{ fontFamily: fontFamily }}
+                style={{
+                  fontFamily: fontFamily,
+                  fontVariationSettings: `'wdth' 900`,
+                }}
               >
                 {pkg.price}
               </div>
