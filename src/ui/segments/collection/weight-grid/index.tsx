@@ -46,10 +46,10 @@ export default function WeightGrid({ content }: { content: typeface }) {
         {WEIGHTS.map((card: WeightDef, idx: number) => (
           <WeightCard
             key={`${card.abbr}-${card.value}`}
-            content={card}
+            card={card}
+            content={content}
             hasWidth={content.has_wdth}
             familyAbbreviation={familyAbbreviation}
-            fontName={fontFamily}
             onMouseEnter={() => setHovered(idx)}
             onMouseLeave={() => setHovered(null)}
             idx={idx}

@@ -1,26 +1,57 @@
 import { WeightDef } from "@/app/content/WEIGHTS-LIST";
+import { typeface } from "@/types/typefaces";
+import { cn } from "@/utils/classNames";
+import slugify from "@/utils/slugify";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import ButtonScript from "./button-script";
+import OpticalSizeSlider from "./sliders/optical-size";
+import SlantSlider from "./sliders/slant";
+import WidthSlider from "./sliders/width";
 
 export default function WeightCard({
+  card,
   content,
   hasWidth,
   onMouseEnter,
   onMouseLeave,
   familyAbbreviation,
-  fontName,
   idx,
 }: {
-  content: WeightDef;
+  card: WeightDef;
+  content: typeface;
   hasWidth: boolean;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
   familyAbbreviation: string;
-  fontName: string;
   idx: number;
 }) {
-  const [isHovered, setIsHovered] = useState(false);
-  const [widthValue, setWidthValue] = useState(100);
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [widthValue, setWidthValue] = useState<number>(100);
+  const [opticalSizeValue, setOpticalSizeValue] = useState<number>(100);
+  const [slantValue, setSlantValue] = useState<number>(0);
+  const [script, setScript] = useState<"latin" | "hangul">("latin");
+
+  const widthSettings = {
+    min: 100,
+    max: 900,
+    step: 1,
+    value: 100,
+  };
+
+  const opticalSizeSettings = {
+    min: 100,
+    max: 900,
+    step: 1,
+    value: 100,
+  };
+
+  const slantSettings = {
+    min: 0,
+    max: 90,
+    step: 1,
+    value: 0,
+  };
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -32,6 +63,8 @@ export default function WeightCard({
     onMouseLeave();
   };
 
+  const fontName = slugify(content.name);
+
   return (
     <div
       className="relative overflow-hidden p-6 border border-solid border-white"
@@ -39,7 +72,7 @@ export default function WeightCard({
       onMouseLeave={handleMouseLeave}
     >
       {/* Card surface */}
-      <div className="absolute inset-0 bg-black shadow-[inset_0_0_0_1px_rgba(0,0,0,0.06)]" />
+      <div className="absolute inset-0 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.06)] bg-black transition-colors duration-300 ease-linear" />
 
       {/* Content */}
       <div className="relative z-10 h-full w-full flex flex-col justify-between text-white">
@@ -49,16 +82,24 @@ export default function WeightCard({
               className="text-6xl w-36 h-36 rounded-full border border-solid border-white flex items-center justify-center"
               style={{
                 fontFamily: fontName,
-                fontVariationSettings: `'wght' ${content.value}, 'wdth' ${widthValue}`,
+                fontVariationSettings: `'wght' ${card.value}, 'wdth' ${
+                  content.has_wdth ? widthValue : 900
+                }, 'opsz' ${
+                  content.has_opsz ? opticalSizeValue : 900
+                }, 'slnt' ${content.has_slnt ? slantValue : 0} `,
               }}
             >
-              {content.abbr}
+              {card.abbr}
             </div>
             <div
               className="text-6xl w-36 h-36 rounded-full bg-white text-black flex items-center justify-center"
               style={{
                 fontFamily: fontName,
-                fontVariationSettings: `'wght' ${content.value}, 'wdth' ${widthValue}`,
+                fontVariationSettings: `'wght' ${card.value}, 'wdth' ${
+                  content.has_wdth ? widthValue : 900
+                }, 'opsz' ${
+                  content.has_opsz ? opticalSizeValue : 900
+                }, 'slnt' ${content.has_slnt ? slantValue : 0} `,
               }}
             >
               {familyAbbreviation}
@@ -70,30 +111,47 @@ export default function WeightCard({
             <div className="relative -top-4 text-[5.5vw] whitespace-nowrap overflow-hidden">
               {/* Weight Name - Slides in first */}
               <motion.span
-                className="inline-block mr-6 text-[7.6vw]"
+                className={cn(
+                  "inline-block mr-6",
+                  script === "latin" ? "text-[7.6vw]" : "text-[5.5vw]"
+                )}
                 style={{
                   fontFamily: fontName,
-                  fontVariationSettings: `'wght' ${content.value}, 'wdth' ${widthValue}`,
+                  fontVariationSettings: `'wght' ${card.value}, 'wdth' ${
+                    content.has_wdth ? widthValue : 900
+                  }, 'opsz' ${
+                    content.has_opsz ? opticalSizeValue : 900
+                  }, 'slnt' ${content.has_slnt ? slantValue : 0} `,
                 }}
                 initial={{ y: "100%", opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
               >
-                {content.name}
+                {content.hasHangul
+                  ? script === "latin"
+                    ? card.name
+                    : card.hangul
+                  : card.name}
               </motion.span>
 
               {/* Weight Value - Slides in second with delay */}
               <motion.span
-                className="text-[7.6vw]"
+                className={cn(
+                  script === "latin" ? "text-[7.6vw]" : "text-[5.5vw]"
+                )}
                 style={{
                   fontFamily: fontName,
-                  fontVariationSettings: `'wght' ${content.value}, 'wdth' ${widthValue}`,
+                  fontVariationSettings: `'wght' ${card.value}, 'wdth' ${
+                    content.has_wdth ? widthValue : 900
+                  }, 'opsz' ${
+                    content.has_opsz ? opticalSizeValue : 900
+                  }, 'slnt' ${content.has_slnt ? slantValue : 0} `,
                 }}
                 initial={{ y: "100%", opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.4, ease: "easeOut", delay: 0.3 }}
               >
-                {content.value}
+                {card.value}
               </motion.span>
             </div>
           )}
@@ -103,23 +161,29 @@ export default function WeightCard({
           <div className="text-base font-medium">#{idx + 1}</div>
 
           {/* Width Slider - Only visible on hover */}
-          {isHovered && hasWidth && (
-            <div className="flex flex-row items-center gap-2">
-              <span className="text-sm text-white/80">Width:</span>
-              <input
-                type="range"
-                min="100"
-                max="900"
-                step="1"
-                value={widthValue}
-                onChange={(e) => setWidthValue(Number(e.target.value))}
-                className="w-24 h-2 appearance-none bg-white/20 rounded-full slider-custom"
-                aria-label="Width axis"
-              />
-              <span className="text-sm text-white/60 w-8 text-right">
-                {widthValue}
-              </span>
-            </div>
+          {isHovered && content.has_wdth && (
+            <WidthSlider
+              widthValue={widthValue}
+              setWidthValue={setWidthValue}
+              widthSettings={widthSettings}
+            />
+          )}
+          {isHovered && content.has_opsz && (
+            <OpticalSizeSlider
+              opticalSizeValue={opticalSizeValue}
+              setOpticalSizeValue={setOpticalSizeValue}
+              opticalSizeSettings={opticalSizeSettings}
+            />
+          )}
+          {isHovered && content.has_slnt && (
+            <SlantSlider
+              slantValue={slantValue}
+              setSlantValue={setSlantValue}
+              slantSettings={slantSettings}
+            />
+          )}
+          {isHovered && content.hasHangul && (
+            <ButtonScript activeScript={script} setActiveScript={setScript} />
           )}
         </div>
       </div>
@@ -128,8 +192,8 @@ export default function WeightCard({
         .slider-custom::-webkit-slider-thumb {
           -webkit-appearance: none;
           appearance: none;
-          width: 16px;
-          height: 16px;
+          width: 22px;
+          height: 22px;
           border-radius: 50%;
           background: white;
           cursor: pointer;
@@ -137,8 +201,8 @@ export default function WeightCard({
         }
 
         .slider-custom::-moz-range-thumb {
-          width: 16px;
-          height: 16px;
+          width: 22px;
+          height: 22px;
           border-radius: 50%;
           background: white;
           cursor: pointer;
@@ -146,15 +210,15 @@ export default function WeightCard({
         }
 
         .slider-custom::-webkit-slider-track {
-          background: rgba(255, 255, 255, 0.2);
+          background: white;
           border-radius: 9999px;
-          height: 8px;
+          height: 2px;
         }
 
         .slider-custom::-moz-range-track {
-          background: rgba(255, 255, 255, 0.2);
+          background: white;
           border-radius: 9999px;
-          height: 8px;
+          height: 2px;
         }
       `}</style>
     </div>
