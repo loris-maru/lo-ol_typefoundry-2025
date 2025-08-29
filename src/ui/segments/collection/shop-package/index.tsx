@@ -50,7 +50,7 @@ export default function ShopPackages({ content }: { content: typeface }) {
     <section
       ref={sectionRef}
       className={cn(
-        "bg-[#EFEFEF] overflow-hidden px-[14vw] py-[16vh] gap-x-2 flex flex-row",
+        "bg-[#EFEFEF] overflow-hidden px-[14vw] py-[12vh] gap-x-2 flex flex-row",
         isFixed && "fixed top-0 left-0 w-full h-screen z-20"
       )}
     >

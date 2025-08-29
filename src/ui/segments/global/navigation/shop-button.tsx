@@ -23,11 +23,11 @@ export default function ShopButton({ content }: ShopButtonProps) {
 
   return (
     <motion.nav
-      className="fixed right-4 top-4 z-50"
+      className="fixed right-20 top-4 z-50"
       animate={{
         width: shopOpen ? "100vw" : "46px",
         height: shopOpen ? "100vh" : "46px",
-        right: shopOpen ? 0 : "16px",
+        right: shopOpen ? 0 : "80px",
         top: shopOpen ? 0 : "16px",
       }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
@@ -40,7 +40,9 @@ export default function ShopButton({ content }: ShopButtonProps) {
         }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
       >
-        {!shopOpen && <span className="text-sm font-medium">Buy</span>}
+        {!shopOpen && (
+          <span className="text-sm font-medium font-whisper">Buy</span>
+        )}
       </motion.button>
 
       {/* Shop Content - Only appears after expansion */}

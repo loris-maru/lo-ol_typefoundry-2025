@@ -6,7 +6,9 @@ import SingleFontItem from "@/ui/segments/collection/shop/item";
 export default function Shop({ content }: { content: typeface }) {
   return (
     <div className="relative w-full h-full flex flex-col">
-      <h1 className="text-6xl font-medium font-whisper mb-8">Shop</h1>
+      <h1 className="text-xl font-medium font-whisper mb-8 uppercase tracking-widest">
+        Shop
+      </h1>
       <div className="flex-1 overflow-y-auto scrollbar-hide">
         <div className="flex flex-col space-y-6">
           {content.singleFontList.map((font: singleFont) => {

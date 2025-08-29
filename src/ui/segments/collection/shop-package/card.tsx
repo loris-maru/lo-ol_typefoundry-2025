@@ -113,7 +113,7 @@ export default function PackageCard({
           >
             {/* Font List Container */}
             <div>
-              <div className="text-base text-white font-normal font-kronik">
+              <div className="text-base text-white font-normal font-whisper leading-[1.6]">
                 {pkg.fonts.map((font, index) => (
                   <span key={font.weight}>
                     {font.weight}, {font.italic}

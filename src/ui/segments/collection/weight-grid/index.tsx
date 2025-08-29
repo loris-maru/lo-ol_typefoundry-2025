@@ -29,14 +29,14 @@ export default function WeightGrid({ content }: { content: typeface }) {
   const familyAbbreviation = content.name.slice(0, 2);
 
   return (
-    <section className="relative w-full bg-white overflow-hidden">
+    <section className="relative w-screen h-screen bg-white overflow-hidden">
       <motion.div
-        className="relative w-full h-full grid gap-0"
+        className="relative w-full h-full grid gap-0 transition-all"
         style={{
           gridTemplateColumns: columns,
           gridTemplateRows: rows,
         }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
       >
         {WEIGHTS.map((weight: WeightDef, index: number) => (
           <WeightCard

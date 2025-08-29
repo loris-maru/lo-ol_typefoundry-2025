@@ -77,7 +77,7 @@ export default function CollectionPage({
 
   if (!isFullyLoaded) {
     return (
-      <div className="relative w-screen h-screen p-6 bg-black text-white font-kronik overflow-hidden">
+      <div className="relative w-screen h-screen p-6 bg-black text-white font-whisper overflow-hidden">
         {/* Progress Bar Background */}
         <div className="absolute inset-0 bg-black">
           {/* Progress Bar */}

@@ -22,11 +22,11 @@ export default function MenuButton() {
 
   return (
     <motion.nav
-      className="fixed right-20 top-4 z-50"
+      className="fixed right-32 top-4 z-50"
       animate={{
         width: menuOpen ? "100vw" : "46px",
         height: menuOpen ? "100vh" : "46px",
-        right: menuOpen ? 0 : "80px",
+        right: menuOpen ? 0 : "128px",
         top: menuOpen ? 0 : "16px",
       }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
