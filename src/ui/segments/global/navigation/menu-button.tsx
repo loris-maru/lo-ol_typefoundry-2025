@@ -1,5 +1,6 @@
 "use client";
 
+import { useScrollBlock } from "@/hooks/useScrollBlock";
 import { useMenuStore } from "@/states/menu";
 import { AnimatePresence, motion } from "framer-motion";
 import { FiMenu } from "react-icons/fi";
@@ -7,6 +8,9 @@ import CloseButton from "./close-button";
 
 export default function MenuButton() {
   const { menuOpen, setMenuOpen } = useMenuStore();
+
+  // Block page scrolling when menu is open
+  useScrollBlock(menuOpen);
 
   const handleMenuClick = () => {
     setMenuOpen(true);

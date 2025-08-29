@@ -1,6 +1,9 @@
 "use client";
 
+import { TypefaceSettings } from "@/types/playground";
 import { typeface } from "@/types/typefaces";
+import SettingButton from "@/ui/segments/collection/playground/setting-button";
+import SettingMenu from "@/ui/segments/collection/playground/setting-menu";
 import { cn } from "@/utils/classNames";
 import slugify from "@/utils/slugify";
 import { motion } from "framer-motion";
@@ -11,8 +14,6 @@ import {
   useRef,
   useState,
 } from "react";
-import SettingButton from "./setting-button";
-import SettingMenu from "./setting-menu";
 
 export type TypeTesterBlockProps = {
   defaultFontSize: number;
@@ -35,15 +36,21 @@ export default function TypeTesterBlock({
   columns,
   content,
 }: TypeTesterBlockProps) {
+  // FONT SETTINGS
   const [menuOpen, setMenuOpen] = useState(false);
   const [wght, setWght] = useState(defaultWeight);
   const [wdth, setWdth] = useState(defaultWidth);
   const [slnt, setSlant] = useState(defaultSlant);
   const [lh, setLh] = useState(defaultLineHeight);
+  const [opsz, setOpsz] = useState<number>(900);
   const [fontSize, setFontSize] = useState(defaultFontSize);
+  const [italic, setItalic] = useState<boolean>(false);
+
+  // EDITABLE CONTENT
   const [editableContent, setEditableContent] = useState(defaultText);
   const [showPlaceholder, setShowPlaceholder] = useState(true);
 
+  // REF
   const editableRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
@@ -137,6 +144,25 @@ export default function TypeTesterBlock({
     }
   };
 
+  const typefaceSettings: TypefaceSettings = {
+    wght: wght,
+    setWght: setWght,
+    has_wdth: content.has_wdth,
+    wdth: wdth,
+    setWdth: setWdth,
+    has_slnt: content.has_slnt,
+    slnt: slnt,
+    setSlnt: setSlant,
+    has_opsz: content.has_opsz,
+    opsz: opsz,
+    setOpsz: setOpsz,
+    has_italic: content.has_italic,
+    italic: italic,
+    setItalic: setItalic,
+    lh: lh,
+    setLh: setLh,
+  };
+
   const fontFamily = slugify(content.name);
 
   return (
@@ -176,16 +202,7 @@ export default function TypeTesterBlock({
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.1 }}
           >
-            <SettingMenu
-              wght={wght}
-              setWght={setWght}
-              wdth={wdth}
-              setWdth={setWdth}
-              slnt={slnt}
-              setSlnt={setSlant}
-              lh={lh}
-              setLh={setLh}
-            />
+            <SettingMenu settings={typefaceSettings} />
           </motion.div>
         )}
       </div>

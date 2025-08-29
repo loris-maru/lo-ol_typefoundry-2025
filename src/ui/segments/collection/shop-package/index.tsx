@@ -2,10 +2,10 @@
 
 import { PACKAGES } from "@/app/content/PACKAGES";
 import { typeface } from "@/types/typefaces";
+import PackageCard from "@/ui/segments/collection/shop-package/card";
 import { cn } from "@/utils/classNames";
 import { useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import PackageCard from "./card";
 
 export default function ShopPackages({ content }: { content: typeface }) {
   const sectionRef = useRef<HTMLDivElement>(null);

@@ -1,7 +1,7 @@
 "use client";
 
 import { typeface } from "@/types/typefaces";
-import TypeTesterBlock from "./type-tester-block";
+import TypeTesterBlock from "@/ui/segments/collection/playground/type-tester-block";
 
 export default function ThreeColumnSection({ content }: { content: typeface }) {
   const text1 =

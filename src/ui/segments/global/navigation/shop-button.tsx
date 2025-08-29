@@ -1,9 +1,10 @@
 "use client";
 
+import { useScrollBlock } from "@/hooks/useScrollBlock";
 import { useShopStore } from "@/states/shop";
 import { typeface } from "@/types/typefaces";
+import Shop from "@/ui/segments/collection/shop";
 import { AnimatePresence, motion } from "framer-motion";
-import Shop from "../../collection/shop";
 import CloseButton from "./close-button";
 
 interface ShopButtonProps {
@@ -12,6 +13,9 @@ interface ShopButtonProps {
 
 export default function ShopButton({ content }: ShopButtonProps) {
   const { shopOpen, setShopOpen } = useShopStore();
+
+  // Block page scrolling when shop is open
+  useScrollBlock(shopOpen);
 
   const handleShopClose = () => {
     setShopOpen(false);

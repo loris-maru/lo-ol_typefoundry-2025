@@ -45,16 +45,27 @@ export type muxVideos = {
 export type singleFont = {
   _key: string;
   _type: string;
-  hasOpticalSize: boolean;
-  hasSerif: boolean;
-  hasSlant: boolean;
-  hasWidth: boolean;
-  has_MONO: boolean;
-  has_STEN: boolean;
-  inPackage: string;
-  isItalic: boolean;
   weightName: string;
   weightValue: number;
+  hasWidth: boolean;
+  widthName: string;
+  widthValue: number;
+  hasOpticalSize: boolean;
+  opticalSizeName: string;
+  opticalSizeValue: number;
+  hasSlant: boolean;
+  slantName: string;
+  slantValue: number;
+  isItalic: boolean;
+  hasSerif: boolean;
+  serifStyleValue: number;
+  has_MONO: boolean;
+  monoStyleName: string;
+  monoStyleValue: number;
+  has_STEN: boolean;
+  stencilStyleName: string;
+  stencilStyleValue: number;
+  inPackage: string;
 };
 
 export type singleWeight = {
@@ -120,4 +131,11 @@ export type typeface = {
   trialFont: string;
   weightList: singleWeight[];
   designers: designers[];
+};
+
+export type FontSettings = {
+  hasOpticalSize: boolean;
+  hasSlant: boolean;
+  hasWidth: boolean;
+  isItalic: boolean;
 };

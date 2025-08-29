@@ -1,16 +1,16 @@
 "use client";
 
-import VideoHero from "./hero";
-import Playground from "./playground";
+import VideoHero from "@/ui/segments/collection/hero";
+import Playground from "@/ui/segments/collection/playground";
 // adjust path if Playground is separate
 import { typeface } from "@/types/typefaces";
+import DiscoverMoreCollections from "@/ui/segments/collection/discover-more";
+import CollectionHorizontal from "@/ui/segments/collection/horizontal-scroll-block";
+import ShopPackages from "@/ui/segments/collection/shop-package";
 import slugify from "@/utils/slugify";
 import { useFont } from "@react-hooks-library/core";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
-import DiscoverMoreCollections from "./discover-more";
-import CollectionHorizontal from "./horizontal-scroll-block";
-import ShopPackages from "./shop-package";
 
 export default function CollectionPage({
   content,

@@ -1,6 +1,6 @@
+import { TextBlock as TextBlockType } from "@/states/playground";
+import SettingsMenu from "@/ui/segments/collection/playground/settings-menu";
 import { useState } from "react";
-import { TextBlock as TextBlockType } from "../../../../states/playground";
-import SettingsMenu from "./settings-menu";
 
 interface TextBlockProps {
   block: TextBlockType;

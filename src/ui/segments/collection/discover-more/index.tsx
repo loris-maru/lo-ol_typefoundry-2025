@@ -1,13 +1,13 @@
 "use client";
 
 import { typeface } from "@/types/typefaces";
+import CollectionCard from "@/ui/segments/collection/discover-more/card";
+import InternalNavigation from "@/ui/segments/collection/discover-more/internal-navigation";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { motion, useScroll, useTransform } from "framer-motion";
 import "keen-slider/keen-slider.min.css";
-import { KeenSliderInstance, useKeenSlider } from "keen-slider/react";
+import { useKeenSlider } from "keen-slider/react";
 import { useRef, useState } from "react";
-import CollectionCard from "./card";
-import InternalNavigation from "./internal-navigation";
 
 export default function DiscoverMoreCollections({
   content,
@@ -141,7 +141,7 @@ export default function DiscoverMoreCollections({
             content={content}
             currentSlide={currentSlide}
             setCurrentSlide={setCurrentSlide}
-            instanceRef={instanceRef as React.RefObject<KeenSliderInstance>}
+            instanceRef={instanceRef as React.RefObject<any>}
           />
         </div>
       </motion.div>

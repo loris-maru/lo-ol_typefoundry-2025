@@ -1,18 +1,17 @@
 import { WeightDef } from "@/app/content/WEIGHTS-LIST";
 import { typeface } from "@/types/typefaces";
+import ButtonScript from "@/ui/segments/collection/weight-grid/button-script";
+import OpticalSizeSlider from "@/ui/segments/collection/weight-grid/sliders/optical-size";
+import SlantSlider from "@/ui/segments/collection/weight-grid/sliders/slant";
+import WidthSlider from "@/ui/segments/collection/weight-grid/sliders/width";
 import { cn } from "@/utils/classNames";
 import slugify from "@/utils/slugify";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import ButtonScript from "./button-script";
-import OpticalSizeSlider from "./sliders/optical-size";
-import SlantSlider from "./sliders/slant";
-import WidthSlider from "./sliders/width";
 
 export default function WeightCard({
   card,
   content,
-  hasWidth,
   onMouseEnter,
   onMouseLeave,
   familyAbbreviation,
@@ -20,7 +19,6 @@ export default function WeightCard({
 }: {
   card: WeightDef;
   content: typeface;
-  hasWidth: boolean;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
   familyAbbreviation: string;

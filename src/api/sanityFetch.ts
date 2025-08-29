@@ -1,4 +1,4 @@
-import { sanityServer } from "./sanity";
+import { sanityServer } from "@/api/sanity";
 
 export async function sanityFetch<T>(
   query: string,

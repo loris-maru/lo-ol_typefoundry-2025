@@ -1,12 +1,11 @@
 "use client";
 
+import { typeface } from "@/types/typefaces";
+import CharacterSetPanel from "@/ui/segments/collection/character-set";
+import FontInfoPanel from "@/ui/segments/collection/font-info";
+import WeightGrid from "@/ui/segments/collection/weight-grid";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-// import WeightsGridPanel from ".";
-import { typeface } from "@/types/typefaces";
-import CharacterSetPanel from "./character-set";
-import FontInfoPanel from "./font-info";
-import WeightGrid from "./weight-grid";
 
 export default function CollectionHorizontal({
   content,

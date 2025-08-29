@@ -1,13 +1,13 @@
 "use client";
 
 import { typeface } from "@/types/typefaces";
+import AddBlock from "@/ui/segments/collection/playground/blocks/add-block";
+import OneColumnSection from "@/ui/segments/collection/playground/blocks/one-column-section";
+import ThreeColumnSection from "@/ui/segments/collection/playground/blocks/three-column-section";
+import TwoColumnSection from "@/ui/segments/collection/playground/blocks/two-column-section";
+import PlaygroundHeader from "@/ui/segments/collection/playground/header";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
-import AddBlock from "./add-block";
-import PlaygroundHeader from "./header";
-import OneColumnSection from "./one-column-section";
-import ThreeColumnSection from "./three-column-section";
-import TwoColumnSection from "./two-column-section";
 
 export default function Playground({ content }: { content: typeface }) {
   const sectionRef = useRef<HTMLDivElement>(null);

@@ -1,23 +1,45 @@
 "use client";
 
-import { singleFont, typeface } from "@/types/typefaces";
-import SingleFontItem from "./item";
+import { FontSettings, singleFont, typeface } from "@/types/typefaces";
+import SingleFontItem from "@/ui/segments/collection/shop/item";
 
 export default function Shop({ content }: { content: typeface }) {
-  console.log("Content is: ", content.singleFontList);
-
   return (
-    <div className="relative w-full h-full">
-      <h1 className="text-6xl font-medium font-whisper">Shop</h1>
-      <div className="flex flex-col">
-        {content.singleFontList.map((font: singleFont) => (
-          <SingleFontItem
-            key={font._key}
-            familyName={content.name}
-            content={font}
-          />
-        ))}
+    <div className="relative w-full h-full flex flex-col">
+      <h1 className="text-6xl font-medium font-whisper mb-8">Shop</h1>
+      <div className="flex-1 overflow-y-auto scrollbar-hide">
+        <div className="flex flex-col space-y-6">
+          {content.singleFontList.map((font: singleFont) => {
+            const fontSettings: FontSettings = {
+              hasOpticalSize: font.hasOpticalSize,
+              hasSlant: font.hasSlant,
+              hasWidth: font.hasWidth,
+              isItalic: font.isItalic,
+            };
+            return (
+              <SingleFontItem
+                key={font._key}
+                content={font}
+                settings={fontSettings}
+                familyName={content.name}
+                price={content.pricePerFont}
+              />
+            );
+          })}
+        </div>
       </div>
+
+      <style jsx>{`
+        .scrollbar-hide {
+          -ms-overflow-style: none !important;
+          scrollbar-width: none !important;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
+        }
+      `}</style>
     </div>
   );
 }

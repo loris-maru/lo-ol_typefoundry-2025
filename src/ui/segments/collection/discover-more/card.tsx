@@ -4,6 +4,7 @@ import { COLLECTION_DETAILS } from "@/app/content/COLLECTION_DETAILS";
 import { typeface } from "@/types/typefaces";
 import { CursorTextCircle } from "@/ui/molecules/collection/discover-collection-cursor";
 import VideoPlayerMux from "@/ui/molecules/global/video-player";
+import CollectionDetailsCard from "@/ui/segments/collection/discover-more/collection-details-card";
 import slugify from "@/utils/slugify";
 import { useFont } from "@react-hooks-library/core";
 import { AnimatePresence, motion } from "framer-motion";
@@ -11,7 +12,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { BounceLoader } from "react-spinners";
 import { useMediaQuery } from "usehooks-ts";
-import CollectionDetailsCard from "./collection-details-card";
 
 interface CollectionCardProps {
   content: typeface;
