@@ -108,7 +108,7 @@ export default function CollectionCard({
                 initial={{ opacity: 0, y: 40 }}
                 animate={{
                   opacity: isNavigating ? 0 : 1,
-                  y: isHovered ? -50 : 10,
+                  y: isHovered ? 0 : 30,
                 }}
                 exit={{ opacity: 0, y: 50 }}
                 transition={{ duration: animTime }}
@@ -130,7 +130,7 @@ export default function CollectionCard({
                 initial={{ opacity: 0, y: 100 }}
                 animate={{
                   opacity: 1,
-                  y: isHovered ? 0 : 60,
+                  y: isHovered ? 0 : 30,
                 }}
                 exit={{ opacity: 0, y: -100 }}
                 transition={{ duration: animTime, delay: 0.1 }}

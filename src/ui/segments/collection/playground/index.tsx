@@ -17,18 +17,11 @@ export default function Playground({ content }: { content: typeface }) {
     { type: "three", id: 3 },
   ]);
 
-  // Local scroll progress to drive width/height/radius
-  const { scrollYProgress: localProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "start start"],
-  });
+  // Global scroll progress to drive width/height/radius
+  const { scrollYProgress } = useScroll();
 
-  const width = useTransform(localProgress, [0, 1], ["50vw", "100vw"]);
-  const height = useTransform(localProgress, [0, 1], ["80vh", "100vh"]);
-  const radius = useTransform(localProgress, [0, 1], ["50px", "0px"]);
-  const overflowY = useTransform(localProgress, (v) =>
-    v >= 1 ? "auto" : "hidden"
-  );
+  const width = useTransform(scrollYProgress, [0, 0.3], ["50vw", "100vw"]);
+  const radius = useTransform(scrollYProgress, [0, 0.3], ["50px", "0px"]);
 
   // Early fade-in on first part of page scroll (optional polish)
   const { scrollY } = useScroll();
@@ -58,12 +51,12 @@ export default function Playground({ content }: { content: typeface }) {
   return (
     <section ref={sectionRef} className="relative w-full">
       <motion.div
-        className="sticky top-0 z-20 flex items-center justify-center min-h-screen"
+        className="sticky top-0 z-20 flex items-start justify-center"
         style={{ opacity: earlyOpacity, pointerEvents: earlyPointer }}
       >
         <motion.div
-          className="font-fuzar relative flex w-full flex-col items-start justify-start overscroll-auto no-scrollbar bg-[#F5F5F5] p-10 scrollbar-hide"
-          style={{ width, height, borderRadius: radius, overflowY }}
+          className="font-fuzar relative flex w-full flex-col items-start justify-start bg-[#F5F5F5] p-10"
+          style={{ width, borderRadius: radius }}
         >
           <div className="relative flex flex-col w-full gap-4 pb-16">
             <PlaygroundHeader content={content} />
@@ -85,37 +78,6 @@ export default function Playground({ content }: { content: typeface }) {
             <AddBlock addSection={addSection} />
           </div>
         </motion.div>
-        <style jsx>{`
-          /* Hide scrollbars for all browsers */
-          .scrollbar-hide {
-            -ms-overflow-style: none !important; /* Internet Explorer 10+ */
-            scrollbar-width: none !important; /* Firefox */
-          }
-          .scrollbar-hide::-webkit-scrollbar {
-            display: none !important; /* Safari and Chrome */
-            width: 0 !important;
-            height: 0 !important;
-          }
-          .no-scrollbar {
-            -ms-overflow-style: none !important; /* Internet Explorer 10+ */
-            scrollbar-width: none !important; /* Firefox */
-          }
-          .no-scrollbar::-webkit-scrollbar {
-            display: none !important; /* Safari and Chrome */
-            width: 0 !important;
-            height: 0 !important;
-          }
-          /* Additional global scrollbar hiding */
-          * {
-            scrollbar-width: none !important;
-            -ms-overflow-style: none !important;
-          }
-          *::-webkit-scrollbar {
-            display: none !important;
-            width: 0 !important;
-            height: 0 !important;
-          }
-        `}</style>
       </motion.div>
     </section>
   );
