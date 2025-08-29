@@ -14,3 +14,18 @@ export type CollectionCardProps = {
   color: string;
   index: number;
 };
+
+export type FontsForList = {
+  _key: string;
+  _type: string;
+  hasOpticalSize: boolean;
+  hasSerif: boolean;
+  hasSlant: boolean;
+  hasWidth: boolean;
+  has_MONO: boolean;
+  has_STEN: boolean;
+  inPackage: string;
+  isItalic: boolean;
+  weightName: string;
+  weightValue: number;
+};

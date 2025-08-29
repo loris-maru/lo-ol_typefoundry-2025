@@ -67,11 +67,6 @@ export default function CollectionPage({
     }
   }, [fontLoaded, videoLoaded]);
 
-  // Debug logging
-  useEffect(() => {
-    console.log("Loading state:", { fontLoaded, videoLoaded, fakeProgress });
-  }, [fontLoaded, videoLoaded, fakeProgress]);
-
   if (error) {
     return (
       <div className="relative w-screen h-screen flex items-center justify-center text-red-700 text-lg">

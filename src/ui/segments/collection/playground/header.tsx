@@ -23,7 +23,7 @@ export default function PlaygroundHeader({ content }: { content: typeface }) {
       exit={{ opacity: 0, y: 50 }}
       transition={{ duration: 0.6, ease: "easeInOut" }}
     >
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-left text-neutral-500 text-sm border-y border-solid border-neutral-200 py-4 font-kronik">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-left text-neutral-500 text-sm border-y border-solid border-neutral-200 font-normal py-4 font-whisper">
         <div>
           <p>Typeface: {content.name}</p>
           <p>Designer: Noheul Lee</p>

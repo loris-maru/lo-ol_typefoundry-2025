@@ -14,7 +14,7 @@ export default function OpticalSizeSlider({
 }) {
   return (
     <div className="flex flex-row items-center gap-2">
-      <span className="text-sm text-white/80">Optical Size:</span>
+      <span className="text-base text-white font-whisper">Optical Size:</span>
       <input
         type="range"
         min={opticalSizeSettings.min}

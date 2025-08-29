@@ -1,12 +1,7 @@
 import { getAllTypefaces, getTypefaceBySlug } from "@/api/typefaces";
+import { PageProps } from "@/types/common";
 import CollectionPage from "@/ui/segments/collection";
 import { notFound } from "next/navigation";
-
-interface PageProps {
-  params: Promise<{
-    slug: string;
-  }>;
-}
 
 export default async function Page({ params }: PageProps) {
   try {

@@ -90,8 +90,8 @@ export default function VideoHero({
 
         {/* Small info block behind the video (top-4 left-4) */}
         <div className="fixed top-4 left-4 z-[-1] pointer-events-none">
-          <div className="pointer-events-auto border border-black text-black shadow-sm backdrop-blur-sm">
-            <div className="divide-y divide-black text-xs leading-tight font-kronik font-medium">
+          <div className="pointer-events-auto border border-black text-black">
+            <div className="divide-y divide-black text-xs leading-tight font-whisper font-medium">
               <div className="px-3 py-2">{content.name} Collection</div>
               <div className="px-3 py-2">
                 Total of {content.singleFontList.length} fonts
@@ -123,7 +123,7 @@ export default function VideoHero({
               {familyAbbreviation}
             </motion.div>
 
-            <div className="mt-1 text-white leading-[1] text-[22px] font-kronik">
+            <div className="mt-1 text-white leading-[1] text-[22px] font-whisper">
               <div className="mb-2">Discover a new</div>
               <div>{content.category} typeface</div>
             </div>

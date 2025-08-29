@@ -14,7 +14,7 @@ export default function WidthSlider({
 }) {
   return (
     <div className="flex flex-row items-center gap-2">
-      <span className="text-sm text-white/80">Width:</span>
+      <span className="text-base text-white font-whisper">Width:</span>
       <input
         type="range"
         min={widthSettings.min}

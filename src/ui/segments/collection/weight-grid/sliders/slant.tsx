@@ -14,7 +14,7 @@ export default function SlantSlider({
 }) {
   return (
     <div className="flex flex-row items-center gap-2">
-      <span className="text-sm text-white/80">Slant:</span>
+      <span className="text-base text-white font-whisper">Slant:</span>
       <input
         type="range"
         min={slantSettings.min}

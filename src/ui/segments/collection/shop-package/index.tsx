@@ -46,8 +46,6 @@ export default function ShopPackages({ content }: { content: typeface }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isFixed, sectionTop]);
 
-  console.log("Video url: ", videoUrl);
-
   return (
     <section
       ref={sectionRef}
