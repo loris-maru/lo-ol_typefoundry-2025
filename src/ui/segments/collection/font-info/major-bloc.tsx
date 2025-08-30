@@ -29,25 +29,25 @@ export default function MajorBlock({
         style={{
           color: mouseHover ? "white" : "black",
         }}
-        className="w-[40vw] flex flex-row gap-6 font-medium transition-all text-5xl duration-200 ease-in-out leading-[1] origin-top-left"
+        className="w-[30vw] flex flex-row gap-6 font-medium transition-all text-4xl duration-200 ease-in-out leading-[1] origin-top-left"
       >
         <div>0{index + 1}.</div>
         <h3>{title}</h3>
       </motion.div>
       <div
-        className="relative w-[40vw] flex flex-row gap-4 text-base text-white transition-opacity duration-100 ease-linear"
+        className="relative w-[60vw] flex flex-row justify-end gap-4 text-base text-white transition-opacity duration-100 ease-linear"
         style={{
           opacity: mouseHover ? 1 : 0,
         }}
       >
         {description.map((item: BlockContent, index: number) => (
           <div
-            className="flex flex-col items-start"
+            className="w-1/2 flex flex-col items-start"
             key={`${index}-${item.title}`}
           >
             <h4>{item.title}</h4>
             <div className="w-10 h-px bg-white my-2" />
-            <p className="line-clamp-4">{item.description}</p>
+            <p className="line-clamp-4 mb-4">{item.description}</p>
             {item.label && (
               <SmallLink label={item.label} link={item.link || ""} />
             )}

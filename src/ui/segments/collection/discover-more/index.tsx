@@ -33,7 +33,7 @@ export default function DiscoverMoreCollections({
 
   const borderRadius = useTransform(
     scrollYProgress,
-    [0, 0.7], // From entering screen to 70% of scroll progress
+    [0, 0.5], // From entering screen to 70% of scroll progress
     ["40px", "0px"] // From 40px to 0px (reaches 0 earlier)
   );
 

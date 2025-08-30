@@ -26,7 +26,7 @@ export default function CollectionLink({
       onBlur={() => setMouseHover(false)}
     >
       <div
-        className="text-3xl text-white font-whisper"
+        className="text-2xl text-white font-whisper"
         style={{ fontVariationSettings: `'wght' ${mouseHover ? 700 : 300}` }}
       >
         {label}

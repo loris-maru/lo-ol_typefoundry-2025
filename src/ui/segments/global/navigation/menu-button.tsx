@@ -81,7 +81,7 @@ export default function MenuButton({
           >
             <div
               id="collection-links-list"
-              className="relative w-3/4 flex flex-col gap-y-4 text-xl text-white pr-8"
+              className="relative w-3/4 flex flex-col gap-y-5 text-xl text-white pr-8"
             >
               {allTypefaces.map((typeface: typeface) => (
                 <div key={typeface.slug}>
@@ -117,7 +117,7 @@ export default function MenuButton({
         {menuOpen && (
           <CloseButton
             onClick={handleClose}
-            className="bg-white text-black hover:bg-gray-100"
+            className="bg-transparent text-white hover:bg-gray-100"
             zIndex={70}
           />
         )}

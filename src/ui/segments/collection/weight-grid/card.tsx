@@ -106,12 +106,17 @@ export default function WeightCard({
 
           {/* Weight Name and Value - Only visible on hover with slide-in animations */}
           {isHovered && (
-            <div className="relative -top-4 text-[5.5vw] whitespace-nowrap overflow-hidden">
+            <div
+              style={{
+                top: script === "latin" ? "-4" : "0",
+              }}
+              className="relative text-[5.5vw] whitespace-nowrap overflow-hidden"
+            >
               {/* Weight Name - Slides in first */}
               <motion.span
                 className={cn(
                   "inline-block mr-6",
-                  script === "latin" ? "text-[7.6vw]" : "text-[5.5vw]",
+                  script === "latin" ? "text-[7.6vw]" : "text-[5.5vw]"
                 )}
                 style={{
                   fontFamily: fontName,
@@ -135,7 +140,7 @@ export default function WeightCard({
               {/* Weight Value - Slides in second with delay */}
               <motion.span
                 className={cn(
-                  script === "latin" ? "text-[7.6vw]" : "text-[5.5vw]",
+                  script === "latin" ? "text-[7.6vw]" : "text-[5.5vw]"
                 )}
                 style={{
                   fontFamily: fontName,

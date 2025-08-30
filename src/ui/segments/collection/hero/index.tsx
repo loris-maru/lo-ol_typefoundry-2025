@@ -85,7 +85,7 @@ export default function VideoHero({
         {/* Background title behind the video */}
         <div className="fixed inset-0 z-[-1] flex items-center justify-center pointer-events-none">
           <div
-            className="flex flex-col items-center text-center leading-[0.85] text-black select-none w-full"
+            className="flex flex-col items-center text-center leading-[1] text-black select-none w-full"
             style={{
               fontFamily: fontName,
               fontVariationSettings: `'wght' 900, 'wdth' 900, 'slnt' 0, 'opsz' 900`,
