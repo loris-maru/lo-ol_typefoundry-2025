@@ -33,12 +33,12 @@ export default function CartButton() {
 
   return (
     <motion.nav
-      className="fixed right-4 top-4 z-50"
+      className="fixed right-4 top-4 z-40"
       animate={{
         width: cartOpen ? "400px" : "46px",
         height: cartOpen ? "600px" : "46px",
         right: cartOpen ? "16px" : "16px",
-        top: cartOpen ? "16px" : "16px",
+        top: cartOpen ? 0 : "16px",
       }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
     >

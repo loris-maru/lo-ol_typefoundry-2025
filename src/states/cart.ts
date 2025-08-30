@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 
 export type SingleCartItem = {
   _key: string;
+  fullName: string;
   license: string;
   users: [number, number];
   family: string;

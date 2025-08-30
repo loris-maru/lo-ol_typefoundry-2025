@@ -23,7 +23,7 @@ export default function ShopButton({ content }: ShopButtonProps) {
 
   return (
     <motion.nav
-      className="fixed right-20 top-4 z-50"
+      className="fixed right-20 top-4 z-[60]"
       animate={{
         width: shopOpen ? "100vw" : "46px",
         height: shopOpen ? "100vh" : "46px",
@@ -62,7 +62,7 @@ export default function ShopButton({ content }: ShopButtonProps) {
 
       {/* Close Button for Shop - Only visible when expanded */}
       <AnimatePresence>
-        {shopOpen && <CloseButton onClick={handleShopClose} />}
+        {shopOpen && <CloseButton onClick={handleShopClose} zIndex={70} />}
       </AnimatePresence>
     </motion.nav>
   );

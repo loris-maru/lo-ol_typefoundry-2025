@@ -52,7 +52,7 @@ export default function CollectionHorizontal({
 
           {/* Panel 3: Font Info */}
           <div className="h-[100vh] w-[100vw] shrink-0 grid place-items-center bg-[#efefef]">
-            <FontInfoPanel />
+            <FontInfoPanel content={content} />
           </div>
 
           {/* Panel 4: Spacer (visual pause) */}

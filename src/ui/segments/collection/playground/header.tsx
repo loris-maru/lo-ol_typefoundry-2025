@@ -49,7 +49,10 @@ export default function PlaygroundHeader({ content }: { content: typeface }) {
           className="relative overflow-hidden h-[24vh]"
         >
           <motion.span
-            className="absolute text-[14vw] leading-[1] "
+            className="absolute text-[14vw] leading-[1]"
+            style={{
+              fontVariationSettings: `'wght' 900, 'wdth' 900, 'opsz' 900`,
+            }}
             initial={{ y: 300 }}
             animate={{ y: isInView ? 0 : 300 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
@@ -64,7 +67,10 @@ export default function PlaygroundHeader({ content }: { content: typeface }) {
           className="relative overflow-hidden h-[24vh]"
         >
           <motion.span
-            className="absolute text-[14vw] leading-[1] "
+            className="absolute text-[14vw] leading-[1]"
+            style={{
+              fontVariationSettings: `'wght' 900, 'wdth' 900, 'opsz' 900`,
+            }}
             initial={{ y: 300 }}
             animate={{ y: isInView ? 0 : 300 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}

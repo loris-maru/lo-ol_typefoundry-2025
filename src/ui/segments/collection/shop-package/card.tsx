@@ -33,7 +33,7 @@ export default function PackageCard({
 
   return (
     <motion.div
-      className="relative w-full h-[60vh] rounded-2xl overflow-hidden"
+      className="relative w-full h-full rounded-2xl overflow-hidden"
       onMouseEnter={() => onHoverChange(true)}
       onMouseLeave={() => onHoverChange(false)}
       animate={{

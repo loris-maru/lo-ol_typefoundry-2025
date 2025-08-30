@@ -50,8 +50,8 @@ export default function ShopPackages({ content }: { content: typeface }) {
     <section
       ref={sectionRef}
       className={cn(
-        "bg-[#EFEFEF] overflow-hidden px-[14vw] py-[12vh] gap-x-2 flex flex-row",
-        isFixed && "fixed top-0 left-0 w-full h-screen z-20"
+        "bg-[#EFEFEF] overflow-hidden h-screen px-[14vw] py-[8vh] gap-x-2 flex flex-row",
+        isFixed && "fixed top-0 left-0 w-full z-20"
       )}
     >
       {PACKAGES.map((pkg, idx) => (

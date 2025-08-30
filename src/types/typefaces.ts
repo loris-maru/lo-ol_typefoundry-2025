@@ -78,8 +78,11 @@ export type singleWeight = {
 };
 
 export type designers = {
-  name: string;
-  url: string;
+  fullName: string;
+  biography: string;
+  emailAddress: string;
+  instagram: string;
+  portrait: string;
 };
 
 export type typeface = {

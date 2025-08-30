@@ -165,6 +165,8 @@ export default function TypeTesterBlock({
 
   const fontFamily = slugify(content.name);
 
+  // const fontFile = italic ? content.varFont : content.varFont
+
   return (
     <div className={cn("relative", getColumnClass())} ref={wrapperRef}>
       <div>
@@ -181,7 +183,7 @@ export default function TypeTesterBlock({
               className="w-full resize-none border-0 focus:ring-0 text-black overflow-hidden whitespace-pre-wrap outline-none cursor-text"
               style={{
                 fontFamily: fontFamily,
-                fontVariationSettings: `'wght' ${wght}, 'wdth' ${wdth}, 'slnt' ${slnt}`,
+                fontVariationSettings: `'wght' ${wght}, 'wdth' ${wdth}, 'slnt' ${slnt}, 'opsz' ${opsz}`,
                 fontSize: `${fontSize}px`,
                 lineHeight: lh,
                 minHeight: `${minHeightPx}px`,
