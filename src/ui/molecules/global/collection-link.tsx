@@ -19,7 +19,7 @@ export default function CollectionLink({
   return (
     <Link
       href={link}
-      className="w-full flex flex-row justify-between items-baseline font-whisper hover:text-gray-300 cursor-pointer transition-all duration-300"
+      className="relative z-50 w-full flex flex-row justify-between items-baseline font-whisper hover:text-gray-300 cursor-pointer transition-all duration-300 mix-blend-difference"
       onMouseOver={() => setMouseHover(true)}
       onFocus={() => setMouseHover(true)}
       onMouseOut={() => setMouseHover(false)}
@@ -27,7 +27,7 @@ export default function CollectionLink({
     >
       <div
         className="text-3xl text-white font-whisper"
-        style={{ fontVariationSettings: `'wght' ${mouseHover ? 900 : 400}` }}
+        style={{ fontVariationSettings: `'wght' ${mouseHover ? 700 : 300}` }}
       >
         {label}
       </div>

@@ -95,7 +95,7 @@ export default function MenuButton({
               ))}
               <div
                 id="single-font-background-container"
-                className="absolute -left-4 z-50 w-full h-12 rounded-full bg-white mix-blend-difference transition-transform duration-75 ease-out"
+                className="absolute -left-4 z-30 w-full h-12 rounded-full bg-white mix-blend-difference transition-transform duration-75 ease-out pointer-none:"
                 style={{
                   transform: `translateY(${mouseY - 82}px)`, // Center the div on mouse Y position (24px = half of h-12)
                 }}
