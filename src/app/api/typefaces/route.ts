@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
 import { getAllTypefaces } from "@/api/typefaces";
+import { NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const typefaces = await getAllTypefaces();
     return NextResponse.json({ typefaces });
@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     console.error("API Error:", error);
     return NextResponse.json(
       { error: "Failed to fetch typefaces" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

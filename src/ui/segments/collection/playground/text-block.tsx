@@ -1,5 +1,6 @@
 import { TextBlock as TextBlockType } from "@/states/playground";
-import SettingsMenu from "@/ui/segments/collection/playground/settings-menu";
+import SettingButton from "@/ui/segments/collection/playground/setting-button";
+import SettingMenu from "@/ui/segments/collection/playground/setting-menu";
 import { useState } from "react";
 
 interface TextBlockProps {
@@ -9,6 +10,26 @@ interface TextBlockProps {
 
 export default function TextBlock({ block, onUpdate }: TextBlockProps) {
   const [showMenu, setShowMenu] = useState(false);
+
+  // Create settings object for the SettingMenu
+  const textBlockSettings = {
+    wght: block.weight,
+    setWght: (value: number) => onUpdate(block.id, "weight", value),
+    has_wdth: true,
+    wdth: block.width,
+    setWdth: (value: number) => onUpdate(block.id, "width", value),
+    has_slnt: true,
+    slnt: block.slant,
+    setSlnt: (value: number) => onUpdate(block.id, "slant", value),
+    has_opsz: false,
+    opsz: 0,
+    setOpsz: () => {},
+    has_italic: false,
+    italic: false,
+    setItalic: () => {},
+    lh: block.leading,
+    setLh: (value: number) => onUpdate(block.id, "leading", value),
+  };
 
   // Get column classes based on block columns
   const getColumnClasses = () => {
@@ -54,12 +75,15 @@ export default function TextBlock({ block, onUpdate }: TextBlockProps) {
   return (
     <div className="relative">
       {/* Settings button - positioned upper right */}
-      <SettingsMenu
-        showMenu={showMenu}
-        setShowMenu={setShowMenu}
-        block={block}
-        onUpdate={onUpdate}
-      />
+      <SettingButton showMenu={showMenu} setShowMenu={setShowMenu} />
+
+      {/* Settings menu - rendered conditionally */}
+      {showMenu && (
+        <div className="absolute right-4 top-14 z-20 w-64">
+          <SettingMenu settings={textBlockSettings} />
+        </div>
+      )}
+
       {/* Text content in columns */}
       <div className={`grid ${getColumnClasses()} gap-6`}>
         {columnContent.map((text, index) => (

@@ -27,7 +27,7 @@ export default function CollectionHorizontal({
   const x = useTransform(
     scrollYProgress,
     [0, 0.75], // Complete horizontal scroll by 75% of total scroll
-    ["0vw", `-${(3 - 1) * 100}vw`],
+    ["0vw", `-${(3 - 1) * 100}vw`]
   );
 
   return (
@@ -52,7 +52,7 @@ export default function CollectionHorizontal({
 
           {/* Panel 3: Font Info */}
           <div className="h-[100vh] w-[100vw] shrink-0 grid place-items-center bg-[#efefef]">
-            <FontInfoPanel content={content} />
+            <FontInfoPanel content={content} collectionColor={content.color} />
           </div>
 
           {/* Panel 4: Spacer (visual pause) */}
