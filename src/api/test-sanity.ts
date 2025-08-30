@@ -3,7 +3,9 @@ import { sanityServer } from "./sanity";
 export async function testSanityConnection() {
   try {
     // Simple query to test connection
-    const result = await sanityServer.fetch('*[_type == "typefaces"][0..2] { _id, name, slug }');
+    const result = await sanityServer.fetch(
+      '*[_type == "typefaces"][0..2] { _id, name, slug }',
+    );
     console.log("✅ Sanity connection successful. Sample data:", result);
     return true;
   } catch (error) {

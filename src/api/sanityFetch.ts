@@ -2,7 +2,7 @@ import { sanityServer } from "@/api/sanity";
 
 export async function sanityFetch<T>(
   query: string,
-  params?: Record<string, unknown>
+  params?: Record<string, unknown>,
 ): Promise<T> {
   try {
     const result = await sanityServer.fetch(query, params);
@@ -15,7 +15,7 @@ export async function sanityFetch<T>(
 
 export async function sanityFetchAll<T>(
   query: string,
-  params?: Record<string, unknown>
+  params?: Record<string, unknown>,
 ): Promise<T[]> {
   try {
     const result = await sanityServer.fetch(query, params);

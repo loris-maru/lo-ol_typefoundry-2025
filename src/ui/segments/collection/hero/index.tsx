@@ -4,11 +4,10 @@ import { typeface } from "@/types/typefaces";
 import slugify from "@/utils/slugify";
 import { useFont } from "@react-hooks-library/core";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 export default function VideoHero({
   content,
-  isMobile,
   onVideoLoaded,
 }: {
   content: typeface;
@@ -18,10 +17,9 @@ export default function VideoHero({
   const fontName = slugify(content.name);
   const fontUrl = content.varFont;
 
-  const { error, loaded: fontLoaded, font } = useFont(fontName, fontUrl);
+  const { error, loaded: fontLoaded } = useFont(fontName, fontUrl);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const [videoLoaded, setVideoLoaded] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: wrapperRef,
@@ -31,7 +29,7 @@ export default function VideoHero({
   const width = useTransform(
     scrollYProgress,
     [0, 0.3, 0.6],
-    ["100vw", "20vw", "16vw"]
+    ["100vw", "20vw", "16vw"],
   );
 
   const borderRadius = useTransform(scrollYProgress, [0, 0.3, 0.6], [0, 8, 14]);
@@ -39,7 +37,7 @@ export default function VideoHero({
   const height = useTransform(
     scrollYProgress,
     [0, 0.3, 0.6],
-    ["100vh", "100vh", "40vh"]
+    ["100vh", "100vh", "40vh"],
   );
   const scale = useTransform(scrollYProgress, [0.6, 0.9, 1], [1, 0.3, 0.1]);
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 1]);
@@ -59,7 +57,6 @@ export default function VideoHero({
 
   const handleVideoLoad = () => {
     console.log("Video loaded in VideoHero, calling onVideoLoaded");
-    setVideoLoaded(true);
     onVideoLoaded();
   };
 

@@ -86,7 +86,7 @@ export function CursorTextCircle({
   const circumference = 2 * Math.PI * r;
   const repeated = repeatToLength(
     text,
-    Math.ceil(circumference / Math.max(1, fontSize * 0.6))
+    Math.ceil(circumference / Math.max(1, fontSize * 0.6)),
   );
 
   return (
@@ -124,8 +124,16 @@ export function CursorTextCircle({
           animation: spin 8s linear infinite;
         }
         .label {
-          font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
-            Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+          font-family:
+            ui-sans-serif,
+            system-ui,
+            -apple-system,
+            Segoe UI,
+            Roboto,
+            Helvetica,
+            Arial,
+            "Apple Color Emoji",
+            "Segoe UI Emoji";
           font-size: ${fontSize}px;
           letter-spacing: 2px;
           fill: black;

@@ -30,7 +30,7 @@ export default function Playground({ content }: { content: typeface }) {
   const { scrollY } = useScroll();
   const earlyOpacity = useTransform(scrollY, [0, 120], [0, 1]);
   const earlyPointer = useTransform(scrollY, (y) =>
-    y < 80 ? ("none" as const) : ("auto" as const)
+    y < 80 ? ("none" as const) : ("auto" as const),
   );
 
   const addSection = (type: "one" | "two" | "three") => {

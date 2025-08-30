@@ -24,7 +24,7 @@ export default function CollectionPage({
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [fakeProgress, setFakeProgress] = useState(0);
 
-  const { error, loaded: fontLoaded, font } = useFont(fontName, fontUrl);
+  const { error, loaded: fontLoaded } = useFont(fontName, fontUrl);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   // Combined loading state

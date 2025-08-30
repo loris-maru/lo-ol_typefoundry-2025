@@ -48,6 +48,6 @@ export const useCartStore = create<CartState>()(
     {
       name: "cart-storage", // unique name for localStorage key
       partialize: (state) => ({ cart: state.cart }), // only persist cart array
-    }
-  )
+    },
+  ),
 );

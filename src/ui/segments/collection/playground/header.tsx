@@ -46,7 +46,7 @@ export default function PlaygroundHeader({ content }: { content: typeface }) {
           style={{
             fontFamily: slugify(content.name),
           }}
-          className="relative overflow-hidden h-[24vh]"
+          className="relative overflow-hidden h-[28vh]"
         >
           <motion.span
             className="absolute text-[14vw] leading-[1]"
@@ -64,7 +64,7 @@ export default function PlaygroundHeader({ content }: { content: typeface }) {
           style={{
             fontFamily: slugify(content.name),
           }}
-          className="relative overflow-hidden h-[24vh]"
+          className="relative overflow-hidden h-[28vh]"
         >
           <motion.span
             className="absolute text-[14vw] leading-[1]"

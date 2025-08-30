@@ -109,7 +109,7 @@ export const usePlaygroundStore = create<PlaygroundState>((set, get) => ({
     const { activeBlocks } = get();
     set({
       activeBlocks: activeBlocks.map((block) =>
-        block.id === id ? { ...block, [field]: value } : block
+        block.id === id ? { ...block, [field]: value } : block,
       ),
     });
   },

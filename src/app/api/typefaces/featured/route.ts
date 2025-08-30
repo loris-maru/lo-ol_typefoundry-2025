@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     console.error("API Error:", error);
     return NextResponse.json(
       { error: "Failed to fetch featured typefaces" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

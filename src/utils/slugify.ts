@@ -10,7 +10,7 @@ function slugify(
     lower?: boolean;
     maxLength?: number;
     fallback?: string;
-  } = {}
+  } = {},
 ) {
   let str = String(input ?? "");
 

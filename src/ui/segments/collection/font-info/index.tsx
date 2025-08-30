@@ -12,7 +12,6 @@ export type BlockContent = {
 
 export default function FontInfoPanel({
   content,
-  collectionColor,
 }: {
   content: typeface;
   collectionColor: string;

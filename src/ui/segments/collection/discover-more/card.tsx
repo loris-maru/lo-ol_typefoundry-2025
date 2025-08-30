@@ -24,17 +24,10 @@ export default function CollectionCard({
   content,
   index,
   isActive,
-  onNavigate,
 }: CollectionCardProps) {
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  const [isNameHovered, setIsNameHovered] = useState<boolean>(false);
   const [isNavigating, setIsNavigating] = useState<boolean>(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const router = useRouter();
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    setMousePosition({ x: e.clientX, y: e.clientY });
-  };
 
   const handleNavigate = async () => {
     setIsNavigating(true);
@@ -54,7 +47,7 @@ export default function CollectionCard({
   const familyName = slugify(content.name);
   const fontFile = content.varFont;
 
-  const { loaded, error, font } = useFont(familyName, fontFile);
+  const { loaded, error } = useFont(familyName, fontFile);
 
   if (error) {
     return (
@@ -90,10 +83,7 @@ export default function CollectionCard({
   }
 
   return (
-    <div
-      className="relative w-screen h-screen flex items-center justify-center"
-      onMouseMove={handleMouseMove}
-    >
+    <div className="relative w-screen h-screen flex items-center justify-center">
       <motion.div className="relative z-20 w-full h-full flex items-center justify-center">
         <button
           onClick={handleNavigate}
@@ -144,8 +134,6 @@ export default function CollectionCard({
                     }, 'wdth' 900, 'opsz' 900`,
                   }}
                   className="text-[16vw] text-white font-bold font-fuzar leading-[0.8] text-center transition-all duration-300 ease-in-out cursor-pointer"
-                  onMouseEnter={() => setIsNameHovered(true)}
-                  onMouseLeave={() => setIsNameHovered(false)}
                 >
                   {isNavigating ? content.name.substring(0, 2) : content.name}
                 </div>

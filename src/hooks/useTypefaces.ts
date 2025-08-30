@@ -1,5 +1,5 @@
 import { typeface } from "@/types/typefaces";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface UseTypefacesOptions {
   search?: string;
@@ -24,13 +24,13 @@ interface UseTypefacesReturn {
 }
 
 export function useTypefaces(
-  options: UseTypefacesOptions = {}
+  options: UseTypefacesOptions = {},
 ): UseTypefacesReturn {
   const [typefaces, setTypefaces] = useState<typeface[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchTypefaces = async () => {
+  const fetchTypefaces = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -59,11 +59,11 @@ export function useTypefaces(
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [options.search, options.filters]);
 
   useEffect(() => {
     fetchTypefaces();
-  }, [options.search, JSON.stringify(options.filters)]);
+  }, [fetchTypefaces]);
 
   return {
     typefaces,

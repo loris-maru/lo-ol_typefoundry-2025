@@ -7,13 +7,13 @@ export async function getAllTypefaces(): Promise<typeface[]> {
 }
 
 export async function getTypefaceBySlug(
-  slug: string
+  slug: string,
 ): Promise<typeface | null> {
   try {
     // Use the existing typefaces query but filter by slug
     const query = `*[_type == "typefaces" && slug.current == $slug][0] ${typefaces.replace(
       '*[_type == "typefaces"][]',
-      ""
+      "",
     )}`;
 
     const result = await sanityFetch<typeface>(query, { slug });
@@ -25,11 +25,11 @@ export async function getTypefaceBySlug(
 }
 
 export async function getFeaturedTypefaces(
-  limit: number = 6
+  limit: number = 6,
 ): Promise<typeface[]> {
   const query = `*[_type == "typefaces" && featured == true][0...${limit}] ${typefaces.replace(
     '*[_type == "typefaces"][]',
-    ""
+    "",
   )}`;
   return sanityFetchAll<typeface>(query);
 }

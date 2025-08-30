@@ -6,7 +6,7 @@ export interface ValidationResult {
 }
 
 export interface ValidationRule {
-  test: (value: any) => boolean;
+  test: (value: unknown) => boolean;
   message: string;
 }
 
@@ -18,7 +18,7 @@ export class Validator {
     return this;
   }
 
-  validate(value: any): ValidationResult {
+  validate(value: unknown): ValidationResult {
     const errors: string[] = [];
 
     for (const rule of this.rules) {
@@ -42,21 +42,22 @@ export class Validator {
 // Common validation rules
 export const commonRules = {
   required: (message = "This field is required"): ValidationRule => ({
-    test: (value: any) => value !== null && value !== undefined && value !== "",
+    test: (value: unknown) =>
+      value !== null && value !== undefined && value !== "",
     message,
   }),
 
   email: (message = "Please enter a valid email address"): ValidationRule => ({
-    test: (value: any) => {
+    test: (value: unknown) => {
       if (!value) return true; // Allow empty if not required
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailRegex.test(value);
+      return emailRegex.test(String(value));
     },
     message,
   }),
 
   minLength: (min: number, message?: string): ValidationRule => ({
-    test: (value: any) => {
+    test: (value: unknown) => {
       if (!value) return true; // Allow empty if not required
       return String(value).length >= min;
     },
@@ -64,7 +65,7 @@ export const commonRules = {
   }),
 
   maxLength: (max: number, message?: string): ValidationRule => ({
-    test: (value: any) => {
+    test: (value: unknown) => {
       if (!value) return true; // Allow empty if not required
       return String(value).length <= max;
     },
@@ -72,7 +73,7 @@ export const commonRules = {
   }),
 
   numeric: (message = "Must be a number"): ValidationRule => ({
-    test: (value: any) => {
+    test: (value: unknown) => {
       if (!value) return true; // Allow empty if not required
       return !isNaN(Number(value));
     },
@@ -80,7 +81,7 @@ export const commonRules = {
   }),
 
   positiveNumber: (message = "Must be a positive number"): ValidationRule => ({
-    test: (value: any) => {
+    test: (value: unknown) => {
       if (!value) return true; // Allow empty if not required
       const num = Number(value);
       return !isNaN(num) && num > 0;
@@ -89,10 +90,10 @@ export const commonRules = {
   }),
 
   url: (message = "Please enter a valid URL"): ValidationRule => ({
-    test: (value: any) => {
+    test: (value: unknown) => {
       if (!value) return true; // Allow empty if not required
       try {
-        new URL(value);
+        new URL(String(value));
         return true;
       } catch {
         return false;
@@ -103,9 +104,9 @@ export const commonRules = {
 };
 
 // Helper function to validate form data
-export function validateForm<T extends Record<string, any>>(
+export function validateForm<T extends Record<string, unknown>>(
   data: T,
-  validators: Record<keyof T, ValidationRule[]>
+  validators: Record<keyof T, ValidationRule[]>,
 ): Record<keyof T, ValidationResult> {
   const results: Record<keyof T, ValidationResult> = {} as Record<
     keyof T,
@@ -123,8 +124,8 @@ export function validateForm<T extends Record<string, any>>(
 }
 
 // Helper function to check if form is valid
-export function isFormValid<T extends Record<string, any>>(
-  results: Record<keyof T, ValidationResult>
+export function isFormValid<T extends Record<string, unknown>>(
+  results: Record<keyof T, ValidationResult>,
 ): boolean {
   return Object.values(results).every((result) => result.isValid);
 }

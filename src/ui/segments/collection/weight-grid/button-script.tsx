@@ -18,7 +18,7 @@ export default function ButtonScript({
           "relative font-kronik px-6 py-2 rounded-full cursor-pointer",
           activeScript == "latin"
             ? "bg-white text-black"
-            : "bg-black text-white border border-solid border-black"
+            : "bg-black text-white border border-solid border-black",
         )}
       >
         <span className="relative top-px">Latin</span>
@@ -32,7 +32,7 @@ export default function ButtonScript({
           "relative font-kronik px-6 py-2 rounded-full cursor-pointer",
           activeScript == "hangul"
             ? "bg-white text-black"
-            : "bg-black text-white border border-solid border-black"
+            : "bg-black text-white border border-solid border-black",
         )}
       >
         <span className="relative top-px">Hangul</span>

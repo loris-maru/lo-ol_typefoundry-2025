@@ -134,7 +134,7 @@ export default function SingleFontItem({
       cartItem.widthName === content.widthName &&
       cartItem.opticalSizeName === content.opticalSizeName &&
       cartItem.slantName === content.slantName &&
-      cartItem.isItalic === content.isItalic
+      cartItem.isItalic === content.isItalic,
   );
 
   const handleCartAction = () => {
@@ -148,7 +148,7 @@ export default function SingleFontItem({
           cartItem.widthName === content.widthName &&
           cartItem.opticalSizeName === content.opticalSizeName &&
           cartItem.slantName === content.slantName &&
-          cartItem.isItalic === content.isItalic
+          cartItem.isItalic === content.isItalic,
       );
 
       if (cartItem) {
@@ -198,8 +198,8 @@ export default function SingleFontItem({
               isInCart
                 ? "border-white bg-white text-black"
                 : !license
-                ? "border-neutral-500 text-neutral-500 cursor-not-allowed opacity-50"
-                : "border-neutral-700 text-neutral-400 hover:border-white hover:text-white"
+                  ? "border-neutral-500 text-neutral-500 cursor-not-allowed opacity-50"
+                  : "border-neutral-700 text-neutral-400 hover:border-white hover:text-white",
             )}
             style={{
               fontVariationSettings: `'wght' ${isHovered ? 900 : 400}`,

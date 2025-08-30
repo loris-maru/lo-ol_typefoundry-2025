@@ -43,12 +43,11 @@ export default function TypeTesterBlock({
   const [slnt, setSlant] = useState(defaultSlant);
   const [lh, setLh] = useState(defaultLineHeight);
   const [opsz, setOpsz] = useState<number>(900);
-  const [fontSize, setFontSize] = useState(defaultFontSize);
+  const [fontSize] = useState(defaultFontSize);
   const [italic, setItalic] = useState<boolean>(false);
 
   // EDITABLE CONTENT
   const [editableContent, setEditableContent] = useState(defaultText);
-  const [showPlaceholder, setShowPlaceholder] = useState(true);
 
   // REF
   const editableRef = useRef<HTMLDivElement>(null);
@@ -112,15 +111,14 @@ export default function TypeTesterBlock({
   const handleContentChange = (e: React.FormEvent<HTMLDivElement>) => {
     const newContent = e.currentTarget.textContent || "";
     setEditableContent(newContent);
-    setShowPlaceholder(newContent.length === 0);
   };
 
   const handleFocus = () => {
-    setShowPlaceholder(false);
+    // Handle focus event
   };
 
   const handleBlur = () => {
-    setShowPlaceholder(editableContent.length === 0);
+    // Handle blur event
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {

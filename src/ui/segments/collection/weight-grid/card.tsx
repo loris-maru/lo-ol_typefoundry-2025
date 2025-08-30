@@ -111,7 +111,7 @@ export default function WeightCard({
               <motion.span
                 className={cn(
                   "inline-block mr-6",
-                  script === "latin" ? "text-[7.6vw]" : "text-[5.5vw]"
+                  script === "latin" ? "text-[7.6vw]" : "text-[5.5vw]",
                 )}
                 style={{
                   fontFamily: fontName,
@@ -135,7 +135,7 @@ export default function WeightCard({
               {/* Weight Value - Slides in second with delay */}
               <motion.span
                 className={cn(
-                  script === "latin" ? "text-[7.6vw]" : "text-[5.5vw]"
+                  script === "latin" ? "text-[7.6vw]" : "text-[5.5vw]",
                 )}
                 style={{
                   fontFamily: fontName,

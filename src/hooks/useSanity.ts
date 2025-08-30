@@ -18,7 +18,7 @@ import useSWR, { SWRConfiguration } from "swr";
 export function useSanity<T = unknown>(
   query: string | null,
   params?: Record<string, unknown>,
-  config?: SWRConfiguration
+  config?: SWRConfiguration,
 ) {
   // Key must be null to disable SWR when query is null/undefined
   const key = query ? ["sanity", query, params ?? {}] : null;
@@ -26,7 +26,7 @@ export function useSanity<T = unknown>(
   const fetcher = async (
     _key: string,
     q: string,
-    p: Record<string, unknown>
+    p: Record<string, unknown>,
   ) => {
     return sanityServer.fetch<T>(q, p);
   };

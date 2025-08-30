@@ -27,7 +27,7 @@ export default function CollectionHorizontal({
   const x = useTransform(
     scrollYProgress,
     [0, 0.75], // Complete horizontal scroll by 75% of total scroll
-    ["0vw", `-${(3 - 1) * 100}vw`]
+    ["0vw", `-${(3 - 1) * 100}vw`],
   );
 
   return (

@@ -6,7 +6,7 @@ import InternalNavigation from "@/ui/segments/collection/discover-more/internal-
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { motion, useScroll, useTransform } from "framer-motion";
 import "keen-slider/keen-slider.min.css";
-import { useKeenSlider } from "keen-slider/react";
+import { useKeenSlider, KeenSliderInstance } from "keen-slider/react";
 import { useRef, useState } from "react";
 
 export default function DiscoverMoreCollections({
@@ -28,13 +28,13 @@ export default function DiscoverMoreCollections({
   const scale = useTransform(
     scrollYProgress,
     [0, 1], // From entering screen to reaching top
-    [0.4, 1] // From 0.76 to 1
+    [0.4, 1], // From 0.76 to 1
   );
 
   const borderRadius = useTransform(
     scrollYProgress,
     [0, 1], // From entering screen to reaching top
-    ["40px", "0px"] // From 40px to 0px
+    ["40px", "0px"], // From 40px to 0px
   );
 
   const [sliderRef, instanceRef] = useKeenSlider({
@@ -141,7 +141,7 @@ export default function DiscoverMoreCollections({
             content={content}
             currentSlide={currentSlide}
             setCurrentSlide={setCurrentSlide}
-            instanceRef={instanceRef as React.RefObject<any>}
+            instanceRef={instanceRef as React.RefObject<KeenSliderInstance>}
           />
         </div>
       </motion.div>
