@@ -113,13 +113,15 @@ export default function FontInfoPanel({
       <div className="absolute z-20 w-full h-full flex items-center justify-center mix-blend-exclusion">
         <div
           id="giant-abbreviation"
-          className="text-[80vw] text-neutral-800"
+          className="relative text-[80vw] text-neutral-800"
           style={{
             fontFamily: slugify(content.name),
             fontVariationSettings: `'wght' ${dynamicWeight}, 'slnt' 0, 'opsz' 900, 'wdth' 900`,
           }}
         >
-          {content.name.slice(0, 1)}
+          <span className="relative top-20 inline-block">
+            {content.name.slice(0, 1)}
+          </span>
         </div>
       </div>
 

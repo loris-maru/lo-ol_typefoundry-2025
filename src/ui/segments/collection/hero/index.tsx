@@ -4,7 +4,7 @@ import { typeface } from "@/types/typefaces";
 import slugify from "@/utils/slugify";
 import { useFont } from "@react-hooks-library/core";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 export default function VideoHero({
   content,
@@ -26,10 +26,21 @@ export default function VideoHero({
     offset: ["start start", "end start"],
   });
 
+  // Debug scroll progress in development
+  useEffect(() => {
+    if (process.env.NODE_ENV === "development") {
+      const unsubscribe = scrollYProgress.on("change", (latest) => {
+        console.log("Scroll progress:", latest);
+      });
+      return unsubscribe;
+    }
+  }, [scrollYProgress]);
+
+  // Add fallback values and ensure transforms work in production
   const width = useTransform(
     scrollYProgress,
     [0, 0.3, 0.6],
-    ["100vw", "20vw", "16vw"],
+    ["100vw", "20vw", "16vw"]
   );
 
   const borderRadius = useTransform(scrollYProgress, [0, 0.3, 0.6], [0, 8, 14]);
@@ -37,7 +48,7 @@ export default function VideoHero({
   const height = useTransform(
     scrollYProgress,
     [0, 0.3, 0.6],
-    ["100vh", "100vh", "40vh"],
+    ["100vh", "100vh", "40vh"]
   );
   const scale = useTransform(scrollYProgress, [0.6, 0.9, 1], [1, 0.3, 0.1]);
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 1]);
@@ -51,7 +62,7 @@ export default function VideoHero({
     damping: 20,
     mass: 0.6,
   });
-  const groupScale = useTransform(widthVW, (w) => (w >= 50 ? 1 : w / 50));
+  const groupScale = useTransform(widthVW, [100, 50], [1, 0.5]);
 
   const familyAbbreviation = content.name.slice(0, 2);
 
@@ -103,6 +114,7 @@ export default function VideoHero({
         <motion.div
           style={{ width, height, scale, opacity, borderRadius }}
           className="relative overflow-hidden shadow-2xl will-change-transform"
+          initial={{ scale: 1, width: "100vw", height: "100vh" }}
         >
           <motion.div
             className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center text-center"

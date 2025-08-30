@@ -1,5 +1,5 @@
+import { SmallLink } from "@/ui/molecules/global/links";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { useState } from "react";
 import { BlockContent } from ".";
 
@@ -41,19 +41,15 @@ export default function MajorBlock({
         }}
       >
         {description.map((item: BlockContent, index: number) => (
-          <div className="flex flex-col items-start" key={index}>
+          <div
+            className="flex flex-col items-start"
+            key={`${index}-${item.title}`}
+          >
             <h4>{item.title}</h4>
             <div className="w-10 h-px bg-white my-2" />
             <p className="line-clamp-4">{item.description}</p>
             {item.label && (
-              <Link
-                className="relative mt-2 px-8 py-2 border border-solid border-white rounded-full text-base transition-colors duration-300 ease-in-out hover:bg-black hover:text-white"
-                href={item.link || ""}
-              >
-                <span className="relative top-0.5 inline-block">
-                  {item.label}
-                </span>
-              </Link>
+              <SmallLink label={item.label} link={item.link || ""} />
             )}
           </div>
         ))}

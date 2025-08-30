@@ -1,0 +1,41 @@
+"use client";
+
+import Link from "next/link";
+import { useState } from "react";
+
+export default function CollectionLink({
+  link,
+  label,
+  category,
+  fontsNumber,
+}: {
+  link: string;
+  label: string;
+  category: string;
+  fontsNumber: number;
+}) {
+  const [mouseHover, setMouseHover] = useState<boolean>(false);
+
+  return (
+    <Link
+      href={link}
+      className="w-full flex flex-row justify-between items-baseline font-whisper hover:text-gray-300 cursor-pointer transition-all duration-300"
+      onMouseOver={() => setMouseHover(true)}
+      onFocus={() => setMouseHover(true)}
+      onMouseOut={() => setMouseHover(false)}
+      onBlur={() => setMouseHover(false)}
+    >
+      <div
+        className="text-3xl text-white font-whisper"
+        style={{ fontVariationSettings: `'wght' ${mouseHover ? 900 : 400}` }}
+      >
+        {label}
+      </div>
+      <div className="flex flex-row gap-x-3 text-base text-neutral-400">
+        <div>{category}</div>
+        <div className="mx-2">|</div>
+        <div>{fontsNumber} fonts</div>
+      </div>
+    </Link>
+  );
+}

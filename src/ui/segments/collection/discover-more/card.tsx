@@ -103,8 +103,8 @@ export default function CollectionCard({
                 exit={{ opacity: 0, y: 50 }}
                 transition={{ duration: animTime }}
               >
-                <div className="text-3xl font-normal text-white cursor-pointer font-kronik">
-                  Collection
+                <div className="text-2xl font-normal text-white cursor-pointer font-kronik">
+                  Discover the collection
                 </div>
               </motion.div>
             )}
@@ -133,7 +133,7 @@ export default function CollectionCard({
                       isHovered ? 900 : 400
                     }, 'wdth' 900, 'opsz' 900`,
                   }}
-                  className="text-[16vw] text-white font-bold font-fuzar leading-[0.8] text-center transition-all duration-300 ease-in-out cursor-pointer"
+                  className="text-[16vw] text-white font-bold font-fuzar leading-none text-center transition-all duration-300 ease-in-out cursor-pointer"
                 >
                   {isNavigating ? content.name.substring(0, 2) : content.name}
                 </div>

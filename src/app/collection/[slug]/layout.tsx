@@ -1,7 +1,7 @@
 import Navigation from "@/ui/segments/global/navigation";
 import type { Metadata } from "next";
 
-import { getTypefaceBySlug } from "@/api/typefaces";
+import { getAllTypefaces, getTypefaceBySlug } from "@/api/typefaces";
 import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
@@ -19,6 +19,7 @@ export default async function RootLayout({
   try {
     const { slug } = await params;
     const typeface = await getTypefaceBySlug(slug);
+    const allTypefaces = await getAllTypefaces();
 
     if (!typeface) {
       notFound();
@@ -26,7 +27,7 @@ export default async function RootLayout({
 
     return (
       <div className="relative w-full">
-        <Navigation content={typeface} />
+        <Navigation content={typeface} allTypefaces={allTypefaces} />
         {children}
       </div>
     );
