@@ -1,6 +1,7 @@
 import { getAllTypefaces, getTypefaceBySlug } from "@/api/typefaces";
 import { PageProps } from "@/types/common";
 import CollectionPage from "@/ui/segments/collection";
+import Footer from "@/ui/segments/global/footer";
 import { notFound } from "next/navigation";
 
 export default async function Page({ params }: PageProps) {
@@ -16,6 +17,7 @@ export default async function Page({ params }: PageProps) {
     return (
       <main className="relative w-full">
         <CollectionPage content={typeface} allTypefaces={allTypefaces} />
+        <Footer />
       </main>
     );
   } catch (error) {
@@ -30,6 +32,7 @@ export default async function Page({ params }: PageProps) {
             Failed to load typeface data. Please try again later.
           </p>
         </div>
+        <Footer />
       </main>
     );
   }

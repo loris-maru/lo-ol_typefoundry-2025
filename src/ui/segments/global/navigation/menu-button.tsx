@@ -1,6 +1,7 @@
 "use client";
 
 import { useScrollBlock } from "@/hooks/useScrollBlock";
+import { useCartStore } from "@/states/cart";
 import { useMenuStore } from "@/states/menu";
 import { typeface } from "@/types/typefaces";
 import CollectionLink from "@/ui/molecules/global/collection-link";
@@ -17,6 +18,7 @@ export default function MenuButton({
 }) {
   const { menuOpen, setMenuOpen } = useMenuStore();
   const [mouseY, setMouseY] = useState(0);
+  const { cart } = useCartStore();
 
   // Block page scrolling when menu is open
   useScrollBlock(menuOpen);
@@ -44,13 +46,17 @@ export default function MenuButton({
     setMenuOpen(false);
   };
 
+  // Calculate position based on cart visibility
+  const hasCartItems = cart.length > 0;
+  const rightPosition = hasCartItems ? "right-[62px]" : "right-[30px]"; // 62px = 30px + 32px (cart button right-4 = 16px + 46px cart width)
+
   return (
     <motion.nav
-      className="fixed z-50"
+      className={`fixed ${rightPosition} top-4 z-50`}
       animate={{
         width: menuOpen ? "100vw" : "46px",
         height: menuOpen ? "100vh" : "46px",
-        right: menuOpen ? 0 : "144px",
+        right: menuOpen ? 0 : hasCartItems ? "75px" : "30px",
         top: menuOpen ? 0 : "16px",
       }}
       transition={{ duration: 0.3, ease: "easeInOut" }}

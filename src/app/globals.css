@@ -26,10 +26,21 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Mayday";
+  src:
+    url("/fonts/MaydayOriginal-Black.woff2") format("woff2"),
+    url("/fonts/MaydayOriginal-Black.woff") format("woff");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --font-fuzar: "Fuzar", sans-serif;
   --font-kronik: "Kronik", sans-serif;
   --font-whisper: "Whisper", sans-serif;
+  --font-mayday: "Mayday", sans-serif;
 }
 
 html,
