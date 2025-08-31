@@ -33,11 +33,12 @@ export default function PackageCard({
 
   return (
     <motion.div
-      className="relative w-full h-full rounded-2xl overflow-hidden"
+      className="relative w-full rounded-2xl overflow-hidden transition-all duration-500 ease-in-out"
       onMouseEnter={() => onHoverChange(true)}
       onMouseLeave={() => onHoverChange(false)}
       animate={{
         width: isHovered ? "120%" : "100%",
+        height: isInView ? "100%" : "30%",
         zIndex: isHovered ? 10 : 1,
       }}
       transition={{ duration: 0.4, ease: "easeInOut" }}

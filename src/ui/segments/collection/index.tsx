@@ -140,19 +140,6 @@ export default function CollectionPage({
         >
           {Math.round(fakeProgress)}%
         </div>
-
-        {/* Additional progress indicators */}
-        <div className="absolute bottom-6 right-32 text-blue-400 text-lg font-bold z-10">
-          {Math.round(progressBar2)}%
-        </div>
-
-        <div className="absolute bottom-6 right-48 text-green-400 text-lg font-bold z-10">
-          {Math.round(progressBar3)}%
-        </div>
-
-        <div className="absolute bottom-6 right-64 text-amber-400 text-lg font-bold z-10">
-          {Math.round(progressBar4)}%
-        </div>
       </div>
     );
   }

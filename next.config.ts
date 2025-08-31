@@ -6,9 +6,6 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["framer-motion"],
   },
 
-  // Ensure proper build optimization
-  swcMinify: true,
-
   // Add headers for better performance
   async headers() {
     return [

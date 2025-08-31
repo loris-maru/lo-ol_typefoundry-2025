@@ -1,3 +1,5 @@
+import { getAllTypefaces } from "@/api/typefaces";
+import GlobalNavigation from "@/ui/segments/global/navigation/global-navigation";
 import type { Metadata } from "next";
 
 import "./globals.css";
@@ -12,9 +14,14 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const allTypefaces = await getAllTypefaces();
+
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <GlobalNavigation allTypefaces={allTypefaces} />
+        {children}
+      </body>
     </html>
   );
 }

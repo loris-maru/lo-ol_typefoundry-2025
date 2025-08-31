@@ -46,7 +46,7 @@ export default function MenuButton({
 
   return (
     <motion.nav
-      className="fixed right-36 top-4 z-50"
+      className="fixed z-50"
       animate={{
         width: menuOpen ? "100vw" : "46px",
         height: menuOpen ? "100vh" : "46px",

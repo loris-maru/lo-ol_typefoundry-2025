@@ -1,5 +1,6 @@
 "use client";
 
+import { useMenuStore } from "@/states/menu";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -15,10 +16,16 @@ export default function CollectionLink({
   fontsNumber: number;
 }) {
   const [mouseHover, setMouseHover] = useState<boolean>(false);
+  const { setMenuOpen } = useMenuStore();
+
+  const handleClick = () => {
+    setMenuOpen(false);
+  };
 
   return (
     <Link
       href={link}
+      onClick={handleClick}
       className="relative z-50 w-full flex flex-row justify-between items-baseline font-whisper hover:text-gray-300 cursor-pointer transition-all duration-300 mix-blend-difference"
       onMouseOver={() => setMouseHover(true)}
       onFocus={() => setMouseHover(true)}

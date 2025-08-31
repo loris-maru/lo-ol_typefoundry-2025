@@ -1,4 +1,4 @@
-import Navigation from "@/ui/segments/global/navigation";
+import CollectionNavigation from "@/ui/segments/global/navigation/collection-navigation";
 import type { Metadata } from "next";
 
 import { getAllTypefaces, getTypefaceBySlug } from "@/api/typefaces";
@@ -27,7 +27,7 @@ export default async function RootLayout({
 
     return (
       <div className="relative w-full">
-        <Navigation content={typeface} allTypefaces={allTypefaces} />
+        <CollectionNavigation content={typeface} allTypefaces={allTypefaces} />
         {children}
       </div>
     );
