@@ -1,46 +1,68 @@
+// CollectionCard.tsx
+"use client";
+
 import type { typeface } from "@/types/typefaces";
 import slugify from "@/utils/slugify";
 import { useFont } from "@react-hooks-library/core";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
+
+type HoverPayload =
+  | { hovering: false }
+  | { hovering: true; cardRect: DOMRect; nameRect: DOMRect };
 
 export default function CollectionCard({
   typeface,
   index,
   showContent,
+  setMouseHoverCard,
+  setMouseHoverCardRect, // NEW
 }: {
   typeface: typeface;
   index: number;
   showContent: boolean;
+  setMouseHoverCard: (isMouseHover: boolean) => void;
+  setMouseHoverCardRect: (p: HoverPayload) => void;
 }) {
-  const [isMouseHover, setIsMouseHover] = useState<boolean>(false);
+  const [isMouseHover, setIsMouseHover] = useState(false);
+  const cardRef = useRef<HTMLDivElement | null>(null); // NEW
+  const nameRef = useRef<HTMLHeadingElement | null>(null); // NEW
 
   const fontFamily = slugify(typeface.name);
+  const { loaded, error } = useFont(fontFamily, typeface.varFont);
+  if (error) return <div>Error loading font</div>;
+  if (!loaded) return <div>Loading font</div>;
 
-  const { loaded, error, font } = useFont(fontFamily, typeface.varFont);
+  const handleEnter = () => {
+    setIsMouseHover(true);
+    setMouseHoverCard(true);
+    if (cardRef.current && nameRef.current) {
+      setMouseHoverCardRect({
+        hovering: true,
+        cardRect: cardRef.current.getBoundingClientRect(),
+        nameRect: nameRef.current.getBoundingClientRect(),
+      });
+    }
+  };
 
-  if (error) {
-    return <div>Error loading font</div>;
-  }
-
-  if (!loaded) {
-    return <div>Loading font</div>;
-  }
+  const handleLeave = () => {
+    setIsMouseHover(false);
+    setMouseHoverCard(false);
+    setMouseHoverCardRect({ hovering: false });
+  };
 
   return (
     <motion.div
+      ref={cardRef} // <-- measure full card
       className="relative"
       key={typeface.slug}
-      onMouseOver={() => setIsMouseHover(true)}
-      onFocus={() => setIsMouseHover(true)}
-      onMouseOut={() => setIsMouseHover(false)}
-      onBlur={() => setIsMouseHover(false)}
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+      onFocus={handleEnter}
+      onBlur={handleLeave}
       initial={{ y: 50, opacity: 0 }}
-      animate={{
-        y: showContent ? 0 : 50,
-        opacity: showContent ? 1 : 0,
-      }}
+      animate={{ y: showContent ? 0 : 50, opacity: showContent ? 1 : 0 }}
       transition={{
         duration: 0.6,
         ease: [0.25, 0.46, 0.45, 0.94],
@@ -50,29 +72,34 @@ export default function CollectionCard({
       <Link
         href={`/collection/${typeface.slug}`}
         aria-label={typeface.name}
-        className="relative flex justify-between items-center text-white"
+        className="relative z-10 flex items-center justify-between text-white"
       >
-        {/* Collection name */}
+        {/* Name = hover trigger; we measure its height */}
         <h3
-          className="text-[8vw] transition-all duration-300 ease-in-out"
+          ref={nameRef}
+          className="text-[8vw] transition-all duration-500 ease-in-out whitespace-nowrap"
           style={{
-            fontFamily: fontFamily,
+            fontFamily,
             fontVariationSettings: `'wght' ${isMouseHover ? 900 : 400}, 'wdth' 900, 'opsz' 900, 'slnt' 0`,
-            paddingLeft: isMouseHover ? "80px" : 0,
+            paddingLeft: isMouseHover ? "72px" : 0,
           }}
         >
           {typeface.name}
         </h3>
 
-        {/* Font count and axis info */}
         <div
-          className="text-lg font-normal font-whisper transition-alll duration-300 ease-in-out"
+          className="relative transition-all duration-300 ease-in-out"
           style={{
-            paddingRight: isMouseHover ? "80px" : 0,
+            paddingRight: isMouseHover ? "60px" : 0,
+            opacity: isMouseHover ? 1 : 0,
           }}
         >
-          <div className="mb-1">{typeface.singleFontList.length} fonts</div>
-          <div>{typeface.category}</div>
+          <div className="w-[20vw] text-lg font-normal font-whisper transition-all duration-500 ease-in-out divide-y divide-white border border-white border-solid rounded-r-full">
+            <div className="mb-1 px-3 py-2">
+              {typeface.singleFontList.length} fonts
+            </div>
+            <div className="px-3 py-2">{typeface.category}</div>
+          </div>
         </div>
       </Link>
     </motion.div>
