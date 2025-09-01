@@ -2,7 +2,7 @@
 
 import { typeface } from "@/types/typefaces";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 export default function HeroSection({ typefaces }: { typefaces: typeface[] }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -11,16 +11,6 @@ export default function HeroSection({ typefaces }: { typefaces: typeface[] }) {
     target: wrapperRef,
     offset: ["start start", "end start"],
   });
-
-  // Debug scroll progress in development
-  useEffect(() => {
-    if (process.env.NODE_ENV === "development") {
-      const unsubscribe = scrollYProgress.on("change", (latest) => {
-        console.log("Scroll progress:", latest);
-      });
-      return unsubscribe;
-    }
-  }, [scrollYProgress]);
 
   // Add fallback values and ensure transforms work in production
   const width = useTransform(
