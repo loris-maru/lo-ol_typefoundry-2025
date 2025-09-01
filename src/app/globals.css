@@ -91,3 +91,10 @@ mux-player video {
   height: 100% !important;
   object-fit: cover !important;
 }
+
+.delay-enter {
+  transition-delay: 300ms;
+}
+.group:hover .delay-enter {
+  transition-delay: 0ms; /* reset when leaving */
+}

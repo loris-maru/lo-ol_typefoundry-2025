@@ -46,11 +46,29 @@ export default function CollectionsList({ typefaces }: CollectionsListProp) {
   useEffect(() => {
     const move = (e: MouseEvent) => {
       if (locked) return;
-      const size = defaultSizePxRef.current || 0;
-      const hostRect = containerRef.current?.getBoundingClientRect();
-      const left = hostRect?.left ?? 0;
-      const top = hostRect?.top ?? 0;
 
+      const hostRect = containerRef.current?.getBoundingClientRect();
+      if (!hostRect) return;
+
+      const left = hostRect.left;
+      const top = hostRect.top;
+      const right = hostRect.right;
+      const bottom = hostRect.bottom;
+
+      // Check if mouse is inside the CollectionList boundaries
+      const isInside =
+        e.clientX >= left &&
+        e.clientX <= right &&
+        e.clientY >= top &&
+        e.clientY <= bottom;
+
+      if (!isInside) {
+        // Hide cursor when outside CollectionList
+        setCursor({ x: -9999, y: -9999, w: 0, h: 0 });
+        return;
+      }
+
+      const size = defaultSizePxRef.current || 0;
       setCursor({
         w: size,
         h: size,
@@ -58,6 +76,7 @@ export default function CollectionsList({ typefaces }: CollectionsListProp) {
         y: e.clientY - top - size / 2,
       });
     };
+
     window.addEventListener("mousemove", move, { passive: true });
     return () => window.removeEventListener("mousemove", move);
   }, [locked]);
