@@ -21,11 +21,8 @@ export default function CollectionPage({
 }) {
   const fontName = slugify(content.name);
   const fontUrl = content.varFont;
-  const [videoLoaded, setVideoLoaded] = useState(false);
-  const [fakeProgress, setFakeProgress] = useState(0);
-  const [progressBar2, setProgressBar2] = useState(0);
-  const [progressBar3, setProgressBar3] = useState(0);
-  const [progressBar4, setProgressBar4] = useState(0);
+  const [videoLoaded, setVideoLoaded] = useState<boolean>(false);
+  const [fakeProgress, setFakeProgress] = useState<number>(0);
 
   const { error, loaded: fontLoaded } = useFont(fontName, fontUrl);
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -50,11 +47,6 @@ export default function CollectionPage({
 
         // Main progress bar
         setFakeProgress(progress);
-
-        // Staggered progress bars with different delays
-        setProgressBar2(Math.min(Math.max(0, progress - 15), 100)); // 15% delay
-        setProgressBar3(Math.min(Math.max(0, (progress - 30) * 1.8), 100)); // 30% delay, 1.8x speed
-        setProgressBar4(Math.min(Math.max(0, (progress - 45) * 2.2), 100)); // 45% delay, 2.2x speed
 
         if (progress < 100 && !(fontLoaded && videoLoaded)) {
           requestAnimationFrame(animateProgress);
@@ -98,47 +90,16 @@ export default function CollectionPage({
               background: "rgba(139, 92, 246, 1)", // Violet
             }}
           />
-
-          {/* Progress Bar 2 - Delayed by 15% */}
-          <div
-            className="absolute bottom-0 left-0 h-full transition-all duration-100 ease-out opacity-80"
-            style={{
-              width: `${progressBar2}vw`,
-              background: "rgba(59, 130, 246, 1)", // Blue
-            }}
-          />
-
-          {/* Progress Bar 3 - Delayed by 30% */}
-          <div
-            className="absolute bottom-0 left-0 h-full transition-all duration-100 ease-out opacity-60"
-            style={{
-              width: `${progressBar3}vw`,
-              background: "rgba(0, 0, 0, 1)", // Green
-            }}
-          />
-
-          {/* Progress Bar 4 - Delayed by 45% */}
-          <div
-            className="absolute bottom-0 left-0 h-full transition-all duration-100 ease-out opacity-40"
-            style={{
-              width: `${progressBar4}vw`,
-              background: "rgba(80, 4, 239, 1)", // Amber
-            }}
-          />
         </div>
 
         {/* Loading text with progress indicators */}
-        <div className="relative z-10 text-left text-[20vw] text-white font-black leading-[1.05]">
-          <div>Loading</div>
-          <div>{content.name}</div>
-        </div>
-
-        {/* Progress percentage indicators */}
-        <div
-          id="loader-progress-bar-1"
-          className="absolute bottom-6 right-6 text-violet-400 text-2xl font-bold z-10"
-        >
-          {Math.round(fakeProgress)}%
+        <div className="flex flex-col items-start relative z-10 text-left text-white font-normal leading-[1.05]">
+          <div className="flex flex-col divide-y divide-white border-white border-solid border">
+            <div className="px-4 py-3">Loading...</div>
+            <div className="px-4 py-3">Collection: {content.name}</div>
+          </div>
+          {/* Progress percentage indicators */}
+          <div className="text-[50vw]">{Math.round(fakeProgress)}%</div>
         </div>
       </div>
     );

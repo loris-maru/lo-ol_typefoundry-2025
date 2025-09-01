@@ -77,7 +77,7 @@ export default function CollectionCard({
         {/* Name = hover trigger; we measure its height */}
         <h3
           ref={nameRef}
-          className="text-[8vw] transition-all duration-500 ease-in-out whitespace-nowrap"
+          className="text-[7vw] transition-all duration-500 ease-in-out whitespace-nowrap"
           style={{
             fontFamily,
             fontVariationSettings: `'wght' ${isMouseHover ? 900 : 400}, 'wdth' 900, 'opsz' 900, 'slnt' 0`,
@@ -94,7 +94,7 @@ export default function CollectionCard({
             opacity: isMouseHover ? 1 : 0,
           }}
         >
-          <div className="w-[20vw] text-lg font-normal font-whisper transition-all duration-500 ease-in-out divide-y divide-white border border-white border-solid rounded-r-full">
+          <div className="w-[16vw] text-base font-normal font-whisper transition-all duration-500 ease-in-out divide-y divide-white border border-white border-solid rounded-r-full">
             <div className="mb-1 px-3 py-2">
               {typeface.singleFontList.length} fonts
             </div>
