@@ -20,26 +20,20 @@ export default function CardTopic({
   const getWidth = () => {
     if (isHovered) {
       return "50%";
-    } else if (
-      activeTopic?.title !== topic.title &&
-      activeTopic?.title !== ""
-    ) {
+    } else if (activeTopic && activeTopic.title !== topic.title) {
       // Another card is hovered (activeTopic is set but not this one)
-      return "14%";
+      return "25%";
     } else {
-      // No cards are hovered (activeTopic is empty or this one is active)
-      return "33%";
+      // No cards are hovered (activeTopic is null or this one is active)
+      return "33.33%";
     }
   };
 
   return (
     <div
-      className="relative z-10 h-[42vh] border border-solid border-black font-whisper p-6 transition-all duration-700 ease-in-out overflow-hidden bg-white flex flex-col justify-between"
+      className="relative z-10 h-[42vh] font-whisper p-6 transition-all duration-700 ease-in-out overflow-hidden bg-white flex flex-col justify-between"
       style={{
         width: getWidth(),
-        border: isHovered
-          ? "0px solid rgba(0, 0, 0, 0)"
-          : "1px solid rgba(0, 0, 0, 0.12)",
       }}
       onMouseEnter={() => {
         setIsHovered(true);
@@ -60,7 +54,7 @@ export default function CardTopic({
     >
       <div className="relative z-30 flex flex-col justify-between h-full w-full">
         <div>
-          <div className="text-sm">{topic.title}</div>
+          <div className="text-sm">{topic.subtitle}</div>
           <h4 className="text-5xl font-medium font-mayday uppercase tracking-wide leading-none mt-2">
             {topic.title}
           </h4>

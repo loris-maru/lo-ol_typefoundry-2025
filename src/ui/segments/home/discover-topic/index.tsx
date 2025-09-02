@@ -3,6 +3,7 @@ import { useState } from "react";
 
 export type Topic = {
   title: string;
+  subtitle: string;
   description: string;
   link: string;
   textSize: string;
@@ -11,28 +12,31 @@ export type Topic = {
 
 const TOPICS: Topic[] = [
   {
-    title: "Discover Hangeul",
+    subtitle: "Discover",
+    title: "Hangeul",
     description:
       "A Klingon will be sure to miss what they won't understand. And with what they understand, they will love what they're missing.",
     link: "/discover-hangeul",
     textSize: "30vw",
-    heading: ["Type", "Design"],
+    heading: ["Hangeul", "Design"],
   },
   {
-    title: "Discover Hangeul",
+    subtitle: "Tailored",
+    title: "Custom typeface",
     description:
       "A Klingon will be sure to miss what they won't understand. And with what they understand, they will love what they're missing.",
     link: "/discover-hangeul",
     textSize: "30vw",
-    heading: ["Script", "Latin"],
+    heading: ["Custom", "Type"],
   },
   {
-    title: "Discover Hangeul",
+    subtitle: "Learn",
+    title: "Workshops",
     description:
       "A Klingon will be sure to miss what they won't understand. And with what they understand, they will love what they're missing.",
     link: "/discover-hangeul",
     textSize: "30vw",
-    heading: ["Hangeul", "Korea"],
+    heading: ["Latin", "Hangeul"],
   },
 ];
 
@@ -47,14 +51,15 @@ export default function DiscoverTopics() {
 
   const handleCardLeave = () => {
     setIsAnyCardHovered(false);
+    setActiveTopic(null);
   };
 
   return (
     <div className="relative w-full h-screen flex items-center justify-center bg-white">
-      <div className="relative w-[76vw] flex flex-row flex-nowrap justify-between">
-        {TOPICS.map((topic: Topic) => (
+      <div className="relative w-[76vw] flex flex-row flex-nowrap justify-between border border-solid border-black divide-x divide-black">
+        {TOPICS.map((topic: Topic, index: number) => (
           <CardTopic
-            key={topic.title}
+            key={`${topic.title}-${index}`}
             topic={topic}
             activeTopic={activeTopic}
             setActiveTopic={handleCardHover}
