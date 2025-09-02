@@ -1,7 +1,7 @@
-import { TextBlock as TextBlockType } from "@/states/playground";
-import SettingButton from "@/ui/segments/collection/playground/setting-button";
-import SettingMenu from "@/ui/segments/collection/playground/setting-menu";
-import { useState } from "react";
+import { TextBlock as TextBlockType } from '@/states/playground';
+import SettingButton from '@/ui/segments/collection/playground/setting-button';
+import SettingMenu from '@/ui/segments/collection/playground/setting-menu';
+import { useState } from 'react';
 
 interface TextBlockProps {
   block: TextBlockType;
@@ -14,13 +14,13 @@ export default function TextBlock({ block, onUpdate }: TextBlockProps) {
   // Create settings object for the SettingMenu
   const textBlockSettings = {
     wght: block.weight,
-    setWght: (value: number) => onUpdate(block.id, "weight", value),
+    setWght: (value: number) => onUpdate(block.id, 'weight', value),
     has_wdth: true,
     wdth: block.width,
-    setWdth: (value: number) => onUpdate(block.id, "width", value),
+    setWdth: (value: number) => onUpdate(block.id, 'width', value),
     has_slnt: true,
     slnt: block.slant,
-    setSlnt: (value: number) => onUpdate(block.id, "slant", value),
+    setSlnt: (value: number) => onUpdate(block.id, 'slant', value),
     has_opsz: false,
     opsz: 0,
     setOpsz: () => {},
@@ -28,20 +28,20 @@ export default function TextBlock({ block, onUpdate }: TextBlockProps) {
     italic: false,
     setItalic: () => {},
     lh: block.leading,
-    setLh: (value: number) => onUpdate(block.id, "leading", value),
+    setLh: (value: number) => onUpdate(block.id, 'leading', value),
   };
 
   // Get column classes based on block columns
   const getColumnClasses = () => {
     switch (block.columns) {
       case 1:
-        return "grid-cols-1";
+        return 'grid-cols-1';
       case 2:
-        return "grid-cols-2";
+        return 'grid-cols-2';
       case 3:
-        return "grid-cols-3";
+        return 'grid-cols-3';
       default:
-        return "grid-cols-1";
+        return 'grid-cols-1';
     }
   };
 
@@ -51,20 +51,17 @@ export default function TextBlock({ block, onUpdate }: TextBlockProps) {
       return [block.text];
     } else if (block.columns === 2) {
       // Split text into two parts for 2 columns
-      const words = block.text.split(" ");
+      const words = block.text.split(' ');
       const midPoint = Math.ceil(words.length / 2);
-      return [
-        words.slice(0, midPoint).join(" "),
-        words.slice(midPoint).join(" "),
-      ];
+      return [words.slice(0, midPoint).join(' '), words.slice(midPoint).join(' ')];
     } else if (block.columns === 3) {
       // Split text into three parts for 3 columns
-      const words = block.text.split(" ");
+      const words = block.text.split(' ');
       const partSize = Math.ceil(words.length / 3);
       return [
-        words.slice(0, partSize).join(" "),
-        words.slice(partSize, partSize * 2).join(" "),
-        words.slice(partSize * 2).join(" "),
+        words.slice(0, partSize).join(' '),
+        words.slice(partSize, partSize * 2).join(' '),
+        words.slice(partSize * 2).join(' '),
       ];
     }
     return [block.text];
@@ -79,7 +76,7 @@ export default function TextBlock({ block, onUpdate }: TextBlockProps) {
 
       {/* Settings menu - rendered conditionally */}
       {showMenu && (
-        <div className="absolute right-4 top-14 z-20 w-64">
+        <div className="absolute top-14 right-4 z-20 w-64">
           <SettingMenu settings={textBlockSettings} />
         </div>
       )}
@@ -93,9 +90,9 @@ export default function TextBlock({ block, onUpdate }: TextBlockProps) {
               onChange={(e) => {
                 const newContent = [...columnContent];
                 newContent[index] = e.target.value;
-                onUpdate(block.id, "text", newContent.join(" "));
+                onUpdate(block.id, 'text', newContent.join(' '));
               }}
-              className="w-full h-auto resize-none border-none outline-none font-fuzar overflow-hidden"
+              className="font-fuzar h-auto w-full resize-none overflow-hidden border-none outline-none"
               style={{
                 fontSize: `${block.fontSize}px`,
                 lineHeight: block.leading,

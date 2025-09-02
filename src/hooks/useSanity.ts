@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { sanityServer } from "@/api/sanity";
-import useSWR, { SWRConfiguration } from "swr";
+import { sanityServer } from '@/api/sanity';
+import useSWR, { SWRConfiguration } from 'swr';
 
 /**
  * A global hook to fetch data from Sanity using GROQ.
@@ -21,13 +21,9 @@ export function useSanity<T = unknown>(
   config?: SWRConfiguration,
 ) {
   // Key must be null to disable SWR when query is null/undefined
-  const key = query ? ["sanity", query, params ?? {}] : null;
+  const key = query ? ['sanity', query, params ?? {}] : null;
 
-  const fetcher = async (
-    _key: string,
-    q: string,
-    p: Record<string, unknown>,
-  ) => {
+  const fetcher = async (_key: string, q: string, p: Record<string, unknown>) => {
     return sanityServer.fetch<T>(q, p);
   };
 

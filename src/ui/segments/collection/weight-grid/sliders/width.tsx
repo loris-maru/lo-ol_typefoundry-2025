@@ -14,7 +14,7 @@ export default function WidthSlider({
 }) {
   return (
     <div className="flex flex-row items-center gap-2">
-      <span className="text-base text-white font-whisper">Width:</span>
+      <span className="font-whisper text-base text-white">Width:</span>
       <input
         type="range"
         min={widthSettings.min}
@@ -22,10 +22,10 @@ export default function WidthSlider({
         step={widthSettings.step}
         value={widthValue}
         onChange={(e) => setWidthValue(Number(e.target.value))}
-        className="w-44 h-2 appearance-none bg-white/20 rounded-full slider-custom"
+        className="slider-custom h-2 w-44 appearance-none rounded-full bg-white/20"
         aria-label="Width axis"
       />
-      <span className="text-sm text-white/60 w-8 text-right">{widthValue}</span>
+      <span className="w-8 text-right text-sm text-white/60">{widthValue}</span>
     </div>
   );
 }

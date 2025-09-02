@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import { useCartStore } from "@/states/cart";
-import { FontSettings, singleFont } from "@/types/typefaces";
-import License from "@/ui/segments/collection/shop/license";
-import Users from "@/ui/segments/collection/shop/users";
-import { cn } from "@/utils/classNames";
-import { generateCartKey } from "@/utils/generateCartKey";
-import slugify from "@/utils/slugify";
-import { FiPlus } from "react-icons/fi";
-import { RiDeleteBinLine } from "react-icons/ri";
+import { useCartStore } from '@/states/cart';
+import { FontSettings, singleFont } from '@/types/typefaces';
+import License from '@/ui/segments/collection/shop/license';
+import Users from '@/ui/segments/collection/shop/users';
+import { cn } from '@/utils/classNames';
+import { generateCartKey } from '@/utils/generateCartKey';
+import slugify from '@/utils/slugify';
+import { FiPlus } from 'react-icons/fi';
+import { RiDeleteBinLine } from 'react-icons/ri';
 
 export default function SingleFontItem({
   content,
@@ -22,14 +22,14 @@ export default function SingleFontItem({
   price: number;
 }) {
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  const [license, setLicense] = useState<string>("");
+  const [license, setLicense] = useState<string>('');
   const [users, setUsers] = useState<[number, number]>([1, 1]);
 
   const { addToCart, removeFromCart, cart } = useCartStore();
 
   const { hasOpticalSize, hasSlant, hasWidth, isItalic } = settings;
 
-  console.log("What are my settings? ", settings);
+  console.log('What are my settings? ', settings);
 
   const itemFullName = () => {
     let fullName = familyName;
@@ -39,7 +39,7 @@ export default function SingleFontItem({
     }
 
     if (hasSlant) {
-      fullName += " Slanted";
+      fullName += ' Slanted';
     }
 
     if (hasWidth) {
@@ -49,7 +49,7 @@ export default function SingleFontItem({
     fullName += ` ${content.weightName}`;
 
     if (isItalic) {
-      fullName += " Italic";
+      fullName += ' Italic';
     }
 
     return fullName;
@@ -91,7 +91,7 @@ export default function SingleFontItem({
     }
 
     // License type multiplier
-    if (license === "desktop & web") {
+    if (license === 'desktop & web') {
       multiplier *= 1.5;
     }
 
@@ -152,10 +152,10 @@ export default function SingleFontItem({
       );
 
       if (cartItem) {
-        console.log("Removing cart item:", cartItem);
+        console.log('Removing cart item:', cartItem);
         removeFromCart(cartItem._key);
       } else {
-        console.log("Cart item not found for removal");
+        console.log('Cart item not found for removal');
       }
     } else {
       addToCart(item);
@@ -163,7 +163,7 @@ export default function SingleFontItem({
   };
 
   return (
-    <div className="relative w-full flex flex-row justify-between items-center text-white">
+    <div className="relative flex w-full flex-row items-center justify-between text-white">
       <div className="flex flex-row text-3xl">
         <div
           className="relative w-[40vw] capitalize"
@@ -181,25 +181,23 @@ export default function SingleFontItem({
           <License license={license} setLicense={setLicense} />
         </div>
       </div>
-      <div className="text-2xl font-medium font-whisper">
-        <div className="relative group">
+      <div className="font-whisper text-2xl font-medium">
+        <div className="group relative">
           <button
             type="button"
             name="add-or-remove-from-the-cart"
             aria-label={
-              isInCart
-                ? `Remove ${itemFullName()} from cart`
-                : `Add ${itemFullName()} to cart`
+              isInCart ? `Remove ${itemFullName()} from cart` : `Add ${itemFullName()} to cart`
             }
             onClick={handleCartAction}
             disabled={!isInCart && !license}
             className={cn(
-              "border rounded-full cursor-pointer px-4 py-2 text-base flex items-center justify-between w-32 transition-all duration-300 ease-in-out",
+              'flex w-32 cursor-pointer items-center justify-between rounded-full border px-4 py-2 text-base transition-all duration-300 ease-in-out',
               isInCart
-                ? "border-white bg-white text-black"
+                ? 'border-white bg-white text-black'
                 : !license
-                  ? "border-neutral-500 text-neutral-500 cursor-not-allowed opacity-50"
-                  : "border-neutral-700 text-neutral-400 hover:border-white hover:text-white",
+                  ? 'cursor-not-allowed border-neutral-500 text-neutral-500 opacity-50'
+                  : 'border-neutral-700 text-neutral-400 hover:border-white hover:text-white',
             )}
             style={{
               fontVariationSettings: `'wght' ${isHovered ? 900 : 400}`,
@@ -211,18 +209,18 @@ export default function SingleFontItem({
           >
             <div className="relative top-px">${displayPrice}</div>
             {isInCart ? (
-              <RiDeleteBinLine className="w-5 h-5 text-red-500" />
+              <RiDeleteBinLine className="h-5 w-5 text-red-500" />
             ) : (
-              <FiPlus className="w-5 h-5" />
+              <FiPlus className="h-5 w-5" />
             )}
           </button>
 
           {/* Tooltip for disabled button - hover only */}
           {!isInCart && !license && (
-            <div className="absolute bottom-full left-1/2 transform -translate-x-3/4 mb-2 w-44 px-3 py-2 bg-white text-black text-sm rounded-lg z-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none text-center">
+            <div className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 w-44 -translate-x-3/4 transform rounded-lg bg-white px-3 py-2 text-center text-sm text-black opacity-0 transition-opacity duration-200 group-hover:opacity-100">
               <div>Please choose</div>
               <div>a license first</div>
-              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black"></div>
+              <div className="absolute top-full left-1/2 h-0 w-0 -translate-x-1/2 transform border-t-4 border-r-4 border-l-4 border-transparent border-t-black"></div>
             </div>
           )}
         </div>

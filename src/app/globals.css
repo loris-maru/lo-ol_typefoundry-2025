@@ -1,9 +1,9 @@
-@import "tailwindcss";
-@import "keen-slider/keen-slider.min.css";
+@import 'tailwindcss';
+@import 'keen-slider/keen-slider.min.css';
 
 @font-face {
-  font-family: "Fuzar";
-  src: url("/fonts/Fuzar_GX.woff2") format("woff2");
+  font-family: 'Fuzar';
+  src: url('/fonts/Fuzar_GX.woff2') format('woff2');
   font-weight: 100 900;
   font-width: 100 900;
   font-style: normal;
@@ -11,36 +11,36 @@
 }
 
 @font-face {
-  font-family: "Kronik";
-  src: url("/fonts/KronikGrotesk_GX.woff2") format("woff2");
+  font-family: 'Kronik';
+  src: url('/fonts/KronikGrotesk_GX.woff2') format('woff2');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Whisper";
-  src: url("/fonts/WhisperMono-VAR.woff2") format("woff2");
+  font-family: 'Whisper';
+  src: url('/fonts/WhisperMono-VAR.woff2') format('woff2');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Mayday";
+  font-family: 'Mayday';
   src:
-    url("/fonts/MaydayOriginal-Black.woff2") format("woff2"),
-    url("/fonts/MaydayOriginal-Black.woff") format("woff");
+    url('/fonts/MaydayOriginal-Black.woff2') format('woff2'),
+    url('/fonts/MaydayOriginal-Black.woff') format('woff');
   font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
 
 @theme {
-  --font-fuzar: "Fuzar", sans-serif;
-  --font-kronik: "Kronik", sans-serif;
-  --font-whisper: "Whisper", sans-serif;
-  --font-mayday: "Mayday", sans-serif;
+  --font-fuzar: 'Fuzar', sans-serif;
+  --font-kronik: 'Kronik', sans-serif;
+  --font-whisper: 'Whisper', sans-serif;
+  --font-mayday: 'Mayday', sans-serif;
 }
 
 html,

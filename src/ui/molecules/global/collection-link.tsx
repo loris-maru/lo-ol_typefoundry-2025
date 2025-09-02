@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useMenuStore } from "@/states/menu";
-import Link from "next/link";
-import { useState } from "react";
+import { useMenuStore } from '@/states/menu';
+import Link from 'next/link';
+import { useState } from 'react';
 
 export default function CollectionLink({
   link,
@@ -26,14 +26,14 @@ export default function CollectionLink({
     <Link
       href={link}
       onClick={handleClick}
-      className="relative z-50 w-full flex flex-row justify-between items-baseline font-whisper hover:text-gray-300 cursor-pointer transition-all duration-300 mix-blend-difference"
+      className="font-whisper relative z-50 flex w-full cursor-pointer flex-row items-baseline justify-between mix-blend-difference transition-all duration-300 hover:text-gray-300"
       onMouseOver={() => setMouseHover(true)}
       onFocus={() => setMouseHover(true)}
       onMouseOut={() => setMouseHover(false)}
       onBlur={() => setMouseHover(false)}
     >
       <div
-        className="text-2xl text-white font-whisper"
+        className="font-whisper text-2xl text-white"
         style={{ fontVariationSettings: `'wght' ${mouseHover ? 700 : 300}` }}
       >
         {label}

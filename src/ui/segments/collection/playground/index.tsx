@@ -1,50 +1,50 @@
-"use client";
+'use client';
 
-import { typeface } from "@/types/typefaces";
-import AddBlock from "@/ui/segments/collection/playground/blocks/add-block";
-import OneColumnSection from "@/ui/segments/collection/playground/blocks/one-column-section";
-import ThreeColumnSection from "@/ui/segments/collection/playground/blocks/three-column-section";
-import TwoColumnSection from "@/ui/segments/collection/playground/blocks/two-column-section";
-import PlaygroundHeader from "@/ui/segments/collection/playground/header";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef, useState } from "react";
+import { typeface } from '@/types/typefaces';
+import AddBlock from '@/ui/segments/collection/playground/blocks/add-block';
+import OneColumnSection from '@/ui/segments/collection/playground/blocks/one-column-section';
+import ThreeColumnSection from '@/ui/segments/collection/playground/blocks/three-column-section';
+import TwoColumnSection from '@/ui/segments/collection/playground/blocks/two-column-section';
+import PlaygroundHeader from '@/ui/segments/collection/playground/header';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef, useState } from 'react';
 
 export default function Playground({ content }: { content: typeface }) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [sections, setSections] = useState([
-    { type: "one", id: 1 },
-    { type: "two", id: 2 },
-    { type: "three", id: 3 },
+    { type: 'one', id: 1 },
+    { type: 'two', id: 2 },
+    { type: 'three', id: 3 },
   ]);
 
   // Scroll progress based on PlaygroundHeader reaching the top
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start end", "start start"],
+    offset: ['start end', 'start start'],
   });
 
-  const width = useTransform(scrollYProgress, [0, 1], ["50vw", "100vw"]);
-  const radius = useTransform(scrollYProgress, [0, 1], ["50px", "0px"]);
+  const width = useTransform(scrollYProgress, [0, 1], ['50vw', '100vw']);
+  const radius = useTransform(scrollYProgress, [0, 1], ['50px', '0px']);
 
   // Early fade-in on first part of page scroll (optional polish)
   const { scrollY } = useScroll();
   const earlyOpacity = useTransform(scrollY, [0, 120], [0, 1]);
   const earlyPointer = useTransform(scrollY, (y) =>
-    y < 80 ? ("none" as const) : ("auto" as const),
+    y < 80 ? ('none' as const) : ('auto' as const),
   );
 
-  const addSection = (type: "one" | "two" | "three") => {
+  const addSection = (type: 'one' | 'two' | 'three') => {
     const newId = Math.max(...sections.map((s) => s.id)) + 1;
     setSections([...sections, { type, id: newId }]);
   };
 
   const renderSection = (section: { type: string; id: number }) => {
     switch (section.type) {
-      case "one":
+      case 'one':
         return <OneColumnSection key={section.id} content={content} />;
-      case "two":
+      case 'two':
         return <TwoColumnSection key={section.id} content={content} />;
-      case "three":
+      case 'three':
         return <ThreeColumnSection key={section.id} content={content} />;
       default:
         return null;
@@ -61,13 +61,13 @@ export default function Playground({ content }: { content: typeface }) {
           className="font-fuzar relative flex w-full flex-col items-start justify-start bg-[#F5F5F5] p-10"
           style={{ width, borderRadius: radius }}
         >
-          <div className="relative flex flex-col w-full gap-4 pb-16">
+          <div className="relative flex w-full flex-col gap-4 pb-16">
             <div ref={sectionRef}>
               <PlaygroundHeader content={content} />
             </div>
 
             {/* Column Sections */}
-            <div className="w-full mt-3">
+            <div className="mt-3 w-full">
               {sections.map((section) => (
                 <div key={section.id}>
                   {renderSection(section)}

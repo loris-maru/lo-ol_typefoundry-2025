@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useScrollBlock } from "@/hooks/useScrollBlock";
-import { useShopStore } from "@/states/shop";
-import { typeface } from "@/types/typefaces";
-import Shop from "@/ui/segments/collection/shop";
-import { AnimatePresence, motion } from "framer-motion";
-import CloseButton from "./close-button";
+import { useScrollBlock } from '@/hooks/useScrollBlock';
+import { useShopStore } from '@/states/shop';
+import { typeface } from '@/types/typefaces';
+import Shop from '@/ui/segments/collection/shop';
+import { AnimatePresence, motion } from 'framer-motion';
+import CloseButton from './close-button';
 
 interface ShopButtonProps {
   content: typeface;
@@ -23,33 +23,31 @@ export default function ShopButton({ content }: ShopButtonProps) {
 
   return (
     <motion.nav
-      className="fixed right-20 top-4 z-[60]"
+      className="fixed top-4 right-20 z-[60]"
       animate={{
-        width: shopOpen ? "100vw" : "46px",
-        height: shopOpen ? "100vh" : "46px",
-        right: shopOpen ? 0 : "80px",
-        top: shopOpen ? 0 : "16px",
+        width: shopOpen ? '100vw' : '46px',
+        height: shopOpen ? '100vh' : '46px',
+        right: shopOpen ? 0 : '80px',
+        top: shopOpen ? 0 : '16px',
       }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
       <motion.button
         onClick={() => setShopOpen(true)}
-        className="w-full h-full rounded-full bg-black text-white hover:bg-gray-800 transition-colors duration-200 flex items-center justify-center"
+        className="flex h-full w-full items-center justify-center rounded-full bg-black text-white transition-colors duration-200 hover:bg-gray-800"
         animate={{
-          borderRadius: shopOpen ? "0px" : "9999px",
+          borderRadius: shopOpen ? '0px' : '9999px',
         }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
       >
-        {!shopOpen && (
-          <span className="text-sm font-medium font-whisper">Buy</span>
-        )}
+        {!shopOpen && <span className="font-whisper text-sm font-medium">Buy</span>}
       </motion.button>
 
       {/* Shop Content - Only appears after expansion */}
       <AnimatePresence>
         {shopOpen && (
           <motion.div
-            className="absolute inset-0 flex items-center justify-center text-white bg-black p-12"
+            className="absolute inset-0 flex items-center justify-center bg-black p-12 text-white"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

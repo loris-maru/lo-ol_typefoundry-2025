@@ -1,5 +1,5 @@
-import { typeface } from "@/types/typefaces";
-import { useCallback, useEffect, useState } from "react";
+import { typeface } from '@/types/typefaces';
+import { useCallback, useEffect, useState } from 'react';
 
 interface UseTypefacesOptions {
   search?: string;
@@ -23,9 +23,7 @@ interface UseTypefacesReturn {
   refetch: () => void;
 }
 
-export function useTypefaces(
-  options: UseTypefacesOptions = {},
-): UseTypefacesReturn {
+export function useTypefaces(options: UseTypefacesOptions = {}): UseTypefacesReturn {
   const [typefaces, setTypefaces] = useState<typeface[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -36,12 +34,12 @@ export function useTypefaces(
       setError(null);
 
       const params = new URLSearchParams();
-      if (options.search) params.append("search", options.search);
+      if (options.search) params.append('search', options.search);
       if (options.filters) {
         Object.entries(options.filters).forEach(([key, value]) => {
           if (value !== undefined) {
             if (Array.isArray(value)) {
-              params.append(key, value.join(","));
+              params.append(key, value.join(','));
             } else {
               params.append(key, String(value));
             }
@@ -50,12 +48,12 @@ export function useTypefaces(
       }
 
       const response = await fetch(`/api/typefaces?${params.toString()}`);
-      if (!response.ok) throw new Error("Failed to fetch typefaces");
+      if (!response.ok) throw new Error('Failed to fetch typefaces');
 
       const data = await response.json();
       setTypefaces(data.typefaces);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setIsLoading(false);
     }
@@ -85,12 +83,12 @@ export function useTypeface(slug: string) {
         setError(null);
 
         const response = await fetch(`/api/typefaces/${slug}`);
-        if (!response.ok) throw new Error("Failed to fetch typeface");
+        if (!response.ok) throw new Error('Failed to fetch typeface');
 
         const data = await response.json();
         setTypeface(data.typeface);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "An error occurred");
+        setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
         setIsLoading(false);
       }

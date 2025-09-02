@@ -1,10 +1,6 @@
-import { TypefaceSettings } from "@/types/playground";
+import { TypefaceSettings } from '@/types/playground';
 
-export default function SettingMenu({
-  settings,
-}: {
-  settings: TypefaceSettings;
-}) {
+export default function SettingMenu({ settings }: { settings: TypefaceSettings }) {
   const {
     wght,
     setWght,

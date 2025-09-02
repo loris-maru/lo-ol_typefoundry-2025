@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 export type CollectionDetailsCardProps = {
   cell1: string;
@@ -18,13 +18,13 @@ export default function CollectionDetailsCard({
   cell6,
 }: CollectionDetailsCardProps) {
   return (
-    <div className="grid grid-cols-3 grid-rows-2 w-[46vw] h-[80px] border border-white divide-x divide-y divide-white text-white font-kronik font-medium">
-      <div className="w-full h-full flex items-center px-3">{cell1}</div>
-      <div className="w-full h-full flex items-center px-3">{cell2}</div>
-      <div className="w-full h-full flex items-center px-3">{cell3}</div>
-      <div className="w-full h-full flex items-center px-3">{cell4}</div>
-      <div className="w-full h-full flex items-center px-3">{cell5}</div>
-      <div className="w-full h-full flex items-center px-3">{cell6}</div>
+    <div className="font-kronik grid h-[80px] w-[46vw] grid-cols-3 grid-rows-2 divide-x divide-y divide-white border border-white font-medium text-white">
+      <div className="flex h-full w-full items-center px-3">{cell1}</div>
+      <div className="flex h-full w-full items-center px-3">{cell2}</div>
+      <div className="flex h-full w-full items-center px-3">{cell3}</div>
+      <div className="flex h-full w-full items-center px-3">{cell4}</div>
+      <div className="flex h-full w-full items-center px-3">{cell5}</div>
+      <div className="flex h-full w-full items-center px-3">{cell6}</div>
     </div>
   );
 }

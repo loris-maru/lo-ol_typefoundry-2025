@@ -1,36 +1,31 @@
-export default function HeroHeader({
-  showContent = true,
-}: {
-  showContent?: boolean;
-}) {
+export default function HeroHeader({ showContent = true }: { showContent?: boolean }) {
   if (!showContent) {
     return null;
   }
 
   return (
-    <div className="relative w-full flex flex-col">
-      <h2 className="text-[9vw] text-white font-mayday font-black uppercase leading-[0.9] tracking-wide">
+    <div className="relative flex w-full flex-col">
+      <h2 className="font-mayday text-[9vw] leading-[0.9] font-black tracking-wide text-white uppercase">
         Our
         <br />
         collections
       </h2>
-      <div className="relative grid grid-cols-3 gap-x-12 text-neutral-400 font-whisper text-medium text-base my-3 py-6 border-y border-solid border-neutral-600">
+      <div className="font-whisper text-medium relative my-3 grid grid-cols-3 gap-x-12 border-y border-solid border-neutral-600 py-6 text-base text-neutral-400">
         <div>
           <p>
-            Original typefaces for both Latin and Hangul. A creative bridge
-            between Switzerland and South Korea.
+            Original typefaces for both Latin and Hangul. A creative bridge between Switzerland and
+            South Korea.
           </p>
         </div>
         <div>
           <p>
-            Unique fonts with distinctive concepts for our retail collection,
-            from text typefaces to display ones.
+            Unique fonts with distinctive concepts for our retail collection, from text typefaces to
+            display ones.
           </p>
         </div>
         <div>
           <p>
-            14 typefaces in total with different weight, width, optical size,
-            and slant features.
+            14 typefaces in total with different weight, width, optical size, and slant features.
           </p>
         </div>
       </div>

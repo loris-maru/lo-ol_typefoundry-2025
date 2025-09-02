@@ -1,17 +1,13 @@
-"use client";
+'use client';
 
-import { typeface } from "@/types/typefaces";
-import CharacterSetPanel from "@/ui/segments/collection/character-set";
-import FontInfoPanel from "@/ui/segments/collection/font-info";
-import WeightGrid from "@/ui/segments/collection/weight-grid";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { typeface } from '@/types/typefaces';
+import CharacterSetPanel from '@/ui/segments/collection/character-set';
+import FontInfoPanel from '@/ui/segments/collection/font-info';
+import WeightGrid from '@/ui/segments/collection/weight-grid';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
 
-export default function CollectionHorizontal({
-  content,
-}: {
-  content: typeface;
-}) {
+export default function CollectionHorizontal({ content }: { content: typeface }) {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   // Panels: 1) Weights, 2) Character Set, 3) Font Info, 4) Spacer (pause)
@@ -20,22 +16,18 @@ export default function CollectionHorizontal({
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start start", "end start"],
+    offset: ['start start', 'end start'],
   });
 
   // Horizontal translate across the first 3 panels only
   const x = useTransform(
     scrollYProgress,
     [0, 0.75], // Complete horizontal scroll by 75% of total scroll
-    ["0vw", `-${(3 - 1) * 100}vw`]
+    ['0vw', `-${(3 - 1) * 100}vw`],
   );
 
   return (
-    <section
-      ref={sectionRef}
-      style={{ height: sectionHeight }}
-      className="relative"
-    >
+    <section ref={sectionRef} style={{ height: sectionHeight }} className="relative">
       {/* Sticky viewport that stays fixed after horizontal scroll */}
       <div className="sticky top-0 h-[100vh] w-[100vw] overflow-hidden">
         {/* Background track (horizontal) */}
@@ -46,12 +38,12 @@ export default function CollectionHorizontal({
           </div>
 
           {/* Panel 2: Character Set */}
-          <div className="h-[100vh] w-[100vw] shrink-0 grid place-items-center bg-[#f7f7f7]">
+          <div className="grid h-[100vh] w-[100vw] shrink-0 place-items-center bg-[#f7f7f7]">
             <CharacterSetPanel />
           </div>
 
           {/* Panel 3: Font Info */}
-          <div className="h-[100vh] w-[100vw] shrink-0 grid place-items-center bg-[#efefef]">
+          <div className="grid h-[100vh] w-[100vw] shrink-0 place-items-center bg-[#efefef]">
             <FontInfoPanel content={content} collectionColor={content.color} />
           </div>
 

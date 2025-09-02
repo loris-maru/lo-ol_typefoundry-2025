@@ -14,7 +14,7 @@ export default function OpticalSizeSlider({
 }) {
   return (
     <div className="flex flex-row items-center gap-2">
-      <span className="text-base text-white font-whisper">Optical Size:</span>
+      <span className="font-whisper text-base text-white">Optical Size:</span>
       <input
         type="range"
         min={opticalSizeSettings.min}
@@ -22,12 +22,10 @@ export default function OpticalSizeSlider({
         step={opticalSizeSettings.step}
         value={opticalSizeValue}
         onChange={(e) => setOpticalSizeValue(Number(e.target.value))}
-        className="w-44 h-2 appearance-none bg-white/20 rounded-full slider-custom"
+        className="slider-custom h-2 w-44 appearance-none rounded-full bg-white/20"
         aria-label="Width axis"
       />
-      <span className="text-sm text-white/60 w-8 text-right">
-        {opticalSizeValue}
-      </span>
+      <span className="w-8 text-right text-sm text-white/60">{opticalSizeValue}</span>
     </div>
   );
 }

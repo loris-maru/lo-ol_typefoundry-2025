@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import VideoHero from "@/ui/segments/collection/hero";
-import Playground from "@/ui/segments/collection/playground";
+import VideoHero from '@/ui/segments/collection/hero';
+import Playground from '@/ui/segments/collection/playground';
 // adjust path if Playground is separate
-import { typeface } from "@/types/typefaces";
-import DiscoverMoreCollections from "@/ui/segments/collection/discover-more";
-import CollectionHorizontal from "@/ui/segments/collection/horizontal-scroll-block";
-import ShopPackages from "@/ui/segments/collection/shop-package";
-import slugify from "@/utils/slugify";
-import { useFont } from "@react-hooks-library/core";
-import { useEffect, useState } from "react";
-import { useMediaQuery } from "usehooks-ts";
+import { typeface } from '@/types/typefaces';
+import DiscoverMoreCollections from '@/ui/segments/collection/discover-more';
+import CollectionHorizontal from '@/ui/segments/collection/horizontal-scroll-block';
+import ShopPackages from '@/ui/segments/collection/shop-package';
+import slugify from '@/utils/slugify';
+import { useFont } from '@react-hooks-library/core';
+import { useEffect, useState } from 'react';
+import { useMediaQuery } from 'usehooks-ts';
 
 export default function CollectionPage({
   content,
@@ -25,7 +25,7 @@ export default function CollectionPage({
   const [fakeProgress, setFakeProgress] = useState<number>(0);
 
   const { error, loaded: fontLoaded } = useFont(fontName, fontUrl);
-  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   // Combined loading state
   const isFullyLoaded = fontLoaded && videoLoaded;
@@ -61,7 +61,7 @@ export default function CollectionPage({
   useEffect(() => {
     if (fontLoaded && !videoLoaded) {
       const timer = setTimeout(() => {
-        console.log("Video loading timeout - proceeding anyway");
+        console.log('Video loading timeout - proceeding anyway');
         setVideoLoaded(true);
       }, 3000); // 5 second timeout
 
@@ -71,7 +71,7 @@ export default function CollectionPage({
 
   if (error) {
     return (
-      <div className="relative w-screen h-screen flex items-center justify-center text-red-700 text-lg">
+      <div className="relative flex h-screen w-screen items-center justify-center text-lg text-red-700">
         Error loading font
       </div>
     );
@@ -79,7 +79,7 @@ export default function CollectionPage({
 
   if (!isFullyLoaded) {
     return (
-      <div className="relative w-screen h-screen p-6 bg-black text-white font-whisper overflow-hidden">
+      <div className="font-whisper relative h-screen w-screen overflow-hidden bg-black p-6 text-white">
         {/* Progress Bar Background */}
         <div className="absolute inset-0 bg-black">
           {/* Main Progress Bar */}
@@ -87,14 +87,14 @@ export default function CollectionPage({
             className="absolute bottom-0 left-0 h-full transition-all duration-100 ease-out"
             style={{
               width: `${fakeProgress}vw`,
-              background: "rgba(139, 92, 246, 1)", // Violet
+              background: 'rgba(139, 92, 246, 1)', // Violet
             }}
           />
         </div>
 
         {/* Loading text with progress indicators */}
-        <div className="flex flex-col items-start relative z-10 text-left text-white font-normal leading-[1.05]">
-          <div className="flex flex-col divide-y divide-white border-white border-solid border">
+        <div className="relative z-10 flex flex-col items-start text-left leading-[1.05] font-normal text-white">
+          <div className="flex flex-col divide-y divide-white border border-solid border-white">
             <div className="px-4 py-3">Loading...</div>
             <div className="px-4 py-3">Collection: {content.name}</div>
           </div>
@@ -108,11 +108,7 @@ export default function CollectionPage({
   return (
     <main className="w-full">
       {/* Hero section */}
-      <VideoHero
-        content={content}
-        isMobile={isMobile}
-        onVideoLoaded={() => setVideoLoaded(true)}
-      />
+      <VideoHero content={content} isMobile={isMobile} onVideoLoaded={() => setVideoLoaded(true)} />
 
       {/* Playground section */}
       <Playground content={content} />
@@ -129,12 +125,12 @@ export default function CollectionPage({
       <div className="h-screen w-full bg-transparent" />
 
       {/* Discover More Collections section - scrolls over ShopPackage */}
-      <section className="relative h-screen w-full bg-transparent z-30">
+      <section className="relative z-30 h-screen w-full bg-transparent">
         <DiscoverMoreCollections content={allTypefaces} />
       </section>
 
       {/* Footer */}
-      <footer className="relative z-[200] py-24 text-center text-sm text-neutral-400 bg-white">
+      <footer className="relative z-[200] bg-white py-24 text-center text-sm text-neutral-400">
         © {new Date().getFullYear()} Your Foundry
       </footer>
     </main>

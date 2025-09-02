@@ -1,16 +1,14 @@
 // CollectionCard.tsx
-"use client";
+'use client';
 
-import type { typeface } from "@/types/typefaces";
-import slugify from "@/utils/slugify";
-import { useFont } from "@react-hooks-library/core";
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { useRef, useState } from "react";
+import type { typeface } from '@/types/typefaces';
+import slugify from '@/utils/slugify';
+import { useFont } from '@react-hooks-library/core';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { useRef, useState } from 'react';
 
-type HoverPayload =
-  | { hovering: false }
-  | { hovering: true; cardRect: DOMRect; nameRect: DOMRect };
+type HoverPayload = { hovering: false } | { hovering: true; cardRect: DOMRect; nameRect: DOMRect };
 
 export default function CollectionCard({
   typeface,
@@ -77,11 +75,11 @@ export default function CollectionCard({
         {/* Name = hover trigger; we measure its height */}
         <h3
           ref={nameRef}
-          className="text-[7vw] transition-all duration-500 ease-in-out whitespace-nowrap"
+          className="text-[7vw] whitespace-nowrap transition-all duration-500 ease-in-out"
           style={{
             fontFamily,
             fontVariationSettings: `'wght' ${isMouseHover ? 900 : 400}, 'wdth' 900, 'opsz' 900, 'slnt' 0`,
-            paddingLeft: isMouseHover ? "72px" : 0,
+            paddingLeft: isMouseHover ? '72px' : 0,
           }}
         >
           {typeface.name}
@@ -90,14 +88,12 @@ export default function CollectionCard({
         <div
           className="relative transition-all duration-300 ease-in-out"
           style={{
-            paddingRight: isMouseHover ? "60px" : 0,
+            paddingRight: isMouseHover ? '60px' : 0,
             opacity: isMouseHover ? 1 : 0,
           }}
         >
-          <div className="w-[16vw] text-base font-normal font-whisper transition-all duration-500 ease-in-out divide-y divide-white border border-white border-solid rounded-r-full">
-            <div className="mb-1 px-3 py-2">
-              {typeface.singleFontList.length} fonts
-            </div>
+          <div className="font-whisper w-[16vw] divide-y divide-white rounded-r-full border border-solid border-white text-base font-normal transition-all duration-500 ease-in-out">
+            <div className="mb-1 px-3 py-2">{typeface.singleFontList.length} fonts</div>
             <div className="px-3 py-2">{typeface.category}</div>
           </div>
         </div>

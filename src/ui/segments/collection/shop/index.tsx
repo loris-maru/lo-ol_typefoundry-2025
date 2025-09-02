@@ -1,15 +1,13 @@
-"use client";
+'use client';
 
-import { FontSettings, singleFont, typeface } from "@/types/typefaces";
-import SingleFontItem from "@/ui/segments/collection/shop/item";
+import { FontSettings, singleFont, typeface } from '@/types/typefaces';
+import SingleFontItem from '@/ui/segments/collection/shop/item';
 
 export default function Shop({ content }: { content: typeface }) {
   return (
-    <div className="relative w-full h-full flex flex-col">
-      <h1 className="text-xl font-medium font-whisper mb-8 uppercase tracking-widest">
-        Shop
-      </h1>
-      <div className="flex-1 overflow-y-auto scrollbar-hide">
+    <div className="relative flex h-full w-full flex-col">
+      <h1 className="font-whisper mb-8 text-xl font-medium tracking-widest uppercase">Shop</h1>
+      <div className="scrollbar-hide flex-1 overflow-y-auto">
         <div className="flex flex-col space-y-6">
           {content.singleFontList.map((font: singleFont) => {
             const fontSettings: FontSettings = {

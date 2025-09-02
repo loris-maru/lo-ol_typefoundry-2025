@@ -1,7 +1,7 @@
-import { typeface } from "@/types/typefaces";
-import slugify from "@/utils/slugify";
-import { useEffect, useState } from "react";
-import MajorBlock from "./major-bloc";
+import { typeface } from '@/types/typefaces';
+import slugify from '@/utils/slugify';
+import { useEffect, useState } from 'react';
+import MajorBlock from './major-bloc';
 
 export type BlockContent = {
   title: string;
@@ -10,12 +10,7 @@ export type BlockContent = {
   link: string | null;
 };
 
-export default function FontInfoPanel({
-  content,
-}: {
-  content: typeface;
-  collectionColor: string;
-}) {
+export default function FontInfoPanel({ content }: { content: typeface; collectionColor: string }) {
   const [mouseY, setMouseY] = useState(0);
 
   useEffect(() => {
@@ -23,10 +18,10 @@ export default function FontInfoPanel({
       setMouseY(e.clientY);
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove);
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
 
@@ -46,7 +41,7 @@ export default function FontInfoPanel({
       const designContent = {
         title: designer.fullName,
         description: designer.biography,
-        label: "contact",
+        label: 'contact',
         link: designer.instagram,
       };
       designers.push(designContent);
@@ -59,14 +54,13 @@ export default function FontInfoPanel({
   const blocContent1: BlockContent[] = [
     {
       title: content.name,
-      description:
-        "This is a trial font package. It is a free trial of the font.",
-      label: "Download Fonts",
+      description: 'This is a trial font package. It is a free trial of the font.',
+      label: 'Download Fonts',
       link: null,
     },
     {
-      title: "Description",
-      description: "12 files\nOTF, WOFF, WOFF2",
+      title: 'Description',
+      description: '12 files\nOTF, WOFF, WOFF2',
       label: null,
       link: null,
     },
@@ -74,9 +68,9 @@ export default function FontInfoPanel({
 
   const blocContent2: BlockContent[] = [
     {
-      title: "Collection specimen",
-      description: "Presentation of all weights and styles PDF file",
-      label: "Download Specimen",
+      title: 'Collection specimen',
+      description: 'Presentation of all weights and styles PDF file',
+      label: 'Download Specimen',
       link: null,
     },
   ];
@@ -84,7 +78,7 @@ export default function FontInfoPanel({
   const blocContent3: BlockContent[] = designers;
 
   return (
-    <div className="relative w-full h-full flex flex-col bg-[#EFEFEF]">
+    <div className="relative flex h-full w-full flex-col bg-[#EFEFEF]">
       <MajorBlock
         index={0}
         title="Trial font package"
@@ -110,7 +104,7 @@ export default function FontInfoPanel({
       />
 
       {/* Giant abbreviation in fixed position */}
-      <div className="absolute z-20 w-full h-full flex items-center justify-center mix-blend-exclusion">
+      <div className="absolute z-20 flex h-full w-full items-center justify-center mix-blend-exclusion">
         <div
           id="giant-abbreviation"
           className="relative text-[80vw] text-neutral-800"
@@ -119,16 +113,14 @@ export default function FontInfoPanel({
             fontVariationSettings: `'wght' ${dynamicWeight}, 'slnt' 0, 'opsz' 900, 'wdth' 900`,
           }}
         >
-          <span className="relative top-20 inline-block">
-            {content.name.slice(0, 1)}
-          </span>
+          <span className="relative top-20 inline-block">{content.name.slice(0, 1)}</span>
         </div>
       </div>
 
       {/* Revealer as mask - uses mix-blend-mode to reveal the abbreviation */}
       <div
         id="revealer"
-        className="absolute left-0 z-10 w-full h-1/3 bg-black transition-transform duration-75 ease-out"
+        className="absolute left-0 z-10 h-1/3 w-full bg-black transition-transform duration-75 ease-out"
         style={{
           transform: `translateY(${mouseY - 150}px)`,
         }}

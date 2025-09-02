@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 export function useScrollBlock(shouldBlock: boolean) {
   useEffect(() => {
@@ -7,15 +7,15 @@ export function useScrollBlock(shouldBlock: boolean) {
       const scrollY = window.scrollY;
 
       // Block scrolling
-      document.body.style.position = "fixed";
+      document.body.style.position = 'fixed';
       document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = "100%";
+      document.body.style.width = '100%';
 
       return () => {
         // Restore scrolling
-        document.body.style.position = "";
-        document.body.style.top = "";
-        document.body.style.width = "";
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
         window.scrollTo(0, scrollY);
       };
     }

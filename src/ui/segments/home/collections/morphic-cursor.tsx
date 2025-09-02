@@ -1,12 +1,12 @@
 // components/MorphicCursor.tsx
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 
 export type TargetState =
-  | { type: "free" }
+  | { type: 'free' }
   | {
-      type: "lock";
+      type: 'lock';
       // center position of the hovered element
       cx: number;
       cy: number;
@@ -19,8 +19,8 @@ export default function MorphicCursor({
   radiusPx = 120,
   defaultSizeVW = 14,
   transitionMs = 220,
-  easing = "cubic-bezier(.2,.8,.2,1)",
-  className = "",
+  easing = 'cubic-bezier(.2,.8,.2,1)',
+  className = '',
 }: {
   radiusPx?: number;
   defaultSizeVW?: number; // 14 -> 14vw
@@ -31,7 +31,7 @@ export default function MorphicCursor({
   const cursorRef = useRef<HTMLDivElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
-  const [target, setTarget] = useState<TargetState>({ type: "free" });
+  const [target, setTarget] = useState<TargetState>({ type: 'free' });
 
   // default size in pixels (computed on resize)
   const defaultSizePxRef = useRef(0);
@@ -39,16 +39,12 @@ export default function MorphicCursor({
   useEffect(() => {
     const onResize = () => {
       defaultSizePxRef.current =
-        (Math.max(
-          document.documentElement.clientWidth,
-          window.innerWidth || 0
-        ) *
-          defaultSizeVW) /
+        (Math.max(document.documentElement.clientWidth, window.innerWidth || 0) * defaultSizeVW) /
         100;
     };
     onResize();
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
   }, [defaultSizeVW]);
 
   // Mouse move tracking
@@ -56,20 +52,18 @@ export default function MorphicCursor({
     const move = (e: MouseEvent) => {
       setMouse({ x: e.clientX, y: e.clientY });
     };
-    window.addEventListener("mousemove", move, { passive: true });
-    return () => window.removeEventListener("mousemove", move);
+    window.addEventListener('mousemove', move, { passive: true });
+    return () => window.removeEventListener('mousemove', move);
   }, []);
 
   // Event delegation: watch for enter/leave on elements with data-cursor-target
   useEffect(() => {
     const onMouseOver = (e: MouseEvent) => {
-      const el = (e.target as HTMLElement)?.closest<HTMLElement>(
-        "[data-cursor-target]"
-      );
+      const el = (e.target as HTMLElement)?.closest<HTMLElement>('[data-cursor-target]');
       if (!el) return;
       const rect = el.getBoundingClientRect();
       setTarget({
-        type: "lock",
+        type: 'lock',
         cx: rect.left + rect.width / 2,
         cy: rect.top + rect.height / 2,
         w: rect.width,
@@ -79,15 +73,15 @@ export default function MorphicCursor({
     const onMouseOut = (e: MouseEvent) => {
       const el = e.target as HTMLElement | null;
       // If leaving a target, return to free mode
-      if (el && (el as HTMLElement).closest?.("[data-cursor-target]")) {
-        setTarget({ type: "free" });
+      if (el && (el as HTMLElement).closest?.('[data-cursor-target]')) {
+        setTarget({ type: 'free' });
       }
     };
-    document.addEventListener("mouseover", onMouseOver);
-    document.addEventListener("mouseout", onMouseOut);
+    document.addEventListener('mouseover', onMouseOver);
+    document.addEventListener('mouseout', onMouseOut);
     return () => {
-      document.removeEventListener("mouseover", onMouseOver);
-      document.removeEventListener("mouseout", onMouseOut);
+      document.removeEventListener('mouseover', onMouseOver);
+      document.removeEventListener('mouseout', onMouseOut);
     };
   }, []);
 
@@ -97,11 +91,11 @@ export default function MorphicCursor({
     if (!el) return;
 
     const apply = () => {
-      el.style.willChange = "transform, width, height";
+      el.style.willChange = 'transform, width, height';
       el.style.transition = `transform ${transitionMs}ms ${easing}, width ${transitionMs}ms ${easing}, height ${transitionMs}ms ${easing}, border-radius ${transitionMs}ms ${easing}`;
       el.style.borderRadius = `${radiusPx}px`;
 
-      if (target.type === "lock") {
+      if (target.type === 'lock') {
         const { cx, cy, w, h } = target;
         el.style.width = `${Math.max(1, w)}px`;
         el.style.height = `${Math.max(1, h)}px`;
@@ -123,17 +117,14 @@ export default function MorphicCursor({
     <>
       {/* Optional: a wrapper if you want to limit the cursor to a section.
           Replace `fixed` with `absolute` + a relative parent. */}
-      <div
-        ref={containerRef}
-        className="pointer-events-none fixed inset-0 z-[60]"
-      >
+      <div ref={containerRef} className="pointer-events-none fixed inset-0 z-[60]">
         <div
           ref={cursorRef}
           className={`pointer-events-none absolute bg-black/10 ring-1 ring-black/20 backdrop-blur-sm ${className}`}
           style={{
             borderRadius: radiusPx,
             // Start somewhere off-screen before first mouse move
-            transform: "translate3d(-1000px, -1000px, 0)",
+            transform: 'translate3d(-1000px, -1000px, 0)',
           }}
         />
       </div>

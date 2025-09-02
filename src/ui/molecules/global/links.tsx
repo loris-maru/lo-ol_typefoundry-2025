@@ -1,5 +1,5 @@
-import { cn } from "@/utils/classNames";
-import Link from "next/link";
+import { cn } from '@/utils/classNames';
+import Link from 'next/link';
 
 export type Link = {
   label: string;
@@ -7,12 +7,12 @@ export type Link = {
   className?: string;
 };
 
-export function SmallLink({ link, label, className = "border-white" }: Link) {
+export function SmallLink({ link, label, className = 'border-white' }: Link) {
   return (
     <Link
       className={cn(
-        "font-whisper relative mt-2 px-8 py-2 border border-solid rounded-full text-base transition-colors duration-300 ease-in-out hover:bg-black hover:text-white",
-        className
+        'font-whisper relative mt-2 rounded-full border border-solid px-8 py-2 text-base transition-colors duration-300 ease-in-out hover:bg-black hover:text-white',
+        className,
       )}
       href={link}
     >
@@ -23,7 +23,7 @@ export function SmallLink({ link, label, className = "border-white" }: Link) {
 export function MediumLink({ link, label }: Link) {
   return (
     <Link
-      className="font-whisper relative mt-2 px-12 py-6 border border-solid border-white rounded-full text-2xl transition-colors duration-300 ease-in-out hover:bg-black hover:text-white"
+      className="font-whisper relative mt-2 rounded-full border border-solid border-white px-12 py-6 text-2xl transition-colors duration-300 ease-in-out hover:bg-black hover:text-white"
       href={link}
     >
       <span className="relative top-0.5 inline-block">{label}</span>
@@ -33,7 +33,7 @@ export function MediumLink({ link, label }: Link) {
 export function LargeLink({ link, label }: Link) {
   return (
     <Link
-      className="font-whisper relative mt-2 px-16 py-8 border border-solid border-white rounded-full text-5xl transition-colors duration-300 ease-in-out hover:bg-black hover:text-white"
+      className="font-whisper relative mt-2 rounded-full border border-solid border-white px-16 py-8 text-5xl transition-colors duration-300 ease-in-out hover:bg-black hover:text-white"
       href={link}
     >
       <span className="relative top-0.5 inline-block">{label}</span>

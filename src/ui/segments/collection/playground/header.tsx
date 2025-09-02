@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { typeface } from "@/types/typefaces";
-import slugify from "@/utils/slugify";
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { typeface } from '@/types/typefaces';
+import slugify from '@/utils/slugify';
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
 
 export default function PlaygroundHeader({ content }: { content: typeface }) {
   const headerRef = useRef<HTMLDivElement>(null);
@@ -21,9 +21,9 @@ export default function PlaygroundHeader({ content }: { content: typeface }) {
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 50 }}
-      transition={{ duration: 0.6, ease: "easeInOut" }}
+      transition={{ duration: 0.6, ease: 'easeInOut' }}
     >
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-left text-neutral-500 text-sm border-y border-solid border-neutral-200 font-normal py-4 font-whisper">
+      <div className="font-whisper grid grid-cols-1 gap-6 border-y border-solid border-neutral-200 py-4 text-left text-sm font-normal text-neutral-500 sm:grid-cols-3">
         <div>
           <p>Typeface: {content.name}</p>
           <p>Designer: Noheul Lee</p>
@@ -46,7 +46,7 @@ export default function PlaygroundHeader({ content }: { content: typeface }) {
           style={{
             fontFamily: slugify(content.name),
           }}
-          className="relative overflow-hidden h-[28vh]"
+          className="relative h-[28vh] overflow-hidden"
         >
           <motion.span
             className="absolute text-[14vw] leading-[1]"
@@ -55,7 +55,7 @@ export default function PlaygroundHeader({ content }: { content: typeface }) {
             }}
             initial={{ y: 300 }}
             animate={{ y: isInView ? 0 : 300 }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+            transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
           >
             Normalize
           </motion.span>
@@ -64,7 +64,7 @@ export default function PlaygroundHeader({ content }: { content: typeface }) {
           style={{
             fontFamily: slugify(content.name),
           }}
-          className="relative overflow-hidden h-[28vh]"
+          className="relative h-[28vh] overflow-hidden"
         >
           <motion.span
             className="absolute text-[14vw] leading-[1]"
@@ -73,7 +73,7 @@ export default function PlaygroundHeader({ content }: { content: typeface }) {
             }}
             initial={{ y: 300 }}
             animate={{ y: isInView ? 0 : 300 }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
+            transition={{ duration: 0.8, ease: 'easeOut', delay: 0.4 }}
           >
             Font Spirit
           </motion.span>

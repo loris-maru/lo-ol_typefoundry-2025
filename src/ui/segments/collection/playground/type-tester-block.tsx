@@ -1,19 +1,13 @@
-"use client";
+'use client';
 
-import { TypefaceSettings } from "@/types/playground";
-import { typeface } from "@/types/typefaces";
-import SettingButton from "@/ui/segments/collection/playground/setting-button";
-import SettingMenu from "@/ui/segments/collection/playground/setting-menu";
-import { cn } from "@/utils/classNames";
-import slugify from "@/utils/slugify";
-import { motion } from "framer-motion";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { TypefaceSettings } from '@/types/playground';
+import { typeface } from '@/types/typefaces';
+import SettingButton from '@/ui/segments/collection/playground/setting-button';
+import SettingMenu from '@/ui/segments/collection/playground/setting-menu';
+import { cn } from '@/utils/classNames';
+import slugify from '@/utils/slugify';
+import { motion } from 'framer-motion';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 export type TypeTesterBlockProps = {
   defaultFontSize: number;
@@ -65,7 +59,7 @@ export default function TypeTesterBlock({
     el.style.minHeight = `${minHeightPx}px`;
 
     // Auto-expand height based on content
-    el.style.height = "auto";
+    el.style.height = 'auto';
     el.style.height = `${el.scrollHeight}px`;
   }, [minHeightPx]);
 
@@ -109,7 +103,7 @@ export default function TypeTesterBlock({
   }, [autosize]);
 
   const handleContentChange = (e: React.FormEvent<HTMLDivElement>) => {
-    const newContent = e.currentTarget.textContent || "";
+    const newContent = e.currentTarget.textContent || '';
     setEditableContent(newContent);
   };
 
@@ -123,22 +117,22 @@ export default function TypeTesterBlock({
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     // Handle Enter key to create new lines
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      document.execCommand("insertLineBreak");
+      document.execCommand('insertLineBreak');
     }
   };
 
   const getColumnClass = () => {
     switch (columns) {
       case 1:
-        return "col-span-1";
+        return 'col-span-1';
       case 2:
-        return "col-span-1";
+        return 'col-span-1';
       case 3:
-        return "col-span-1";
+        return 'col-span-1';
       default:
-        return "col-span-1";
+        return 'col-span-1';
     }
   };
 
@@ -166,7 +160,7 @@ export default function TypeTesterBlock({
   // const fontFile = italic ? content.varFont : content.varFont
 
   return (
-    <div className={cn("relative", getColumnClass())} ref={wrapperRef}>
+    <div className={cn('relative', getColumnClass())} ref={wrapperRef}>
       <div>
         <div>
           <div className="relative">
@@ -178,7 +172,7 @@ export default function TypeTesterBlock({
               onFocus={handleFocus}
               onBlur={handleBlur}
               onKeyDown={handleKeyDown}
-              className="w-full resize-none border-0 focus:ring-0 text-black overflow-hidden whitespace-pre-wrap outline-none cursor-text"
+              className="w-full cursor-text resize-none overflow-hidden border-0 whitespace-pre-wrap text-black outline-none focus:ring-0"
               style={{
                 fontFamily: fontFamily,
                 fontVariationSettings: `'wght' ${wght}, 'wdth' ${wdth}, 'slnt' ${slnt}, 'opsz' ${opsz}`,
@@ -196,7 +190,7 @@ export default function TypeTesterBlock({
 
         {menuOpen && (
           <motion.div
-            className="absolute right-4 top-14 z-20 w-64"
+            className="absolute top-14 right-4 z-20 w-64"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}

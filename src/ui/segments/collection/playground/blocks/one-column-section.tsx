@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { typeface } from "@/types/typefaces";
-import TypeTesterBlock from "@/ui/segments/collection/playground/type-tester-block";
+import { typeface } from '@/types/typefaces';
+import TypeTesterBlock from '@/ui/segments/collection/playground/type-tester-block';
 
 export default function OneColumnSection({ content }: { content: typeface }) {
   const text =
-    "Our goal is to connect both typographic cultures and share our knowledge of calligraphy, sketching, exploration and type design.";
+    'Our goal is to connect both typographic cultures and share our knowledge of calligraphy, sketching, exploration and type design.';
 
   return (
     <div className="w-full">

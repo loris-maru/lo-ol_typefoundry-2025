@@ -1,23 +1,16 @@
-"use client";
+'use client';
 
-import type { typeface } from "@/types/typefaces";
-import CollectionCard from "@/ui/segments/home/collections/collection-card";
-import HeroHeader from "@/ui/segments/home/hero/hero-header";
-import {
-  motion,
-  useMotionValueEvent,
-  useScroll,
-  useTransform,
-} from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import type { typeface } from '@/types/typefaces';
+import CollectionCard from '@/ui/segments/home/collections/collection-card';
+import HeroHeader from '@/ui/segments/home/hero/hero-header';
+import { motion, useMotionValueEvent, useScroll, useTransform } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 
 export type CollectionsListProp = {
   typefaces: typeface[];
 };
 
-type HoverPayload =
-  | { hovering: false }
-  | { hovering: true; cardRect: DOMRect; nameRect: DOMRect };
+type HoverPayload = { hovering: false } | { hovering: true; cardRect: DOMRect; nameRect: DOMRect };
 
 export default function CollectionsList({ typefaces }: CollectionsListProp) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -32,14 +25,12 @@ export default function CollectionsList({ typefaces }: CollectionsListProp) {
   // compute 14vw in px on load/resize
   useEffect(() => {
     const calc = () => {
-      const vw =
-        Math.max(document.documentElement.clientWidth, window.innerWidth || 0) *
-        0.14;
+      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0) * 0.14;
       defaultSizePxRef.current = vw;
     };
     calc();
-    window.addEventListener("resize", calc);
-    return () => window.removeEventListener("resize", calc);
+    window.addEventListener('resize', calc);
+    return () => window.removeEventListener('resize', calc);
   }, []);
 
   // follow mouse when not locked
@@ -58,8 +49,8 @@ export default function CollectionsList({ typefaces }: CollectionsListProp) {
         y: e.clientY - top - size / 2,
       });
     };
-    window.addEventListener("mousemove", move, { passive: true });
-    return () => window.removeEventListener("mousemove", move);
+    window.addEventListener('mousemove', move, { passive: true });
+    return () => window.removeEventListener('mousemove', move);
   }, [locked]);
 
   // card → parent hover callback
@@ -96,28 +87,24 @@ export default function CollectionsList({ typefaces }: CollectionsListProp) {
   // your existing scroll/width logic
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "start start"],
+    offset: ['start end', 'start start'],
   });
-  const containerWidth = useTransform(
-    scrollYProgress,
-    [0, 1],
-    ["40vw", "100vw"]
-  );
+  const containerWidth = useTransform(scrollYProgress, [0, 1], ['40vw', '100vw']);
   const heroHeaderProgress = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
-  useMotionValueEvent(heroHeaderProgress, "change", (latest) => {
+  useMotionValueEvent(heroHeaderProgress, 'change', (latest) => {
     setShowHeroHeader(latest >= 0.8);
     setShowContent(latest >= 1);
   });
 
   return (
-    <section ref={containerRef} className="relative w-full min-h-screen">
+    <section ref={containerRef} className="relative min-h-screen w-full">
       <motion.div
         id="collections-list"
         className="relative mx-auto"
         style={{ width: containerWidth }}
       >
-        <div className="relative z-10 bg-black px-8 py-20 min-h-screen">
+        <div className="relative z-10 min-h-screen bg-black px-8 py-20">
           <motion.div
             initial={{ y: 100, opacity: 0 }}
             animate={{
@@ -161,14 +148,14 @@ export default function CollectionsList({ typefaces }: CollectionsListProp) {
         {/* Floating highlighter */}
         <motion.div
           id="highlighter-bloc"
-          className="pointer-events-none absolute z-50 -top-4 rounded-[120px] bg-white mix-blend-difference"
+          className="pointer-events-none absolute -top-4 z-50 rounded-[120px] bg-white mix-blend-difference"
           style={{
             width: cursor.w,
             height: cursor.h,
             translateX: cursor.x,
             translateY: cursor.y,
             transition:
-              "width 220ms cubic-bezier(.2,.8,.2,1), height 220ms cubic-bezier(.2,.8,.2,1), transform 220ms cubic-bezier(.2,.8,.2,1)",
+              'width 220ms cubic-bezier(.2,.8,.2,1), height 220ms cubic-bezier(.2,.8,.2,1), transform 220ms cubic-bezier(.2,.8,.2,1)',
           }}
         />
       </motion.div>

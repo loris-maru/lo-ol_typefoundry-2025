@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useScrollBlock } from "@/hooks/useScrollBlock";
-import { useCartStore } from "@/states/cart";
-import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
-import { RiShoppingCart2Fill } from "react-icons/ri";
-import CloseButton from "./close-button";
+import { useScrollBlock } from '@/hooks/useScrollBlock';
+import { useCartStore } from '@/states/cart';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useState } from 'react';
+import { RiShoppingCart2Fill } from 'react-icons/ri';
+import CloseButton from './close-button';
 
 export default function CartButton() {
   const { cart, removeFromCart, clearCart } = useCartStore();
@@ -33,28 +33,28 @@ export default function CartButton() {
 
   return (
     <motion.nav
-      className="fixed right-4 top-4 z-40"
+      className="fixed top-4 right-4 z-40"
       animate={{
-        width: cartOpen ? "400px" : "46px",
-        height: cartOpen ? "600px" : "46px",
-        right: cartOpen ? "16px" : "16px",
-        top: cartOpen ? 0 : "16px",
+        width: cartOpen ? '400px' : '46px',
+        height: cartOpen ? '600px' : '46px',
+        right: cartOpen ? '16px' : '16px',
+        top: cartOpen ? 0 : '16px',
       }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
       <motion.button
         onClick={() => setCartOpen(true)}
-        className="w-full h-full rounded-full bg-black text-white hover:bg-gray-800 transition-colors duration-200 flex items-center justify-center relative"
+        className="relative flex h-full w-full items-center justify-center rounded-full bg-black text-white transition-colors duration-200 hover:bg-gray-800"
         animate={{
-          borderRadius: cartOpen ? "16px" : "9999px",
+          borderRadius: cartOpen ? '16px' : '9999px',
         }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
       >
         {!cartOpen && (
           <div className="flex items-center justify-center">
-            <RiShoppingCart2Fill className="w-5 h-5" />
+            <RiShoppingCart2Fill className="h-5 w-5" />
             {cart.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
                 {cart.length}
               </span>
             )}
@@ -66,43 +66,38 @@ export default function CartButton() {
       <AnimatePresence>
         {cartOpen && (
           <motion.div
-            className="absolute inset-0 flex flex-col text-white bg-black p-6 rounded-2xl overflow-hidden"
+            className="absolute inset-0 flex flex-col overflow-hidden rounded-2xl bg-black p-6 text-white"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, delay: 0.3 }}
           >
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-medium font-whisper">Cart</h2>
+            <div className="mb-6 flex items-center justify-between">
+              <h2 className="font-whisper text-xl font-medium">Cart</h2>
               <button
                 onClick={handleClearCart}
-                className="text-sm text-gray-400 hover:text-white transition-colors"
+                className="text-sm text-gray-400 transition-colors hover:text-white"
               >
                 Clear All
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto space-y-4">
+            <div className="flex-1 space-y-4 overflow-y-auto">
               {cart.map((item) => (
-                <div
-                  key={item._key}
-                  className="border border-gray-700 rounded-lg p-4 bg-gray-900"
-                >
+                <div key={item._key} className="rounded-lg border border-gray-700 bg-gray-900 p-4">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <h3 className="font-medium text-white">
                         {item.family} {item.weightName}
                       </h3>
-                      <p className="text-sm text-gray-400 mt-1">
-                        License: {item.license || "Not selected"}
+                      <p className="mt-1 text-sm text-gray-400">
+                        License: {item.license || 'Not selected'}
                       </p>
                       <p className="text-sm text-gray-400">
                         Users: {item.users[0]}-{item.users[1]}
                       </p>
                       {item.widthName && (
-                        <p className="text-sm text-gray-400">
-                          Width: {item.widthName}
-                        </p>
+                        <p className="text-sm text-gray-400">Width: {item.widthName}</p>
                       )}
                       {item.opticalSizeName && (
                         <p className="text-sm text-gray-400">
@@ -110,19 +105,15 @@ export default function CartButton() {
                         </p>
                       )}
                       {item.slantName && (
-                        <p className="text-sm text-gray-400">
-                          Slant: {item.slantName}
-                        </p>
+                        <p className="text-sm text-gray-400">Slant: {item.slantName}</p>
                       )}
-                      {item.isItalic && (
-                        <p className="text-sm text-gray-400">Italic</p>
-                      )}
+                      {item.isItalic && <p className="text-sm text-gray-400">Italic</p>}
                     </div>
-                    <div className="text-right ml-4">
+                    <div className="ml-4 text-right">
                       <p className="font-medium text-white">${item.price}</p>
                       <button
                         onClick={() => handleRemoveItem(item._key)}
-                        className="text-sm text-red-400 hover:text-red-300 transition-colors mt-2"
+                        className="mt-2 text-sm text-red-400 transition-colors hover:text-red-300"
                       >
                         Remove
                       </button>
@@ -132,14 +123,14 @@ export default function CartButton() {
               ))}
             </div>
 
-            <div className="border-t border-gray-700 pt-4 mt-4">
-              <div className="flex items-center justify-between mb-4">
+            <div className="mt-4 border-t border-gray-700 pt-4">
+              <div className="mb-4 flex items-center justify-between">
                 <span className="text-lg font-medium">Total:</span>
                 <span className="text-xl font-bold">
                   ${cart.reduce((sum, item) => sum + item.price, 0)}
                 </span>
               </div>
-              <button className="w-full bg-white text-black py-3 px-6 rounded-lg font-medium hover:bg-gray-100 transition-colors">
+              <button className="w-full rounded-lg bg-white px-6 py-3 font-medium text-black transition-colors hover:bg-gray-100">
                 Checkout
               </button>
             </div>
@@ -148,9 +139,7 @@ export default function CartButton() {
       </AnimatePresence>
 
       {/* Close Button for Cart - Only visible when expanded */}
-      <AnimatePresence>
-        {cartOpen && <CloseButton onClick={handleCartClose} />}
-      </AnimatePresence>
+      <AnimatePresence>{cartOpen && <CloseButton onClick={handleCartClose} />}</AnimatePresence>
     </motion.nav>
   );
 }

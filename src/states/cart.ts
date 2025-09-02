@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export type SingleCartItem = {
   _key: string;
@@ -46,7 +46,7 @@ export const useCartStore = create<CartState>()(
       clearCart: () => set({ cart: [] }),
     }),
     {
-      name: "cart-storage", // unique name for localStorage key
+      name: 'cart-storage', // unique name for localStorage key
       partialize: (state) => ({ cart: state.cart }), // only persist cart array
     },
   ),

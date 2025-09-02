@@ -1,4 +1,4 @@
-import slugify from "@/utils/slugify";
+import slugify from '@/utils/slugify';
 
 /**
  * Generates a unique cart item key with slugification and date
@@ -7,18 +7,11 @@ import slugify from "@/utils/slugify";
  */
 export function generateCartKey(familyName: string): string {
   // Generate a random string (8 characters)
-  const randomString = Math.random()
-    .toString(36)
-    .substring(2, 10)
-    .toLowerCase();
+  const randomString = Math.random().toString(36).substring(2, 10).toLowerCase();
 
   // Get current date in YYYYMMDD-HHMMSS format
   const now = new Date();
-  const dateString = now
-    .toISOString()
-    .slice(0, 19)
-    .replace(/[-:T]/g, "")
-    .replace(/\..+/, "");
+  const dateString = now.toISOString().slice(0, 19).replace(/[-:T]/g, '').replace(/\..+/, '');
 
   // Slugify the family name
   const slugifiedFamily = slugify(familyName);

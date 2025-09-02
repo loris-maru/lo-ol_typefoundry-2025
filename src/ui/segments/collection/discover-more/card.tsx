@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { COLLECTION_DETAILS } from "@/app/content/COLLECTION_DETAILS";
-import { typeface } from "@/types/typefaces";
-import { CursorTextCircle } from "@/ui/molecules/collection/discover-collection-cursor";
-import VideoPlayerMux from "@/ui/molecules/global/video-player";
-import CollectionDetailsCard from "@/ui/segments/collection/discover-more/collection-details-card";
-import slugify from "@/utils/slugify";
-import { useFont } from "@react-hooks-library/core";
-import { AnimatePresence, motion } from "framer-motion";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { BounceLoader } from "react-spinners";
-import { useMediaQuery } from "usehooks-ts";
+import { COLLECTION_DETAILS } from '@/app/content/COLLECTION_DETAILS';
+import { typeface } from '@/types/typefaces';
+import { CursorTextCircle } from '@/ui/molecules/collection/discover-collection-cursor';
+import VideoPlayerMux from '@/ui/molecules/global/video-player';
+import CollectionDetailsCard from '@/ui/segments/collection/discover-more/collection-details-card';
+import slugify from '@/utils/slugify';
+import { useFont } from '@react-hooks-library/core';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { BounceLoader } from 'react-spinners';
+import { useMediaQuery } from 'usehooks-ts';
 
 interface CollectionCardProps {
   content: typeface;
@@ -20,11 +20,7 @@ interface CollectionCardProps {
   onNavigate?: () => void;
 }
 
-export default function CollectionCard({
-  content,
-  index,
-  isActive,
-}: CollectionCardProps) {
+export default function CollectionCard({ content, index, isActive }: CollectionCardProps) {
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [isNavigating, setIsNavigating] = useState<boolean>(false);
   const router = useRouter();
@@ -42,7 +38,7 @@ export default function CollectionCard({
   const animTime = 0.4;
   const collectionNameId = `collection-name-${index}`;
 
-  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   const familyName = slugify(content.name);
   const fontFile = content.varFont;
@@ -51,7 +47,7 @@ export default function CollectionCard({
 
   if (error) {
     return (
-      <div className="relative w-screen h-screen flex items-center justify-center text-red-700 text-lg">
+      <div className="relative flex h-screen w-screen items-center justify-center text-lg text-red-700">
         Error loading font
       </div>
     );
@@ -59,42 +55,34 @@ export default function CollectionCard({
 
   if (!loaded) {
     return (
-      <div className="relative w-screen h-screen flex flex-col items-center justify-center bg-white">
+      <div className="relative flex h-screen w-screen flex-col items-center justify-center bg-white">
         {/* Large Bounce Loader with different transparency levels */}
-        <div className="flex items-center justify-center space-x-2 mb-8">
-          <BounceLoader
-            color="rgba(0, 0, 0, 0.1)"
-            size={80}
-            speedMultiplier={0.8}
-          />
+        <div className="mb-8 flex items-center justify-center space-x-2">
+          <BounceLoader color="rgba(0, 0, 0, 0.1)" size={80} speedMultiplier={0.8} />
         </div>
 
         {/* Loading text */}
         <div className="text-center">
-          <h2 className="text-2xl font-medium text-black/60 mb-2">
-            Loading {content.name}
-          </h2>
-          <p className="text-sm text-black/40">
-            Preparing your typography playground...
-          </p>
+          <h2 className="mb-2 text-2xl font-medium text-black/60">Loading {content.name}</h2>
+          <p className="text-sm text-black/40">Preparing your typography playground...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="relative w-screen h-screen flex items-center justify-center">
-      <motion.div className="relative z-20 w-full h-full flex items-center justify-center">
+    <div className="relative flex h-screen w-screen items-center justify-center">
+      <motion.div className="relative z-20 flex h-full w-full items-center justify-center">
         <button
           onClick={handleNavigate}
-          className="relative z-20 w-full h-full flex items-center justify-center"
+          className="relative z-20 flex h-full w-full items-center justify-center"
         >
           {/* Text Overlay - Above the video container */}
           <AnimatePresence mode="wait">
             {isActive && (
               <motion.div
                 key={`collection-${index}`}
-                className="absolute left-1/2 -translate-x-1/2 top-1/4 -translate-y-1/2 flex flex-col items-center justify-center text-white z-20"
+                className="absolute top-1/4 left-1/2 z-20 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center text-white"
                 initial={{ opacity: 0, y: 40 }}
                 animate={{
                   opacity: isNavigating ? 0 : 1,
@@ -103,7 +91,7 @@ export default function CollectionCard({
                 exit={{ opacity: 0, y: 50 }}
                 transition={{ duration: animTime }}
               >
-                <div className="text-2xl font-normal text-white cursor-pointer font-kronik">
+                <div className="font-kronik cursor-pointer text-2xl font-normal text-white">
                   Discover the collection
                 </div>
               </motion.div>
@@ -116,7 +104,7 @@ export default function CollectionCard({
                 key={`name-${index}`}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
-                className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 flex flex-col items-center justify-center"
+                className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center"
                 initial={{ opacity: 0, y: 100 }}
                 animate={{
                   opacity: 1,
@@ -133,7 +121,7 @@ export default function CollectionCard({
                       isHovered ? 900 : 400
                     }, 'wdth' 900, 'opsz' 900`,
                   }}
-                  className="text-[16vw] text-white font-bold font-fuzar leading-none text-center transition-all duration-300 ease-in-out cursor-pointer"
+                  className="font-fuzar cursor-pointer text-center text-[16vw] leading-none font-bold text-white transition-all duration-300 ease-in-out"
                 >
                   {isNavigating ? content.name.substring(0, 2) : content.name}
                 </div>
@@ -145,7 +133,7 @@ export default function CollectionCard({
             {isActive && (
               <motion.div
                 key={`details-${index}`}
-                className="absolute left-1/2 -translate-x-1/2 bottom-1/4 translate-y-1/2 flex items-center justify-center"
+                className="absolute bottom-1/4 left-1/2 flex -translate-x-1/2 translate-y-1/2 items-center justify-center"
                 initial={{ opacity: 0, y: 50 }}
                 animate={{
                   opacity: isHovered && !isNavigating ? 1 : 0,
@@ -160,7 +148,7 @@ export default function CollectionCard({
                   cell3={`${content.totalGlyphs} glyphs`}
                   cell4={COLLECTION_DETAILS.cell4}
                   cell5="Latin"
-                  cell6={`${content.hasHangul ? "Hangul" : "No Hangul"}`}
+                  cell6={`${content.hasHangul ? 'Hangul' : 'No Hangul'}`}
                 />
               </motion.div>
             )}
@@ -174,27 +162,27 @@ export default function CollectionCard({
         {isActive && (
           <motion.div
             key={`container-${index}`}
-            className="absolute z-0 cursor-none group overflow-hidden bg-white"
+            className="group absolute z-0 cursor-none overflow-hidden bg-white"
             initial={{ scale: 0, opacity: 0 }}
             animate={{
               scale: 1,
               opacity: 1,
-              width: isNavigating ? "100vw" : isHovered ? "70vh" : "23vw",
-              height: isNavigating ? "100vh" : isHovered ? "70vh" : "80vh",
-              borderRadius: isNavigating ? 0 : isHovered ? "50vw" : "40vw",
+              width: isNavigating ? '100vw' : isHovered ? '70vh' : '23vw',
+              height: isNavigating ? '100vh' : isHovered ? '70vh' : '80vh',
+              borderRadius: isNavigating ? 0 : isHovered ? '50vw' : '40vw',
             }}
             exit={{ scale: 0, opacity: 0 }}
             transition={{ duration: animTime }}
           >
-            <div className="relative w-full h-full">
+            <div className="relative h-full w-full">
               <motion.div
-                className="absolute z-[5] w-full h-full bottom-0"
+                className="absolute bottom-0 z-[5] h-full w-full"
                 style={{
                   background: `linear-gradient(0deg,rgba(0, 0, 0, 1) 1%, #${content.color} 89%)`,
                 }}
                 animate={{
                   opacity: isNavigating ? 0 : 1,
-                  height: isHovered ? 0 : "100%",
+                  height: isHovered ? 0 : '100%',
                 }}
                 transition={{ duration: animTime }}
               />
@@ -203,9 +191,7 @@ export default function CollectionCard({
                 title={content?.name}
                 autoplay={isHovered}
                 playbackId={
-                  isMobile
-                    ? content.muxMobileVideo.playbackId
-                    : content.muxDesktopVideo.playbackId
+                  isMobile ? content.muxMobileVideo.playbackId : content.muxDesktopVideo.playbackId
                 }
               />
             </div>
