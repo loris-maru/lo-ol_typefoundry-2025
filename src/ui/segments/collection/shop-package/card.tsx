@@ -1,8 +1,9 @@
-import { Package } from '@/app/content/PACKAGES';
-import { useShopStore } from '@/states/shop';
-import { typeface } from '@/types/typefaces';
-import slugify from '@/utils/slugify';
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
+
+import { Package } from "@/app/content/PACKAGES";
+import { useShopStore } from "@/states/shop";
+import { typeface } from "@/types/typefaces";
+import slugify from "@/utils/slugify";
 
 export type PackageCardType = {
   content: typeface;
@@ -37,11 +38,11 @@ export default function PackageCard({
       onMouseEnter={() => onHoverChange(true)}
       onMouseLeave={() => onHoverChange(false)}
       animate={{
-        width: isHovered ? '120%' : '100%',
-        height: isInView ? '100%' : '30%',
+        width: isHovered ? "120%" : "100%",
+        height: isInView ? "100%" : "30%",
         zIndex: isHovered ? 10 : 1,
       }}
-      transition={{ duration: 0.4, ease: 'easeInOut' }}
+      transition={{ duration: 0.4, ease: "easeInOut" }}
     >
       {/* Video Background */}
       <div className="absolute inset-0 z-0 h-full w-full">
@@ -67,9 +68,9 @@ export default function PackageCard({
           className="absolute inset-0 bg-black/10"
           animate={{
             opacity: isHovered ? 0 : 1,
-            backdropFilter: isHovered ? 'blur(0px)' : 'blur(4px)',
+            backdropFilter: isHovered ? "blur(0px)" : "blur(4px)",
           }}
-          transition={{ duration: 0.4, ease: 'easeInOut' }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
         />
       </div>
 
@@ -78,11 +79,11 @@ export default function PackageCard({
         className="absolute inset-0 z-10 bg-black"
         initial={{ y: 0 }}
         animate={{
-          y: isInView ? '100%' : 0,
+          y: isInView ? "100%" : 0,
         }}
         transition={{
           duration: 0.8,
-          ease: 'easeInOut',
+          ease: "easeInOut",
           delay: idx * 0.2, // Staggered animation: left to right
         }}
       />
@@ -92,7 +93,7 @@ export default function PackageCard({
         {/* Top Section - Package Abbreviation */}
         <div>
           <div
-            className="text-[14vw] leading-none transition-all duration-300 ease-in-out"
+            className="text-[10vw] leading-none transition-all duration-300 ease-in-out"
             style={{
               fontFamily: fontFamily,
               fontVariationSettings: `'wght' ${isHovered ? 900 : 300}, 'wdth' 900`,
@@ -108,7 +109,7 @@ export default function PackageCard({
             className="z-[100] flex h-[50%] flex-col justify-between space-y-6 pt-5"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
           >
             {/* Font List Container */}
             <div>
@@ -116,7 +117,7 @@ export default function PackageCard({
                 {pkg.fonts.map((font, index) => (
                   <span key={font.weight}>
                     {font.weight}, {font.italic}
-                    {index < pkg.fonts.length - 1 ? ', ' : ''}
+                    {index < pkg.fonts.length - 1 ? ", " : ""}
                   </span>
                 ))}
               </div>
@@ -149,8 +150,8 @@ export default function PackageCard({
       <motion.div
         className="absolute right-0 bottom-0 left-0 z-15 bg-black"
         initial={{ height: 0 }}
-        animate={{ height: isHovered ? '50%' : 0 }}
-        transition={{ duration: 0.4, ease: 'easeInOut' }}
+        animate={{ height: isHovered ? "50%" : 0 }}
+        transition={{ duration: 0.4, ease: "easeInOut" }}
       />
     </motion.div>
   );

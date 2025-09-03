@@ -1,5 +1,6 @@
-import CardTopic from '@/ui/segments/home/discover-topic/card-topic';
-import { useState } from 'react';
+import { useState } from "react";
+
+import CardTopic from "@/ui/segments/home/discover-topic/card-topic";
 
 export type Topic = {
   title: string;
@@ -12,31 +13,31 @@ export type Topic = {
 
 const TOPICS: Topic[] = [
   {
-    subtitle: 'Discover',
-    title: 'Hangeul',
+    subtitle: "Discover",
+    title: "Hangeul",
     description:
       "A Klingon will be sure to miss what they won't understand. And with what they understand, they will love what they're missing.",
-    link: '/discover-hangeul',
-    textSize: '30vw',
-    heading: ['Hangeul', 'Design'],
+    link: "/discover-hangeul",
+    textSize: "30vw",
+    heading: ["Hangeul", "Design"],
   },
   {
-    subtitle: 'Tailored',
-    title: 'Custom typeface',
+    subtitle: "Tailored",
+    title: "Custom typeface",
     description:
       "A Klingon will be sure to miss what they won't understand. And with what they understand, they will love what they're missing.",
-    link: '/discover-hangeul',
-    textSize: '30vw',
-    heading: ['Custom', 'Type'],
+    link: "/discover-hangeul",
+    textSize: "30vw",
+    heading: ["Custom", "Type"],
   },
   {
-    subtitle: 'Learn',
-    title: 'Workshops',
+    subtitle: "Learn",
+    title: "Workshops",
     description:
       "A Klingon will be sure to miss what they won't understand. And with what they understand, they will love what they're missing.",
-    link: '/discover-hangeul',
-    textSize: '30vw',
-    heading: ['Latin', 'Hangeul'],
+    link: "/discover-hangeul",
+    textSize: "30vw",
+    heading: ["Latin", "Hangeul"],
   },
 ];
 
@@ -88,13 +89,13 @@ export default function DiscoverTopics() {
             id="top-heading"
             className="absolute w-full text-center transition-all duration-300 ease-in-out"
             style={{
-              bottom: isAnyCardHovered && !isContentChanging ? '10px' : '-400px',
+              bottom: isAnyCardHovered && !isContentChanging ? "10px" : "-400px",
               transform:
                 isAnyCardHovered && !isContentChanging
-                  ? 'translateY(0)'
+                  ? "translateY(0)"
                   : isContentChanging
-                    ? 'translateY(-100%)' // Slide down when changing
-                    : 'translateY(100%)', // Slide up when hiding
+                    ? "translateY(-100%)" // Slide down when changing
+                    : "translateY(100%)", // Slide up when hiding
             }}
           >
             {activeTopic?.heading[0]}
@@ -105,13 +106,13 @@ export default function DiscoverTopics() {
             id="bottom-heading"
             className="absolute w-full text-center transition-all duration-300 ease-in-out"
             style={{
-              top: isAnyCardHovered && !isContentChanging ? '10px' : '-400px',
+              top: isAnyCardHovered && !isContentChanging ? "10px" : "-400px",
               transform:
                 isAnyCardHovered && !isContentChanging
-                  ? 'translateY(0)'
+                  ? "translateY(0)"
                   : isContentChanging
-                    ? 'translateY(100%)' // Slide up when changing
-                    : 'translateY(-100%)', // Slide down when hiding
+                    ? "translateY(100%)" // Slide up when changing
+                    : "translateY(-100%)", // Slide down when hiding
             }}
           >
             {activeTopic?.heading[1]}

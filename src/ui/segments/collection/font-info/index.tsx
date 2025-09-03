@@ -1,7 +1,9 @@
-import { typeface } from '@/types/typefaces';
-import slugify from '@/utils/slugify';
-import { useEffect, useState } from 'react';
-import MajorBlock from './major-bloc';
+import { useEffect, useState } from "react";
+
+import { typeface } from "@/types/typefaces";
+import slugify from "@/utils/slugify";
+
+import MajorBlock from "./major-bloc";
 
 export type BlockContent = {
   title: string;
@@ -18,10 +20,10 @@ export default function FontInfoPanel({ content }: { content: typeface; collecti
       setMouseY(e.clientY);
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove);
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener("mousemove", handleMouseMove);
     };
   }, []);
 
@@ -41,7 +43,7 @@ export default function FontInfoPanel({ content }: { content: typeface; collecti
       const designContent = {
         title: designer.fullName,
         description: designer.biography,
-        label: 'contact',
+        label: "contact",
         link: designer.instagram,
       };
       designers.push(designContent);
@@ -54,13 +56,13 @@ export default function FontInfoPanel({ content }: { content: typeface; collecti
   const blocContent1: BlockContent[] = [
     {
       title: content.name,
-      description: 'This is a trial font package. It is a free trial of the font.',
-      label: 'Download Fonts',
+      description: "This is a trial font package. It is a free trial of the font.",
+      label: "Download Fonts",
       link: null,
     },
     {
-      title: 'Description',
-      description: '12 files\nOTF, WOFF, WOFF2',
+      title: "Description",
+      description: "12 files\nOTF, WOFF, WOFF2",
       label: null,
       link: null,
     },
@@ -68,9 +70,9 @@ export default function FontInfoPanel({ content }: { content: typeface; collecti
 
   const blocContent2: BlockContent[] = [
     {
-      title: 'Collection specimen',
-      description: 'Presentation of all weights and styles PDF file',
-      label: 'Download Specimen',
+      title: "Collection specimen",
+      description: "Presentation of all weights and styles PDF file",
+      label: "Download Specimen",
       link: null,
     },
   ];
@@ -107,13 +109,15 @@ export default function FontInfoPanel({ content }: { content: typeface; collecti
       <div className="absolute z-20 flex h-full w-full items-center justify-center mix-blend-exclusion">
         <div
           id="giant-abbreviation"
-          className="relative text-[80vw] text-neutral-800"
+          className="relative text-[64vw] text-neutral-800"
           style={{
             fontFamily: slugify(content.name),
             fontVariationSettings: `'wght' ${dynamicWeight}, 'slnt' 0, 'opsz' 900, 'wdth' 900`,
           }}
         >
-          <span className="relative top-20 inline-block">{content.name.slice(0, 1)}</span>
+          <span className="relative top-12 inline-block tracking-[-0.04em]">
+            {content.name.slice(0, 2)}
+          </span>
         </div>
       </div>
 

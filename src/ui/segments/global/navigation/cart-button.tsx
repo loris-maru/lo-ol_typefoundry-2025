@@ -1,11 +1,14 @@
-'use client';
+"use client";
 
-import { useScrollBlock } from '@/hooks/useScrollBlock';
-import { useCartStore } from '@/states/cart';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
-import { RiShoppingCart2Fill } from 'react-icons/ri';
-import CloseButton from './close-button';
+import { useState } from "react";
+
+import { AnimatePresence, motion } from "framer-motion";
+import { RiShoppingCart2Fill } from "react-icons/ri";
+
+import { useScrollBlock } from "@/hooks/useScrollBlock";
+import { useCartStore } from "@/states/cart";
+
+import CloseButton from "./close-button";
 
 export default function CartButton() {
   const { cart, removeFromCart, clearCart } = useCartStore();
@@ -35,20 +38,20 @@ export default function CartButton() {
     <motion.nav
       className="fixed top-4 right-4 z-40"
       animate={{
-        width: cartOpen ? '400px' : '46px',
-        height: cartOpen ? '600px' : '46px',
-        right: cartOpen ? '16px' : '16px',
-        top: cartOpen ? 0 : '16px',
+        width: cartOpen ? "400px" : "64px",
+        height: cartOpen ? "600px" : "64px",
+        right: cartOpen ? "16px" : "16px",
+        top: cartOpen ? 0 : "16px",
       }}
-      transition={{ duration: 0.3, ease: 'easeInOut' }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
     >
       <motion.button
         onClick={() => setCartOpen(true)}
         className="relative flex h-full w-full items-center justify-center rounded-full bg-black text-white transition-colors duration-200 hover:bg-gray-800"
         animate={{
-          borderRadius: cartOpen ? '16px' : '9999px',
+          borderRadius: cartOpen ? "16px" : "9999px",
         }}
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
       >
         {!cartOpen && (
           <div className="flex items-center justify-center">
@@ -91,7 +94,7 @@ export default function CartButton() {
                         {item.family} {item.weightName}
                       </h3>
                       <p className="mt-1 text-sm text-gray-400">
-                        License: {item.license || 'Not selected'}
+                        License: {item.license || "Not selected"}
                       </p>
                       <p className="text-sm text-gray-400">
                         Users: {item.users[0]}-{item.users[1]}

@@ -1,7 +1,7 @@
-import AsideLinks from '@/ui/segments/global/footer/aside-links';
-import Collections from '@/ui/segments/global/footer/collections';
-import Infos from '@/ui/segments/global/footer/infos';
-import Legal from '@/ui/segments/global/footer/legal';
+import AsideLinks from "@/ui/segments/global/footer/aside-links";
+import Collections from "@/ui/segments/global/footer/collections";
+import Infos from "@/ui/segments/global/footer/infos";
+import Legal from "@/ui/segments/global/footer/legal";
 
 export default function Footer() {
   return (

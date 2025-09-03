@@ -1,7 +1,8 @@
-import { SmallLink } from '@/ui/molecules/global/links';
-import { Topic } from '@/ui/segments/home/discover-topic';
-import { cn } from '@/utils/classNames';
-import { useState } from 'react';
+import { useState } from "react";
+
+import { SmallLink } from "@/ui/molecules/global/links";
+import { Topic } from "@/ui/segments/home/discover-topic";
+import { cn } from "@/utils/classNames";
 
 export default function CardTopic({
   topic,
@@ -19,13 +20,13 @@ export default function CardTopic({
   // Calculate width based on hover states
   const getWidth = () => {
     if (isHovered) {
-      return '50%';
+      return "50%";
     } else if (activeTopic && activeTopic.title !== topic.title) {
       // Another card is hovered (activeTopic is set but not this one)
-      return '25%';
+      return "25%";
     } else {
       // No cards are hovered (activeTopic is null or this one is active)
-      return '33.33%';
+      return "33.33%";
     }
   };
 
@@ -55,7 +56,7 @@ export default function CardTopic({
       <div className="relative z-30 flex h-full w-full flex-col justify-between">
         <div>
           <div className="text-sm">{topic.subtitle}</div>
-          <h4 className="font-mayday mt-2 text-5xl leading-none font-medium tracking-wide uppercase">
+          <h4 className="font-mayday mt-2 pr-6 text-5xl leading-none font-medium tracking-wide uppercase">
             {topic.title}
           </h4>
         </div>
@@ -64,8 +65,8 @@ export default function CardTopic({
           id="card-description"
           style={{ opacity: isHovered ? 1 : 0 }}
           className={cn(
-            'flex flex-col items-start gap-y-3 transition-opacity duration-300 ease-in-out',
-            isHovered ? 'opacity-100 delay-300' : 'opacity-0 delay-0',
+            "flex flex-col items-start gap-y-3 transition-opacity duration-300 ease-in-out",
+            isHovered ? "opacity-100 delay-300" : "opacity-0 delay-0",
           )}
         >
           <p className="mt-4 text-base leading-normal transition-opacity duration-300 ease-in-out">

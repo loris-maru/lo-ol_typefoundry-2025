@@ -1,11 +1,13 @@
-'use client';
+"use client";
 
-import { PACKAGES } from '@/app/content/PACKAGES';
-import { typeface } from '@/types/typefaces';
-import PackageCard from '@/ui/segments/collection/shop-package/card';
-import { cn } from '@/utils/classNames';
-import { useInView } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
+
+import { useInView } from "framer-motion";
+
+import { PACKAGES } from "@/app/content/PACKAGES";
+import { typeface } from "@/types/typefaces";
+import PackageCard from "@/ui/segments/collection/shop-package/card";
+import { cn } from "@/utils/classNames";
 
 export default function ShopPackages({ content }: { content: typeface }) {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -42,16 +44,16 @@ export default function ShopPackages({ content }: { content: typeface }) {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [isFixed, sectionTop]);
 
   return (
     <section
       ref={sectionRef}
       className={cn(
-        'flex h-screen flex-row gap-x-2 overflow-hidden bg-[#EFEFEF] px-[14vw] py-[8vh]',
-        isFixed && 'fixed top-0 left-0 z-20 w-full',
+        "flex h-screen flex-row gap-x-2 overflow-hidden bg-[#EFEFEF] px-[14vw] py-[8vh]",
+        isFixed && "fixed top-0 left-0 z-20 w-full",
       )}
     >
       {PACKAGES.map((pkg, idx) => (

@@ -44,15 +44,15 @@ export default function MenuButton({ allTypefaces }: { allTypefaces: typeface[] 
 
   // Calculate position based on cart visibility
   const hasCartItems = cart.length > 0;
-  const rightPosition = hasCartItems ? 'right-[62px]' : 'right-[30px]'; // 62px = 30px + 32px (cart button right-4 = 16px + 46px cart width)
+  const rightPosition = hasCartItems ? 'right-[94px]' : 'right-[30px]'; // 94px = 30px + 64px (cart button right-4 = 16px + 64px cart width + 14px spacing)
 
   return (
     <motion.nav
       className={`fixed ${rightPosition} top-4 z-50`}
       animate={{
-        width: menuOpen ? '100vw' : '46px',
-        height: menuOpen ? '100vh' : '46px',
-        right: menuOpen ? 0 : hasCartItems ? '75px' : '30px',
+        width: menuOpen ? '100vw' : '64px',
+        height: menuOpen ? '100vh' : '64px',
+        right: menuOpen ? 0 : hasCartItems ? '107px' : '30px',
         top: menuOpen ? 0 : '16px',
       }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
