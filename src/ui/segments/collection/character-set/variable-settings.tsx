@@ -1,6 +1,7 @@
 "use client";
 
 import { VariableSettingsProps } from "@/types/character-set";
+import SliderComponent from "@/ui/segments/collection/character-set/slider-component";
 
 export default function VariableSettings({
   content,
@@ -8,52 +9,9 @@ export default function VariableSettings({
   onAxisSettingsChange,
 }: VariableSettingsProps) {
   const updateSetting = (key: string, value: number | boolean) => {
-    console.log(`Updating ${key} to ${value}`);
-    console.log("Current axisSettings:", axisSettings);
     const newSettings = { ...axisSettings, [key]: value };
-    console.log("New settings:", newSettings);
     onAxisSettingsChange(newSettings);
   };
-
-  const SliderComponent = ({
-    label,
-    value,
-    min,
-    max,
-    step = 1,
-    onChange,
-  }: {
-    label: string;
-    value: number;
-    min: number;
-    max: number;
-    step?: number;
-    onChange: (value: number) => void;
-  }) => (
-    <div className="font-whisper flex flex-col gap-2 text-base">
-      <label className="text-sm font-medium text-white">{label}</label>
-      <div className="flex items-center gap-3">
-        <span className="text-xs text-gray-400">{min}</span>
-        <input
-          type="range"
-          min={min}
-          max={max}
-          step={step}
-          value={value}
-          onChange={(e) => {
-            console.log(`Slider ${label} changed to:`, e.target.value);
-            onChange(Number(e.target.value));
-          }}
-          className="slider h-2 flex-1 cursor-pointer appearance-none rounded-lg bg-gray-600"
-          style={{
-            background: `linear-gradient(to right, #ffffff 0%, #ffffff ${((value - min) / (max - min)) * 100}%, #4b5563 ${((value - min) / (max - min)) * 100}%, #4b5563 100%)`,
-          }}
-        />
-        <span className="text-xs text-gray-400">{max}</span>
-        <span className="w-8 text-center text-xs text-white">{value}</span>
-      </div>
-    </div>
-  );
 
   return (
     <div className="relative flex h-full w-full flex-col gap-4 rounded-lg text-white">

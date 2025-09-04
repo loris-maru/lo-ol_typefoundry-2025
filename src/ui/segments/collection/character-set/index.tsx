@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 
+import { useFont } from "@react-hooks-library/core";
+
+import { AxisSettings } from "@/types/character-set";
 import { CharacterSetProps, typeface } from "@/types/typefaces";
 import CharacterGrid from "@/ui/segments/collection/character-set/character-grid";
 import CharacterViewer from "@/ui/segments/collection/character-set/character-viewer";
@@ -9,9 +12,6 @@ import CharacterViewer from "@/ui/segments/collection/character-set/character-vi
 export default function CharacterSetPanel({ content }: { content: typeface }) {
   const [script, setScript] = useState<"latin" | "hangul">("latin");
   const [activeCharacter, setActiveCharacter] = useState<string>("A");
-
-  const [latinCharacterSet, setLatinCharacterSet] = useState<CharacterSetProps[] | []>([]);
-
   // Axis settings state
   const [axisSettings, setAxisSettings] = useState({
     wght: 400,
@@ -21,9 +21,43 @@ export default function CharacterSetPanel({ content }: { content: typeface }) {
     italic: false,
   });
 
-  const handleAxisSettingsChange = (newSettings: typeof axisSettings) => {
-    console.log("Axis settings changed:", newSettings);
-    setAxisSettings(newSettings);
+  const [latinCharacterSet, setLatinCharacterSet] = useState<CharacterSetProps[] | []>([]);
+
+  const uprightFont = content.varFont;
+  const italicFont = content.varFontItalic;
+
+  // Load both fonts
+  const uprightFontName = content.name;
+  const italicFontName = `${content.name}Italic`;
+
+  const { loaded: uprightLoaded, error: uprightError } = useFont(uprightFontName, uprightFont);
+  const { loaded: italicLoaded, error: italicError } = useFont(italicFontName, italicFont || "");
+
+  // Determine which font to use (only use italic if it's available)
+  const canUseItalic = italicFont && italicFont !== "";
+  const currentFontName = axisSettings.italic && canUseItalic ? italicFontName : uprightFontName;
+  const currentFontFile = axisSettings.italic && canUseItalic ? italicFont : uprightFont;
+
+  // Debug logging
+  useEffect(() => {
+    console.log("Current name: ", currentFontName);
+  }, [
+    axisSettings.italic,
+    canUseItalic,
+    currentFontName,
+    currentFontFile,
+    uprightLoaded,
+    italicLoaded,
+  ]);
+
+  const handleAxisSettingsChange = (newSettings: AxisSettings) => {
+    setAxisSettings({
+      wght: newSettings.wght ?? 400,
+      wdth: newSettings.wdth ?? 100,
+      slnt: newSettings.slnt ?? 0,
+      opsz: newSettings.opsz ?? 14,
+      italic: newSettings.italic ?? false,
+    });
   };
 
   // ---------------
@@ -40,28 +74,25 @@ export default function CharacterSetPanel({ content }: { content: typeface }) {
     fetchCharSet().catch(console.error);
   }, [content.characterSetJSON]);
 
-  console.log("Latin character set:", content.characterSetJSON);
-
   return (
     <section className="relative grid h-full w-full grid-cols-2 gap-0 bg-black">
       <CharacterViewer
         activeCharacter={activeCharacter}
-        uprightFontFile={content.uprightTTFVar}
-        italicFontFile={content.varFontItalic}
         characterSet={latinCharacterSet}
         setActiveCharacter={setActiveCharacter}
         content={content}
         axisSettings={axisSettings}
         onAxisSettingsChange={handleAxisSettingsChange}
+        fontName={currentFontName}
       />
       <CharacterGrid
         characterSet={latinCharacterSet}
         hasHangul={content.hasHangul}
-        fontName={content.name}
         script={script}
         setScript={setScript}
         activeCharacter={activeCharacter}
         setActiveCharacter={setActiveCharacter}
+        fontName={currentFontName}
       />
     </section>
   );

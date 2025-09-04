@@ -15,16 +15,8 @@ export type AxisSettings = {
   italic?: boolean;
 };
 
-export type AxisSettingsProps = {
-  wght: number;
-  wdth?: number;
-  slnt?: number;
-  opsz?: number;
-  italic?: boolean;
-};
-
 export type VariableSettingsProps = {
   content: typeface;
-  axisSettings: AxisSettingsProps;
-  onAxisSettingsChange: (settings: AxisSettingsProps) => void;
+  axisSettings: AxisSettings;
+  onAxisSettingsChange: (settings: AxisSettings) => void;
 };

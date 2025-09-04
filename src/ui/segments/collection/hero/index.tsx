@@ -51,7 +51,6 @@ export default function VideoHero({
   const familyAbbreviation = content.name.slice(0, 2);
 
   const handleVideoLoad = () => {
-    console.log("Video loaded in VideoHero, calling onVideoLoaded");
     onVideoLoaded();
   };
 

@@ -1,7 +1,10 @@
 import { useMemo, useState } from "react";
 
 import { CharacterSetProps } from "@/types/typefaces";
+import Pagination from "@/ui/segments/collection/character-set/pagination";
 import { cn } from "@/utils/classNames";
+
+import ScriptSwitcher from "./script-switcher";
 
 export default function CharacterGrid({
   characterSet,
@@ -23,7 +26,7 @@ export default function CharacterGrid({
   const [currentPage, setCurrentPage] = useState(1);
 
   // Pagination settings
-  const charactersPerPage = 64; // 8x8 grid = 64 characters per page
+  const charactersPerPage = 80; // 8x10 grid = 80 characters per page
 
   // Calculate pagination
   const totalPages = Math.ceil(characterSet.length / charactersPerPage);
@@ -72,10 +75,11 @@ export default function CharacterGrid({
 
     return pages;
   }, [currentPage, totalPages]);
+
   return (
-    <div className="relative h-full w-full py-8 pr-8 pl-4">
+    <div className="relative h-full w-full overflow-hidden rounded-2xl p-8">
       {/* Character Grid */}
-      <div className="divide relative grid h-3/5 w-full grid-cols-8 grid-rows-8 divide-white overflow-hidden rounded-2xl border border-solid border-neutral-700 text-white">
+      <div className="relative grid w-full grid-cols-8 grid-rows-10 text-white" id="character-grid">
         {currentPageCharacters.map((character: CharacterSetProps, index) => (
           <button
             type="button"
@@ -84,108 +88,31 @@ export default function CharacterGrid({
             onClick={() => setActiveCharacter(character.value)}
             key={`${character.value}-${character.unicode}-${index}`}
             className={cn(
-              "relative flex h-full w-full items-center justify-center text-white",
+              "relative flex aspect-square w-full items-center justify-center border border-neutral-700 text-xl",
               activeCharacter === character.value ? "bg-white text-black" : "bg-black text-white",
             )}
             style={{
               fontFamily: fontName,
-              fontVariationSettings: `'wght' 900, 'wdth' ${900}, 'opsz' ${900}, 'slnt' ${0}`,
+              fontVariationSettings: `'wght' ${900}, 'wdth' ${900}, 'opsz' ${900}, 'slnt' ${0}`,
             }}
           >
             {character.value}
           </button>
         ))}
       </div>
+      <div className="relative mt-10 flex w-full flex-row justify-between">
+        {/* Pagination Controls */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          goToPreviousPage={goToPreviousPage}
+          goToNextPage={goToNextPage}
+          pageNumbers={pageNumbers}
+          goToPage={goToPage}
+        />
 
-      {/* Pagination Controls */}
-      <div className="relative flex h-1/5 w-full items-center justify-center">
-        <div className="flex items-center gap-2">
-          {/* Previous Arrow */}
-          <button
-            type="button"
-            onClick={goToPreviousPage}
-            disabled={currentPage === 1}
-            className={cn(
-              "flex h-8 w-8 items-center justify-center rounded-full border border-white text-white transition-colors duration-200",
-              currentPage === 1
-                ? "cursor-not-allowed opacity-50"
-                : "hover:bg-white hover:text-black",
-            )}
-            aria-label="Previous page"
-          >
-            ←
-          </button>
-
-          {/* Page Numbers */}
-          <div className="flex items-center gap-1">
-            {pageNumbers.map((pageNum) => (
-              <button
-                key={pageNum}
-                type="button"
-                onClick={() => goToPage(pageNum)}
-                className={cn(
-                  "flex h-8 w-8 items-center justify-center rounded-full text-sm transition-colors duration-200",
-                  currentPage === pageNum ? "bg-white text-black" : "text-white hover:bg-gray-800",
-                )}
-                aria-label={`Go to page ${pageNum}`}
-              >
-                {pageNum}
-              </button>
-            ))}
-          </div>
-
-          {/* Next Arrow */}
-          <button
-            type="button"
-            onClick={goToNextPage}
-            disabled={currentPage === totalPages}
-            className={cn(
-              "flex h-8 w-8 items-center justify-center rounded-full border border-white text-white transition-colors duration-200",
-              currentPage === totalPages
-                ? "cursor-not-allowed opacity-50"
-                : "hover:bg-white hover:text-black",
-            )}
-            aria-label="Next page"
-          >
-            →
-          </button>
-        </div>
-      </div>
-
-      {/* Script Switcher */}
-      <div className="relative h-1/5 w-full">
-        {hasHangul && (
-          <div className="flex w-full flex-row items-start gap-x-2">
-            <button
-              type="button"
-              name="script-switcher"
-              aria-label="switch-to-latin"
-              onClick={() => setScript("latin")}
-              className={cn(
-                "font-whisper relative flex h-full w-32 items-center justify-center rounded-4xl py-3 transition-colors duration-300 ease-in-out",
-                script === "latin"
-                  ? "bg-white text-black"
-                  : "bg-black text-white hover:bg-gray-800",
-              )}
-            >
-              Latin
-            </button>
-            <button
-              type="button"
-              name="script-switcher-hangul"
-              aria-label="switch-to-hangul"
-              onClick={() => setScript("hangul")}
-              className={cn(
-                "font-whisper relative flex h-full w-32 items-center justify-center rounded-4xl py-3 transition-colors duration-300 ease-in-out hover:bg-gray-800",
-                script === "hangul"
-                  ? "bg-white text-black"
-                  : "bg-black text-white hover:bg-gray-800",
-              )}
-            >
-              Hangul
-            </button>
-          </div>
-        )}
+        {/* Script Switcher */}
+        <ScriptSwitcher hasHangul={hasHangul} script={script} setScript={setScript} />
       </div>
     </div>
   );

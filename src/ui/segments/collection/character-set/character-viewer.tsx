@@ -1,38 +1,28 @@
 import { useEffect, useState } from "react";
 
-import { useFont } from "@react-hooks-library/core";
-
-import { AxisSettingsProps } from "@/types/character-set";
+import { AxisSettings } from "@/types/character-set";
 import { CharacterSetProps, typeface } from "@/types/typefaces";
 import VariableSettings from "@/ui/segments/collection/character-set/variable-settings";
-import slugify from "@/utils/slugify";
 
 import Variants from "./variants";
 
 export default function CharacterViewer({
-  uprightFontFile,
-  italicFontFile,
   activeCharacter,
   characterSet,
   content,
   axisSettings,
   onAxisSettingsChange,
+  fontName,
 }: {
   activeCharacter: string;
-  uprightFontFile: string;
-  italicFontFile?: string;
   characterSet: CharacterSetProps[];
   setActiveCharacter: (character: string) => void;
   content: typeface;
-  axisSettings: AxisSettingsProps;
-  onAxisSettingsChange: (settings: AxisSettingsProps) => void;
+  axisSettings: AxisSettings;
+  onAxisSettingsChange: (settings: AxisSettings) => void;
+  fontName: string;
 }) {
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
-
-  const setFontName = `${slugify(content.name)}VAR`;
-  const fontFile = axisSettings.italic && italicFontFile ? italicFontFile : uprightFontFile;
-
-  const { error, loaded } = useFont(setFontName, fontFile);
 
   // Reset selected variant when active character changes
   useEffect(() => {
@@ -46,8 +36,10 @@ export default function CharacterViewer({
   // Get the character to display (variant or original)
   const displayCharacter = selectedVariant || activeCharacter;
 
-  if (error) return <div>Error loading font</div>;
-  if (!loaded) return <div>Loading font</div>;
+  const wght = axisSettings.wght;
+  const wdth = content.has_wdth ? axisSettings.wdth : 900;
+  const slnt = content.has_slnt ? axisSettings.slnt : 0;
+  const opsz = content.has_opsz ? axisSettings.opsz : 900;
 
   return (
     <div className="relative flex h-full w-full flex-col gap-y-2 py-8 pl-8">
@@ -57,8 +49,8 @@ export default function CharacterViewer({
           id="character-viewer"
           className="relative flex h-[85%] w-full items-center justify-center rounded-lg text-[30vw] text-white"
           style={{
-            fontFamily: setFontName,
-            fontVariationSettings: `'wght' ${axisSettings.wght}${content.has_wdth ? `, 'wdth' ${axisSettings.wdth}` : ""}${content.has_slnt ? `, 'slnt' ${axisSettings.slnt}` : ""}${content.has_opsz ? `, 'opsz' ${axisSettings.opsz}` : ""}`,
+            fontFamily: fontName,
+            fontVariationSettings: `'wght' ${wght}, 'wdth' ${wdth}, 'slnt' ${slnt}, 'opsz' ${opsz}`,
           }}
         >
           {displayCharacter}
@@ -71,7 +63,7 @@ export default function CharacterViewer({
               variants={variants}
               selectedVariant={selectedVariant}
               setSelectedVariant={setSelectedVariant}
-              setFontName={setFontName}
+              fontName={fontName}
               axisSettings={axisSettings}
               content={content}
             />
