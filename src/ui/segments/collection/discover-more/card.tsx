@@ -1,17 +1,20 @@
-'use client';
+"use client";
 
-import { COLLECTION_DETAILS } from '@/app/content/COLLECTION_DETAILS';
-import { typeface } from '@/types/typefaces';
-import { CursorTextCircle } from '@/ui/molecules/collection/discover-collection-cursor';
-import VideoPlayerMux from '@/ui/molecules/global/video-player';
-import CollectionDetailsCard from '@/ui/segments/collection/discover-more/collection-details-card';
-import slugify from '@/utils/slugify';
-import { useFont } from '@react-hooks-library/core';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { BounceLoader } from 'react-spinners';
-import { useMediaQuery } from 'usehooks-ts';
+import { useState } from "react";
+
+import { useRouter } from "next/navigation";
+
+import { useFont } from "@react-hooks-library/core";
+import { AnimatePresence, motion } from "framer-motion";
+import { BounceLoader } from "react-spinners";
+import { useMediaQuery } from "usehooks-ts";
+
+import { COLLECTION_DETAILS } from "@/app/content/COLLECTION_DETAILS";
+import { typeface } from "@/types/typefaces";
+import { CursorTextCircle } from "@/ui/molecules/collection/discover-collection-cursor";
+import VideoPlayerMux from "@/ui/molecules/global/video-player";
+import CollectionDetailsCard from "@/ui/segments/collection/discover-more/collection-details-card";
+import slugify from "@/utils/slugify";
 
 interface CollectionCardProps {
   content: typeface;
@@ -38,7 +41,7 @@ export default function CollectionCard({ content, index, isActive }: CollectionC
   const animTime = 0.4;
   const collectionNameId = `collection-name-${index}`;
 
-  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const familyName = slugify(content.name);
   const fontFile = content.varFont;
@@ -91,7 +94,7 @@ export default function CollectionCard({ content, index, isActive }: CollectionC
                 exit={{ opacity: 0, y: 50 }}
                 transition={{ duration: animTime }}
               >
-                <div className="font-kronik cursor-pointer text-2xl font-normal text-white">
+                <div className="font-whisper cursor-pointer text-2xl font-normal text-white">
                   Discover the collection
                 </div>
               </motion.div>
@@ -148,7 +151,7 @@ export default function CollectionCard({ content, index, isActive }: CollectionC
                   cell3={`${content.totalGlyphs} glyphs`}
                   cell4={COLLECTION_DETAILS.cell4}
                   cell5="Latin"
-                  cell6={`${content.hasHangul ? 'Hangul' : 'No Hangul'}`}
+                  cell6={`${content.hasHangul ? "Hangul" : "No Hangul"}`}
                 />
               </motion.div>
             )}
@@ -167,9 +170,9 @@ export default function CollectionCard({ content, index, isActive }: CollectionC
             animate={{
               scale: 1,
               opacity: 1,
-              width: isNavigating ? '100vw' : isHovered ? '70vh' : '23vw',
-              height: isNavigating ? '100vh' : isHovered ? '70vh' : '80vh',
-              borderRadius: isNavigating ? 0 : isHovered ? '50vw' : '40vw',
+              width: isNavigating ? "100vw" : isHovered ? "70vh" : "23vw",
+              height: isNavigating ? "100vh" : isHovered ? "70vh" : "80vh",
+              borderRadius: isNavigating ? 0 : isHovered ? "50vw" : "40vw",
             }}
             exit={{ scale: 0, opacity: 0 }}
             transition={{ duration: animTime }}
@@ -182,7 +185,7 @@ export default function CollectionCard({ content, index, isActive }: CollectionC
                 }}
                 animate={{
                   opacity: isNavigating ? 0 : 1,
-                  height: isHovered ? 0 : '100%',
+                  height: isHovered ? 0 : "100%",
                 }}
                 transition={{ duration: animTime }}
               />

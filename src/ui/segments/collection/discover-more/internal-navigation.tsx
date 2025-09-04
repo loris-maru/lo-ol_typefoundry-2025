@@ -1,7 +1,9 @@
-import { typeface } from '@/types/typefaces';
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
-import { motion } from 'framer-motion';
-import { KeenSliderInstance } from 'keen-slider/react';
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { motion } from "framer-motion";
+import { KeenSliderInstance } from "keen-slider/react";
+
+import { typeface } from "@/types/typefaces";
+import { cn } from "@/utils/classNames";
 
 export default function InternalNavigation({
   isNavigating,
@@ -30,7 +32,7 @@ export default function InternalNavigation({
           y: isNavigating ? 100 : 0,
           opacity: isNavigating ? 0 : 1,
         }}
-        transition={{ duration: 0.5, ease: 'easeInOut' }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
       >
         <div className="flex items-center justify-center gap-8">
           {/* Left Chevron */}
@@ -45,12 +47,12 @@ export default function InternalNavigation({
 
           {/* Collection Names Container with smooth sliding - limited to 5 visible */}
           <div className="w-[600px] overflow-hidden">
-            {' '}
+            {" "}
             {/* Fixed width to show only 5 items */}
             <motion.div
               className="flex items-center gap-8"
               animate={{ x: -navStartIndex * 120 }} // Adjust 120px based on your gap and text width
-              transition={{ duration: 0.5, ease: 'easeInOut' }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
             >
               {content.map((collection: typeface, index: number) => (
                 <button
@@ -59,9 +61,10 @@ export default function InternalNavigation({
                     instanceRef.current?.moveToIdx(index);
                     setCurrentSlide(index);
                   }}
-                  className={`relative text-sm whitespace-nowrap text-white transition-all duration-200 hover:opacity-80 ${
-                    index === currentSlide ? 'font-bold' : ''
-                  }`}
+                  className={cn(
+                    "font-whisper relative text-sm whitespace-nowrap text-white transition-all duration-200 hover:opacity-80",
+                    index === currentSlide ? "font-bold" : "",
+                  )}
                 >
                   {collection.name}
                   {index === currentSlide && (

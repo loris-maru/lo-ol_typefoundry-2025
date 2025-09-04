@@ -1,11 +1,13 @@
-'use client';
+"use client";
 
-import { typeface } from '@/types/typefaces';
-import CharacterSetPanel from '@/ui/segments/collection/character-set';
-import FontInfoPanel from '@/ui/segments/collection/font-info';
-import WeightGrid from '@/ui/segments/collection/weight-grid';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef } from "react";
+
+import { motion, useScroll, useTransform } from "framer-motion";
+
+import { typeface } from "@/types/typefaces";
+import CharacterSetPanel from "@/ui/segments/collection/character-set";
+import FontInfoPanel from "@/ui/segments/collection/font-info";
+import WeightGrid from "@/ui/segments/collection/weight-grid";
 
 export default function CollectionHorizontal({ content }: { content: typeface }) {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -16,14 +18,14 @@ export default function CollectionHorizontal({ content }: { content: typeface })
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ['start start', 'end start'],
+    offset: ["start start", "end start"],
   });
 
   // Horizontal translate across the first 3 panels only
   const x = useTransform(
     scrollYProgress,
     [0, 0.75], // Complete horizontal scroll by 75% of total scroll
-    ['0vw', `-${(3 - 1) * 100}vw`],
+    ["0vw", `-${(3 - 1) * 100}vw`],
   );
 
   return (
@@ -38,8 +40,8 @@ export default function CollectionHorizontal({ content }: { content: typeface })
           </div>
 
           {/* Panel 2: Character Set */}
-          <div className="grid h-[100vh] w-[100vw] shrink-0 place-items-center bg-[#f7f7f7]">
-            <CharacterSetPanel />
+          <div className="grid h-[100vh] w-[100vw] shrink-0 place-items-center">
+            <CharacterSetPanel content={content} />
           </div>
 
           {/* Panel 3: Font Info */}

@@ -15,7 +15,7 @@ export default function ShopPackages({ content }: { content: typeface }) {
   const [isFixed, setIsFixed] = useState(false);
   const [sectionTop, setSectionTop] = useState(0);
   const isInView = useInView(sectionRef, {
-    amount: 0.75,
+    amount: 0.4, // Trigger when 40% of the section is visible
     once: false,
   });
 

@@ -1,10 +1,12 @@
-'use client';
+"use client";
 
-import { typeface } from '@/types/typefaces';
-import slugify from '@/utils/slugify';
-import { useFont } from '@react-hooks-library/core';
-import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import { useRef } from "react";
+
+import { useFont } from "@react-hooks-library/core";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+
+import { typeface } from "@/types/typefaces";
+import slugify from "@/utils/slugify";
 
 export default function VideoHero({
   content,
@@ -23,25 +25,15 @@ export default function VideoHero({
 
   const { scrollYProgress } = useScroll({
     target: wrapperRef,
-    offset: ['start start', 'end start'],
+    offset: ["start start", "end start"],
   });
 
-  // Debug scroll progress in development
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      const unsubscribe = scrollYProgress.on('change', (latest) => {
-        console.log('Scroll progress:', latest);
-      });
-      return unsubscribe;
-    }
-  }, [scrollYProgress]);
-
   // Add fallback values and ensure transforms work in production
-  const width = useTransform(scrollYProgress, [0, 0.3, 0.6], ['100vw', '20vw', '16vw']);
+  const width = useTransform(scrollYProgress, [0, 0.3, 0.6], ["100vw", "20vw", "16vw"]);
 
   const borderRadius = useTransform(scrollYProgress, [0, 0.3, 0.6], [0, 8, 14]);
 
-  const height = useTransform(scrollYProgress, [0, 0.3, 0.6], ['100vh', '100vh', '40vh']);
+  const height = useTransform(scrollYProgress, [0, 0.3, 0.6], ["100vh", "100vh", "40vh"]);
   const scale = useTransform(scrollYProgress, [0.6, 0.9, 1], [1, 0.3, 0.1]);
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 1]);
 
@@ -59,7 +51,7 @@ export default function VideoHero({
   const familyAbbreviation = content.name.slice(0, 2);
 
   const handleVideoLoad = () => {
-    console.log('Video loaded in VideoHero, calling onVideoLoaded');
+    console.log("Video loaded in VideoHero, calling onVideoLoaded");
     onVideoLoaded();
   };
 
@@ -94,7 +86,7 @@ export default function VideoHero({
             <div className="font-whisper divide-y divide-black text-xs leading-tight font-medium">
               <div className="px-3 py-2">{content.name} Collection</div>
               <div className="px-3 py-2">Total of {content.singleFontList.length} fonts</div>
-              <div className="px-3 py-2">Axis: {content.axisNames.join(', ')}</div>
+              <div className="px-3 py-2">Axis: {content.axisNames.join(", ")}</div>
             </div>
           </div>
         </div>
@@ -102,7 +94,7 @@ export default function VideoHero({
         <motion.div
           style={{ width, height, scale, opacity, borderRadius }}
           className="relative overflow-hidden shadow-2xl will-change-transform"
-          initial={{ scale: 1, width: '100vw', height: '100vh' }}
+          initial={{ scale: 1, width: "100vw", height: "100vh" }}
         >
           <motion.div
             className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center text-center"
@@ -137,10 +129,10 @@ export default function VideoHero({
                 onLoadedData={handleVideoLoad}
                 className="absolute inset-0 h-full w-full object-cover"
                 style={{
-                  minWidth: '100%',
-                  minHeight: '100%',
-                  maxWidth: '100%',
-                  maxHeight: '100%',
+                  minWidth: "100%",
+                  minHeight: "100%",
+                  maxWidth: "100%",
+                  maxHeight: "100%",
                 }}
               />
             ) : (

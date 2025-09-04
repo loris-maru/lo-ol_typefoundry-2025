@@ -1,13 +1,16 @@
-'use client';
+"use client";
 
-import { typeface } from '@/types/typefaces';
-import CollectionCard from '@/ui/segments/collection/discover-more/card';
-import InternalNavigation from '@/ui/segments/collection/discover-more/internal-navigation';
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import 'keen-slider/keen-slider.min.css';
-import { KeenSliderInstance, useKeenSlider } from 'keen-slider/react';
-import { useRef, useState } from 'react';
+import { useRef, useState } from "react";
+
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { KeenSliderInstance, useKeenSlider } from "keen-slider/react";
+
+import { typeface } from "@/types/typefaces";
+import CollectionCard from "@/ui/segments/collection/discover-more/card";
+import InternalNavigation from "@/ui/segments/collection/discover-more/internal-navigation";
+
+import "keen-slider/keen-slider.min.css";
 
 export default function DiscoverMoreCollections({ content }: { content: typeface[] }) {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -18,7 +21,7 @@ export default function DiscoverMoreCollections({ content }: { content: typeface
   // Scroll-based scale and border radius animation
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ['start end', 'start start'],
+    offset: ["start end", "start start"],
   });
 
   const scale = useTransform(
@@ -30,7 +33,7 @@ export default function DiscoverMoreCollections({ content }: { content: typeface
   const borderRadius = useTransform(
     scrollYProgress,
     [0, 0.5], // From entering screen to 70% of scroll progress
-    ['40px', '0px'], // From 40px to 0px (reaches 0 earlier)
+    ["40px", "0px"], // From 40px to 0px (reaches 0 earlier)
   );
 
   const [sliderRef, instanceRef] = useKeenSlider({
@@ -39,7 +42,7 @@ export default function DiscoverMoreCollections({ content }: { content: typeface
       setCurrentSlide(slider.track.details.rel);
     },
     loop: true,
-    mode: 'free-snap',
+    mode: "free-snap",
     slides: {
       perView: 1,
       spacing: 0,
@@ -76,7 +79,7 @@ export default function DiscoverMoreCollections({ content }: { content: typeface
     <section
       ref={sectionRef}
       className="relative z-30 overflow-hidden bg-transparent"
-      style={{ height: '100vh' }}
+      style={{ height: "100vh" }}
     >
       {/* Sticky Container with animated scale and border radius */}
       <motion.div
@@ -84,7 +87,7 @@ export default function DiscoverMoreCollections({ content }: { content: typeface
         style={{
           scale,
           borderRadius,
-          transformOrigin: 'center center',
+          transformOrigin: "center center",
         }}
       >
         {/* Black Container */}

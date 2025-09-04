@@ -97,7 +97,6 @@ export type typeface = {
   pricePerFont: number;
   customFontPrice: number;
   variableFontPrice: number;
-  hangulCharacterSet: number;
   hasHangul: boolean;
   has_MONO: boolean;
   has_SERF: boolean;
@@ -120,7 +119,7 @@ export type typeface = {
   // FONTS
   uprightTTFVar: string;
   varFont: string;
-
+  varFontItalic: string;
   introduction: introduction[];
   isItAHangulCharacterSet: boolean | null;
   specimen: string;
@@ -134,6 +133,25 @@ export type typeface = {
   trialFont: string;
   weightList: singleWeight[];
   designers: designers[];
+
+  // CHARACTER
+  characterSetJSON: string;
+  hangulCharacterSet: number;
+  stylisticSets: StylisticSetsProps[];
+};
+
+export type StylisticSetsProps = {
+  name: string;
+  cssValue: string;
+  characterList: string[];
+};
+
+export type CharacterSetProps = {
+  value: string;
+  unicode: string;
+  lowercase?: string;
+  variants?: object | null;
+  ot?: string;
 };
 
 export type FontSettings = {

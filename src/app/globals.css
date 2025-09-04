@@ -98,3 +98,44 @@ mux-player video {
 .group:hover .delay-enter {
   transition-delay: 0ms; /* reset when leaving */
 }
+
+/* Slider Styles */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-track {
+  background: #4b5563;
+  height: 8px;
+  border-radius: 4px;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #ffffff;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
+
+.slider::-moz-range-track {
+  background: #4b5563;
+  height: 8px;
+  border-radius: 4px;
+  border: none;
+}
+
+.slider::-moz-range-thumb {
+  background: #ffffff;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}

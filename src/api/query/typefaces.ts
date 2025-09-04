@@ -11,6 +11,7 @@ export const typefaces = `*[_type == "typefaces"][] {
         customFontPrice,
         variableFontPrice,
         hangulCharacterSet,
+        "characterSetJSON": characterSetJSON.asset->url,
         hasHangul,
         has_MONO,
         has_SERF,

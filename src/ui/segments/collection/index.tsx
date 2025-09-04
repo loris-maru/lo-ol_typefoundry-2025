@@ -1,16 +1,19 @@
-'use client';
+"use client";
 
-import VideoHero from '@/ui/segments/collection/hero';
-import Playground from '@/ui/segments/collection/playground';
+import { useEffect, useState } from "react";
+
+import { useFont } from "@react-hooks-library/core";
+import { useMediaQuery } from "usehooks-ts";
+
+import { typeface } from "@/types/typefaces";
+import DiscoverMoreCollections from "@/ui/segments/collection/discover-more";
+import VideoHero from "@/ui/segments/collection/hero";
+import CollectionHorizontal from "@/ui/segments/collection/horizontal-scroll-block";
+import Playground from "@/ui/segments/collection/playground";
 // adjust path if Playground is separate
-import { typeface } from '@/types/typefaces';
-import DiscoverMoreCollections from '@/ui/segments/collection/discover-more';
-import CollectionHorizontal from '@/ui/segments/collection/horizontal-scroll-block';
-import ShopPackages from '@/ui/segments/collection/shop-package';
-import slugify from '@/utils/slugify';
-import { useFont } from '@react-hooks-library/core';
-import { useEffect, useState } from 'react';
-import { useMediaQuery } from 'usehooks-ts';
+import ShopPackages from "@/ui/segments/collection/shop-package";
+import Footer from "@/ui/segments/global/footer";
+import slugify from "@/utils/slugify";
 
 export default function CollectionPage({
   content,
@@ -25,7 +28,7 @@ export default function CollectionPage({
   const [fakeProgress, setFakeProgress] = useState<number>(0);
 
   const { error, loaded: fontLoaded } = useFont(fontName, fontUrl);
-  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   // Combined loading state
   const isFullyLoaded = fontLoaded && videoLoaded;
@@ -61,7 +64,7 @@ export default function CollectionPage({
   useEffect(() => {
     if (fontLoaded && !videoLoaded) {
       const timer = setTimeout(() => {
-        console.log('Video loading timeout - proceeding anyway');
+        console.log("Video loading timeout - proceeding anyway");
         setVideoLoaded(true);
       }, 3000); // 5 second timeout
 
@@ -87,7 +90,7 @@ export default function CollectionPage({
             className="absolute bottom-0 left-0 h-full transition-all duration-100 ease-out"
             style={{
               width: `${fakeProgress}vw`,
-              background: 'rgba(139, 92, 246, 1)', // Violet
+              background: "rgba(139, 92, 246, 1)", // Violet
             }}
           />
         </div>
@@ -130,9 +133,7 @@ export default function CollectionPage({
       </section>
 
       {/* Footer */}
-      <footer className="relative z-[200] bg-white py-24 text-center text-sm text-neutral-400">
-        © {new Date().getFullYear()} Your Foundry
-      </footer>
+      <Footer />
     </main>
   );
 }

@@ -37,12 +37,22 @@ export default function PackageCard({
       className="relative w-full overflow-hidden rounded-2xl transition-all duration-500 ease-in-out"
       onMouseEnter={() => onHoverChange(true)}
       onMouseLeave={() => onHoverChange(false)}
+      initial={{
+        y: 500, // Start from much lower position (bottom)
+        opacity: 0,
+      }}
       animate={{
+        y: isInView ? 0 : 500, // Slide in from much lower position when in view
+        opacity: isInView ? 1 : 0,
         width: isHovered ? "120%" : "100%",
         height: isInView ? "100%" : "30%",
         zIndex: isHovered ? 10 : 1,
       }}
-      transition={{ duration: 0.4, ease: "easeInOut" }}
+      transition={{
+        duration: 0.6,
+        ease: "easeOut",
+        delay: idx * 0.2, // Staggered animation: first card (0s), second (0.2s), third (0.4s)
+      }}
     >
       {/* Video Background */}
       <div className="absolute inset-0 z-0 h-full w-full">
