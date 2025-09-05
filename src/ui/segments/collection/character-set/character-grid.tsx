@@ -14,6 +14,7 @@ export default function CharacterGrid({
   setScript,
   activeCharacter,
   setActiveCharacter,
+  isInverted = false,
 }: {
   characterSet: CharacterSetProps[];
   hasHangul: boolean;
@@ -22,6 +23,7 @@ export default function CharacterGrid({
   setScript: (script: "latin" | "hangul") => void;
   activeCharacter: string;
   setActiveCharacter: (character: string) => void;
+  isInverted?: boolean;
 }) {
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -77,9 +79,18 @@ export default function CharacterGrid({
   }, [currentPage, totalPages]);
 
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-2xl p-8">
+    <div
+      className={`relative h-full w-full overflow-hidden rounded-2xl p-8 ${
+        isInverted ? "bg-white" : "bg-transparent"
+      }`}
+    >
       {/* Character Grid */}
-      <div className="relative grid w-full grid-cols-8 grid-rows-10 text-white" id="character-grid">
+      <div
+        className={`relative grid w-full grid-cols-8 grid-rows-10 ${
+          isInverted ? "text-black" : "text-white"
+        }`}
+        id="character-grid"
+      >
         {currentPageCharacters.map((character: CharacterSetProps, index) => (
           <button
             type="button"
@@ -88,8 +99,14 @@ export default function CharacterGrid({
             onClick={() => setActiveCharacter(character.value)}
             key={`${character.value}-${character.unicode}-${index}`}
             className={cn(
-              "relative flex aspect-square w-full items-center justify-center border border-neutral-700 text-xl",
-              activeCharacter === character.value ? "bg-white text-black" : "bg-black text-white",
+              "relative flex aspect-square w-full items-center justify-center border text-xl",
+              isInverted
+                ? activeCharacter === character.value
+                  ? "border-black bg-black text-white"
+                  : "border-neutral-200 bg-white text-black"
+                : activeCharacter === character.value
+                  ? "border-neutral-700 bg-white text-black"
+                  : "border-neutral-700 bg-black text-white",
             )}
             style={{
               fontFamily: fontName,

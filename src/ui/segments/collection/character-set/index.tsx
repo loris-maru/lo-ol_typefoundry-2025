@@ -22,6 +22,7 @@ export default function CharacterSetPanel({ content }: { content: typeface }) {
   });
 
   const [latinCharacterSet, setLatinCharacterSet] = useState<CharacterSetProps[] | []>([]);
+  const [isInverted, setIsInverted] = useState<boolean>(false);
 
   const uprightFont = content.varFont;
   const italicFont = content.varFontItalic;
@@ -30,8 +31,8 @@ export default function CharacterSetPanel({ content }: { content: typeface }) {
   const uprightFontName = content.name;
   const italicFontName = `${content.name}Italic`;
 
-  const { loaded: uprightLoaded, error: uprightError } = useFont(uprightFontName, uprightFont);
-  const { loaded: italicLoaded, error: italicError } = useFont(italicFontName, italicFont || "");
+  const { loaded: uprightLoaded } = useFont(uprightFontName, uprightFont);
+  const { loaded: italicLoaded } = useFont(italicFontName, italicFont || "");
 
   // Determine which font to use (only use italic if it's available)
   const canUseItalic = italicFont && italicFont !== "";
@@ -75,7 +76,11 @@ export default function CharacterSetPanel({ content }: { content: typeface }) {
   }, [content.characterSetJSON]);
 
   return (
-    <section className="relative grid h-full w-full grid-cols-2 gap-0 bg-black">
+    <section
+      className={`relative grid h-full w-full grid-cols-2 gap-0 ${
+        isInverted ? "bg-white" : "bg-black"
+      }`}
+    >
       <CharacterViewer
         activeCharacter={activeCharacter}
         characterSet={latinCharacterSet}
@@ -84,6 +89,8 @@ export default function CharacterSetPanel({ content }: { content: typeface }) {
         axisSettings={axisSettings}
         onAxisSettingsChange={handleAxisSettingsChange}
         fontName={currentFontName}
+        isInverted={isInverted}
+        onToggleInverted={() => setIsInverted(!isInverted)}
       />
       <CharacterGrid
         characterSet={latinCharacterSet}
@@ -93,6 +100,7 @@ export default function CharacterSetPanel({ content }: { content: typeface }) {
         activeCharacter={activeCharacter}
         setActiveCharacter={setActiveCharacter}
         fontName={currentFontName}
+        isInverted={isInverted}
       />
     </section>
   );

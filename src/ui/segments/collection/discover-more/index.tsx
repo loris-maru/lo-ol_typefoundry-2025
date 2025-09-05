@@ -32,8 +32,8 @@ export default function DiscoverMoreCollections({ content }: { content: typeface
 
   const borderRadius = useTransform(
     scrollYProgress,
-    [0, 0.5], // From entering screen to 70% of scroll progress
-    ["40px", "0px"], // From 40px to 0px (reaches 0 earlier)
+    [0, 1], // From entering screen to fully scrolled
+    ["80px", "0px"], // From 40px to 0px when fully scrolled
   );
 
   const [sliderRef, instanceRef] = useKeenSlider({
@@ -91,7 +91,7 @@ export default function DiscoverMoreCollections({ content }: { content: typeface
         }}
       >
         {/* Black Container */}
-        <div className="h-full w-full overflow-hidden rounded-[40px] bg-black">
+        <motion.div className="h-full w-full overflow-hidden bg-black" style={{ borderRadius }}>
           {/* Slider Container */}
           <div className="flex h-full w-full items-center justify-center">
             <div ref={sliderRef} className="keen-slider h-full w-full">
@@ -142,7 +142,7 @@ export default function DiscoverMoreCollections({ content }: { content: typeface
             setCurrentSlide={setCurrentSlide}
             instanceRef={instanceRef as React.RefObject<KeenSliderInstance>}
           />
-        </div>
+        </motion.div>
       </motion.div>
     </section>
   );

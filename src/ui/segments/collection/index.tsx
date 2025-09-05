@@ -64,7 +64,6 @@ export default function CollectionPage({
   useEffect(() => {
     if (fontLoaded && !videoLoaded) {
       const timer = setTimeout(() => {
-        console.log("Video loading timeout - proceeding anyway");
         setVideoLoaded(true);
       }, 3000); // 5 second timeout
 
@@ -132,8 +131,10 @@ export default function CollectionPage({
         <DiscoverMoreCollections content={allTypefaces} />
       </section>
 
-      {/* Footer */}
-      <Footer />
+      {/* Footer - positioned after all content with high z-index */}
+      <div className="relative z-50 bg-black">
+        <Footer />
+      </div>
     </main>
   );
 }

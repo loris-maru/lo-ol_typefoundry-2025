@@ -5,8 +5,8 @@ import Legal from "@/ui/segments/global/footer/legal";
 
 export default function Footer() {
   return (
-    <footer className="relative w-full bg-black px-8 py-16 text-white">
-      <div className="mx-auto max-w-7xl">
+    <footer className="relative h-full w-full bg-black px-8 py-16 text-white">
+      <div className="mx-auto h-full max-w-7xl">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {/* Company Info */}
           <Infos />
