@@ -1,8 +1,9 @@
 // components/VimeoWithLoader.tsx
-'use client';
+"use client";
 
-import Player from '@vimeo/player';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
+
+import Player from "@vimeo/player";
 
 export type VimeoPlayer = {
   videoId: string | number; // e.g. 1108969674
@@ -18,7 +19,7 @@ export default function VimeoWithLoader({
   videoId,
   autoPlay = true,
   showControls = true,
-  className = '',
+  className = "",
   ratioW = 16,
   ratioH = 9,
 }: VimeoPlayer) {
@@ -29,13 +30,13 @@ export default function VimeoWithLoader({
   // Build Vimeo embed URL
   const params = new URLSearchParams({
     // These help autoplay reliably (muted) and keep UX nice.
-    autoplay: autoPlay ? '1' : '0',
-    muted: autoPlay ? '1' : '0',
-    title: '0',
-    byline: '0',
-    portrait: '0',
-    autopause: '0', // optional
-    controls: showControls ? '1' : '0',
+    autoplay: autoPlay ? "1" : "0",
+    muted: autoPlay ? "1" : "0",
+    title: "0",
+    byline: "0",
+    portrait: "0",
+    autopause: "0", // optional
+    controls: showControls ? "1" : "0",
     // keep your other flags if you like (badge, app_id, etc.)
   });
 
@@ -58,20 +59,25 @@ export default function VimeoWithLoader({
             await player.play();
           } catch (e) {
             // Autoplay may fail if browser policy blocks it
-            console.warn('Autoplay prevented:', e);
+            console.warn("Autoplay prevented:", e);
           }
         }
       })
       .catch((e: Error) => {
         console.error(e);
-        setError('Unable to initialize the video player.');
+        setError("Unable to initialize the video player.");
       });
 
     // Optional: listen to buffering/playing if you want a stricter “ready to show” criterion
     // player.on("playing", () => setIsReady(true));
 
     return () => {
-      player.unload().catch(() => {});
+      // Cleanup player by destroying it
+      try {
+        player.destroy();
+      } catch {
+        // Ignore cleanup errors
+      }
     };
   }, [autoPlay]);
 
@@ -98,7 +104,7 @@ export default function VimeoWithLoader({
       )}
 
       {/* Responsive box */}
-      <div className="w-full" style={{ position: 'relative', paddingTop }}>
+      <div className="w-full" style={{ position: "relative", paddingTop }}>
         <iframe
           ref={iframeRef}
           src={src}

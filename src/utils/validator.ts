@@ -41,12 +41,12 @@ export class Validator {
 
 // Common validation rules
 export const commonRules = {
-  required: (message = 'This field is required'): ValidationRule => ({
-    test: (value: unknown) => value !== null && value !== undefined && value !== '',
+  required: (message = "This field is required"): ValidationRule => ({
+    test: (value: unknown) => value !== null && value !== undefined && value !== "",
     message,
   }),
 
-  email: (message = 'Please enter a valid email address'): ValidationRule => ({
+  email: (message = "Please enter a valid email address"): ValidationRule => ({
     test: (value: unknown) => {
       if (!value) return true; // Allow empty if not required
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -71,7 +71,7 @@ export const commonRules = {
     message: message || `Must be no more than ${max} characters long`,
   }),
 
-  numeric: (message = 'Must be a number'): ValidationRule => ({
+  numeric: (message = "Must be a number"): ValidationRule => ({
     test: (value: unknown) => {
       if (!value) return true; // Allow empty if not required
       return !isNaN(Number(value));
@@ -79,7 +79,7 @@ export const commonRules = {
     message,
   }),
 
-  positiveNumber: (message = 'Must be a positive number'): ValidationRule => ({
+  positiveNumber: (message = "Must be a positive number"): ValidationRule => ({
     test: (value: unknown) => {
       if (!value) return true; // Allow empty if not required
       const num = Number(value);
@@ -88,7 +88,7 @@ export const commonRules = {
     message,
   }),
 
-  url: (message = 'Please enter a valid URL'): ValidationRule => ({
+  url: (message = "Please enter a valid URL"): ValidationRule => ({
     test: (value: unknown) => {
       if (!value) return true; // Allow empty if not required
       try {

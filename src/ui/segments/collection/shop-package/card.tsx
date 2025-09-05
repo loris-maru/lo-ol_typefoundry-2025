@@ -13,6 +13,7 @@ export type PackageCardType = {
   idx: number;
   isHovered: boolean;
   onHoverChange: (isHovered: boolean) => void;
+  animationPhase: "stack" | "spread";
 };
 
 export default function PackageCard({
@@ -23,6 +24,7 @@ export default function PackageCard({
   videoUrl,
   isHovered,
   onHoverChange,
+  animationPhase,
 }: PackageCardType) {
   const { setShopOpen } = useShopStore();
 
@@ -32,29 +34,66 @@ export default function PackageCard({
 
   const fontFamily = slugify(content.name);
 
+  // Stack positions - cards stacked on top of each other with slight rotation
+  const getStackPosition = () => {
+    const baseRotation = idx * 3; // 0°, 3°, 6° rotation
+    const baseY = idx * 12; // 0px, 12px, 24px offset
+    // Central card (idx 0) should be in front when they arrive
+    const baseZ = idx === 0 ? 10 : idx * 2; // Center card gets highest z-index
+
+    return {
+      rotation: baseRotation,
+      y: baseY,
+      zIndex: baseZ,
+    };
+  };
+
+  // Spread positions - cards spread out with reduced rotation and more translation
+  const getSpreadPosition = () => {
+    if (idx === 0) return { x: 0, rotation: 0 }; // Center card stays straight
+    if (idx === 1) return { x: -400, rotation: -10 }; // Left card moves far left
+    if (idx === 2) return { x: 400, rotation: 10 }; // Right card moves far right
+    return { x: 0, rotation: 0 };
+  };
+
+  const stackPos = getStackPosition();
+  const spreadPos = getSpreadPosition();
+
   return (
     <motion.div
-      className="relative w-full overflow-hidden rounded-2xl transition-all duration-500 ease-in-out"
+      className={`absolute h-[65vh] w-[25.5vw] overflow-hidden rounded-2xl border-2 transition-all duration-500 ease-in-out ${
+        isHovered ? "border-transparent" : "border-black"
+      }`}
+      style={{
+        backgroundColor: isHovered ? "transparent" : "#ECECEC",
+      }}
       onMouseEnter={() => onHoverChange(true)}
       onMouseLeave={() => onHoverChange(false)}
       initial={{
-        y: 500, // Start from much lower position (bottom)
+        y: 800, // Start from way below screen
         opacity: 0,
+        rotate: 0,
+        x: 0,
       }}
       animate={{
-        y: isInView ? 0 : 500, // Slide in from much lower position when in view
+        y: isInView ? (animationPhase === "stack" ? stackPos.y : 0) : 800,
         opacity: isInView ? 1 : 0,
-        width: isHovered ? "120%" : "100%",
-        height: isInView ? "100%" : "30%",
-        zIndex: isHovered ? 10 : 1,
+        rotate: isInView
+          ? animationPhase === "stack"
+            ? stackPos.rotation
+            : spreadPos.rotation
+          : 0,
+        x: isInView ? (animationPhase === "spread" ? spreadPos.x : 0) : 0,
+        scale: isHovered ? 1.05 : 1,
+        zIndex: isHovered ? 20 : animationPhase === "stack" ? stackPos.zIndex : idx === 0 ? 15 : 5,
       }}
       transition={{
-        duration: 0.6,
+        duration: 1.5,
         ease: "easeOut",
-        delay: idx * 0.2, // Staggered animation: first card (0s), second (0.2s), third (0.4s)
+        delay: idx * 0.15, // Staggered entry: 0s, 0.15s, 0.3s
       }}
     >
-      {/* Video Background */}
+      {/* Video Background - only plays on hover */}
       <div className="absolute inset-0 z-0 h-full w-full">
         <video
           src={videoUrl}
@@ -72,58 +111,62 @@ export default function PackageCard({
           playsInline
           className="h-full w-full object-cover"
         />
-
-        {/* Blur Effect - dissolves on hover */}
-        <motion.div
-          className="absolute inset-0 bg-black/10"
-          animate={{
-            opacity: isHovered ? 0 : 1,
-            backdropFilter: isHovered ? "blur(0px)" : "blur(4px)",
-          }}
-          transition={{ duration: 0.4, ease: "easeInOut" }}
-        />
       </div>
 
-      {/* Black Overlay Container */}
+      {/* Background - slides up on hover to reveal video */}
       <motion.div
-        className="absolute inset-0 z-10 bg-black"
-        initial={{ y: 0 }}
+        className="absolute inset-0 z-10 transition-all duration-500 ease-in-out"
+        style={{ backgroundColor: "#ECECEC" }}
         animate={{
-          y: isInView ? "100%" : 0,
+          y: isHovered ? "-100%" : "0%",
         }}
-        transition={{
-          duration: 0.8,
-          ease: "easeInOut",
-          delay: idx * 0.2, // Staggered animation: left to right
-        }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
       />
 
       {/* Content Container */}
-      <div className="relative z-20 flex h-full flex-col justify-between px-6 py-3 text-left text-white">
-        {/* Top Section - Package Abbreviation */}
+      <div
+        className={`relative z-20 flex h-full flex-col justify-between px-6 py-4 text-left transition-colors duration-300 ${
+          isHovered ? "text-white" : "text-black"
+        }`}
+        style={{
+          transitionDelay: isHovered ? "700ms" : "0ms",
+        }}
+      >
+        {/* Top Section - Package Abbreviation and Full Name */}
         <div>
           <div
-            className="text-[10vw] leading-none transition-all duration-300 ease-in-out"
+            className="text-[6vw] leading-none transition-all duration-300 ease-in-out"
             style={{
               fontFamily: fontFamily,
-              fontVariationSettings: `'wght' ${isHovered ? 900 : 300}, 'wdth' 900`,
+              fontVariationSettings: `'wght' ${isHovered ? 900 : 400}, 'wdth' 900`,
             }}
           >
             {pkg.key}
+          </div>
+          <div
+            className={`text-3xl font-bold transition-colors duration-300 ${
+              isHovered ? "text-white" : "text-black"
+            }`}
+            style={{
+              fontFamily: fontFamily,
+              transitionDelay: isHovered ? "700ms" : "0ms",
+            }}
+          >
+            {pkg.key === "La" ? "Large" : pkg.key === "Me" ? "Medium" : "Small"}
           </div>
         </div>
 
         {/* Bottom Section - Price and Font List (Hidden by default, shown on hover) */}
         {isHovered && (
           <motion.div
-            className="z-[100] flex h-[50%] flex-col justify-between space-y-6 pt-5"
+            className="z-[100] flex h-[50%] flex-col justify-between space-y-4 pt-3"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
           >
             {/* Font List Container */}
             <div>
-              <div className="font-whisper text-base leading-[1.6] font-normal text-white">
+              <div className="font-whisper text-sm leading-[1.6] font-normal">
                 {pkg.fonts.map((font, index) => (
                   <span key={font.weight}>
                     {font.weight}, {font.italic}
@@ -136,7 +179,7 @@ export default function PackageCard({
             {/* Price and Buy Button */}
             <div className="flex flex-row items-center justify-between">
               <div
-                className="text-5xl font-bold"
+                className="text-3xl font-bold"
                 style={{
                   fontFamily: fontFamily,
                   fontVariationSettings: `'wdth' 900`,
@@ -147,7 +190,11 @@ export default function PackageCard({
               <button
                 type="button"
                 onClick={handleBuyClick}
-                className="rounded-full border-1 border-white px-10 py-4 text-xl font-semibold text-white transition-colors duration-300 hover:bg-white hover:text-black"
+                className={`rounded-full border-2 px-6 py-2 text-sm font-semibold transition-colors duration-300 ${
+                  isHovered
+                    ? "border-white text-white hover:bg-white hover:text-black"
+                    : "border-black text-black hover:bg-black hover:text-white"
+                }`}
               >
                 Buy Now
               </button>
@@ -155,14 +202,6 @@ export default function PackageCard({
           </motion.div>
         )}
       </div>
-
-      {/* Hover Overlay - Grows to 50vh on hover, positioned behind content */}
-      <motion.div
-        className="absolute right-0 bottom-0 left-0 z-15 bg-black"
-        initial={{ height: 0 }}
-        animate={{ height: isHovered ? "50%" : 0 }}
-        transition={{ duration: 0.4, ease: "easeInOut" }}
-      />
     </motion.div>
   );
 }

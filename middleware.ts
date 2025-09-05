@@ -1,12 +1,12 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Only apply middleware to collection routes
-  if (pathname.startsWith('/collection/')) {
-    const slug = pathname.replace('/collection/', '');
+  if (pathname.startsWith("/collection/")) {
+    const slug = pathname.replace("/collection/", "");
 
     // Exclude common file extensions and dev tools files
     const excludePatterns = [
@@ -30,5 +30,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/collection/:path*'],
+  matcher: ["/collection/:path*"],
 };

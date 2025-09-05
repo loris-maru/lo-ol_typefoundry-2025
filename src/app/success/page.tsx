@@ -1,11 +1,18 @@
 "use client";
 
-import { useCartStore } from "@/states/cart";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
-export default function SuccessPage() {
-  const [sessionData, setSessionData] = useState<any>(null);
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+
+import { useCartStore } from "@/states/cart";
+
+function SuccessPageContent() {
+  const [sessionData, setSessionData] = useState<{
+    amount_total: number;
+    customer_details?: { email: string };
+    metadata?: { cart_items_count: string };
+  } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const searchParams = useSearchParams();
@@ -53,13 +60,10 @@ export default function SuccessPage() {
   if (error) {
     return (
       <main className="mx-auto max-w-xl p-8 text-center">
-        <h1 className="text-2xl font-semibold text-red-600">
-          Payment Verification Failed
-        </h1>
+        <h1 className="text-2xl font-semibold text-red-600">Payment Verification Failed</h1>
         <p className="mt-2 opacity-80">{error}</p>
         <p className="mt-4 text-sm opacity-60">
-          If you believe this is an error, please contact support with your
-          session ID: {sessionId}
+          If you believe this is an error, please contact support with your session ID: {sessionId}
         </p>
       </main>
     );
@@ -71,19 +75,17 @@ export default function SuccessPage() {
       <p className="mt-2 opacity-80">Your payment was successful.</p>
 
       {sessionData && (
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg text-left">
-          <h2 className="font-semibold mb-2">Purchase Details:</h2>
+        <div className="mt-6 rounded-lg bg-gray-50 p-4 text-left">
+          <h2 className="mb-2 font-semibold">Purchase Details:</h2>
           <p className="text-sm opacity-80">
-            <strong>Amount:</strong> $
-            {(sessionData.amount_total / 100).toFixed(2)}
+            <strong>Amount:</strong> ${(sessionData.amount_total / 100).toFixed(2)}
           </p>
           <p className="text-sm opacity-80">
             <strong>Email:</strong> {sessionData.customer_details?.email}
           </p>
           {sessionData.metadata && (
             <p className="text-sm opacity-80">
-              <strong>Items:</strong> {sessionData.metadata.cart_items_count}{" "}
-              font(s)
+              <strong>Items:</strong> {sessionData.metadata.cart_items_count} font(s)
             </p>
           )}
         </div>
@@ -91,16 +93,32 @@ export default function SuccessPage() {
 
       <div className="mt-6 space-y-2">
         <p className="text-sm opacity-60">
-          You will receive a confirmation email shortly with your font licenses
-          and download links.
+          You will receive a confirmation email shortly with your font licenses and download links.
         </p>
-        <a
+        <Link
           href="/"
-          className="inline-block mt-4 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+          className="mt-4 inline-block rounded-lg bg-black px-4 py-2 text-white transition-colors hover:bg-gray-800"
         >
           Continue Shopping
-        </a>
+        </Link>
       </div>
     </main>
+  );
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="mx-auto max-w-xl p-8 text-center">
+          <div className="flex items-center justify-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-current border-r-transparent"></div>
+            <span className="ml-2">Loading...</span>
+          </div>
+        </main>
+      }
+    >
+      <SuccessPageContent />
+    </Suspense>
   );
 }

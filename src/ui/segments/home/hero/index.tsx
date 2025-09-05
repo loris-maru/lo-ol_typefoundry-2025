@@ -1,23 +1,25 @@
-'use client';
+"use client";
 
-import { typeface } from '@/types/typefaces';
-import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef } from "react";
+
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+
+import { typeface } from "@/types/typefaces";
 
 export default function HeroSection({ typefaces }: { typefaces: typeface[] }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: wrapperRef,
-    offset: ['start start', 'end start'],
+    offset: ["start start", "end start"],
   });
 
   // Add fallback values and ensure transforms work in production
-  const width = useTransform(scrollYProgress, [0, 0.3, 0.6], ['100vw', '20vw', '16vw']);
+  const width = useTransform(scrollYProgress, [0, 0.3, 0.6], ["100vw", "20vw", "16vw"]);
 
   const borderRadius = useTransform(scrollYProgress, [0, 0.3, 0.6], [0, 8, 14]);
 
-  const height = useTransform(scrollYProgress, [0, 0.3, 0.6], ['100vh', '100vh', '40vh']);
+  const height = useTransform(scrollYProgress, [0, 0.3, 0.6], ["100vh", "100vh", "40vh"]);
   const scale = useTransform(scrollYProgress, [0.6, 0.9, 1], [1, 0.3, 0.1]);
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 1]);
 
@@ -61,7 +63,7 @@ export default function HeroSection({ typefaces }: { typefaces: typeface[] }) {
         <motion.div
           style={{ width, height, scale, opacity, borderRadius }}
           className="relative overflow-hidden shadow-2xl will-change-transform"
-          initial={{ scale: 1, width: '100vw', height: '100vh' }}
+          initial={{ scale: 1, width: "100vw", height: "100vh" }}
         >
           <motion.div
             className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center text-center"
@@ -93,10 +95,10 @@ export default function HeroSection({ typefaces }: { typefaces: typeface[] }) {
               playsInline
               className="absolute inset-0 h-full w-full object-cover"
               style={{
-                minWidth: '100%',
-                minHeight: '100%',
-                maxWidth: '100%',
-                maxHeight: '100%',
+                minWidth: "100%",
+                minHeight: "100%",
+                maxWidth: "100%",
+                maxHeight: "100%",
               }}
             />
           </div>

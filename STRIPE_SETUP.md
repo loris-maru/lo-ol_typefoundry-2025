@@ -41,10 +41,7 @@ STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret_here
 import CartCheckout from "@/ui/segments/cart/cart-checkout";
 
 // Use in your cart page
-<CartCheckout
-  label="Proceed to Checkout"
-  className="w-full bg-black text-white"
-/>;
+<CartCheckout label="Proceed to Checkout" className="w-full bg-black text-white" />;
 ```
 
 ### Cart Summary Component

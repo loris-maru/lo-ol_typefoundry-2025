@@ -1,10 +1,12 @@
-'use client';
+"use client";
 
-import type { typeface } from '@/types/typefaces';
-import CollectionCard from '@/ui/segments/home/collections/collection-card';
-import HeroHeader from '@/ui/segments/home/hero/hero-header';
-import { motion, useMotionValueEvent, useScroll, useTransform } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
+
+import { motion, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
+
+import type { typeface } from "@/types/typefaces";
+import CollectionCard from "@/ui/segments/home/collections/collection-card";
+import HeroHeader from "@/ui/segments/home/hero/hero-header";
 
 export type CollectionsListProp = {
   typefaces: typeface[];
@@ -29,8 +31,8 @@ export default function CollectionsList({ typefaces }: CollectionsListProp) {
       defaultSizePxRef.current = vw;
     };
     calc();
-    window.addEventListener('resize', calc);
-    return () => window.removeEventListener('resize', calc);
+    window.addEventListener("resize", calc);
+    return () => window.removeEventListener("resize", calc);
   }, []);
 
   // follow mouse when not locked
@@ -65,8 +67,8 @@ export default function CollectionsList({ typefaces }: CollectionsListProp) {
       });
     };
 
-    window.addEventListener('mousemove', move, { passive: true });
-    return () => window.removeEventListener('mousemove', move);
+    window.addEventListener("mousemove", move, { passive: true });
+    return () => window.removeEventListener("mousemove", move);
   }, [locked]);
 
   // card → parent hover callback
@@ -103,12 +105,12 @@ export default function CollectionsList({ typefaces }: CollectionsListProp) {
   // your existing scroll/width logic
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ['start end', 'start start'],
+    offset: ["start end", "start start"],
   });
-  const containerWidth = useTransform(scrollYProgress, [0, 1], ['40vw', '100vw']);
+  const containerWidth = useTransform(scrollYProgress, [0, 1], ["40vw", "100vw"]);
   const heroHeaderProgress = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
-  useMotionValueEvent(heroHeaderProgress, 'change', (latest) => {
+  useMotionValueEvent(heroHeaderProgress, "change", (latest) => {
     setShowHeroHeader(latest >= 0.8);
     setShowContent(latest >= 1);
   });
@@ -171,7 +173,7 @@ export default function CollectionsList({ typefaces }: CollectionsListProp) {
             translateX: cursor.x,
             translateY: cursor.y,
             transition:
-              'width 220ms cubic-bezier(.2,.8,.2,1), height 220ms cubic-bezier(.2,.8,.2,1), transform 220ms cubic-bezier(.2,.8,.2,1)',
+              "width 220ms cubic-bezier(.2,.8,.2,1), height 220ms cubic-bezier(.2,.8,.2,1), transform 220ms cubic-bezier(.2,.8,.2,1)",
           }}
         />
       </motion.div>

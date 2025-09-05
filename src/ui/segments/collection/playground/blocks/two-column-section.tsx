@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { typeface } from '@/types/typefaces';
-import TypeTesterBlock from '@/ui/segments/collection/playground/type-tester-block';
+import { typeface } from "@/types/typefaces";
+import TypeTesterBlock from "@/ui/segments/collection/playground/type-tester-block";
 
 export default function TwoColumnSection({ content }: { content: typeface }) {
   const text1 =
-    'Typefaces and the technologies used to bring them to life on screen are already incredibly advanced and have been mastered by many designers...';
+    "Typefaces and the technologies used to bring them to life on screen are already incredibly advanced and have been mastered by many designers...";
   const text2 =
-    'We hope that our website gives you a glimpse of a future where type design fully embraces digital. Of course, this is just the beginning...';
+    "We hope that our website gives you a glimpse of a future where type design fully embraces digital. Of course, this is just the beginning...";
 
   return (
     <div className="w-full">

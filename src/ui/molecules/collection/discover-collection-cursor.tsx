@@ -1,15 +1,16 @@
-'use client';
-import { useEffect, useRef, useState } from 'react';
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 
 function repeatToLength(str: string, minLen: number) {
-  if (!str) return '';
+  if (!str) return "";
   let out = str;
   while (out.length < minLen) out += str;
   return out;
 }
 
 export function CursorTextCircle({
-  text = 'Read • More • ',
+  text = "Read • More • ",
   targetId,
   radius = 44,
   fontSize = 12,
@@ -44,9 +45,9 @@ export function CursorTextCircle({
       });
     };
 
-    window.addEventListener('mousemove', handleMove, { passive: true });
+    window.addEventListener("mousemove", handleMove, { passive: true });
     return () => {
-      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener("mousemove", handleMove);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
@@ -65,15 +66,15 @@ export function CursorTextCircle({
       if (!showWhenNotHovering) setIsVisible(false);
     };
 
-    el.addEventListener('mouseenter', enter);
-    el.addEventListener('mouseleave', leave);
+    el.addEventListener("mouseenter", enter);
+    el.addEventListener("mouseleave", leave);
 
     // If we want it visible even when not hovering
     if (showWhenNotHovering) setIsVisible(true);
 
     return () => {
-      el.removeEventListener('mouseenter', enter);
-      el.removeEventListener('mouseleave', leave);
+      el.removeEventListener("mouseenter", enter);
+      el.removeEventListener("mouseleave", leave);
     };
   }, [targetId, showWhenNotHovering]);
 
@@ -90,15 +91,15 @@ export function CursorTextCircle({
     <div
       ref={containerRef}
       style={{
-        borderRadius: '50%',
-        position: 'fixed',
+        borderRadius: "50%",
+        position: "fixed",
         left: 0,
         top: 0,
         transform: `translate(calc(${pos.x}px - 50%), calc(${pos.y}px - 50%))`,
-        pointerEvents: 'none',
+        pointerEvents: "none",
         zIndex: 9999,
         opacity: isVisible ? 1 : 0,
-        transition: 'opacity 180ms ease',
+        transition: "opacity 180ms ease",
       }}
       aria-hidden
     >
@@ -129,15 +130,15 @@ export function CursorTextCircle({
             Roboto,
             Helvetica,
             Arial,
-            'Apple Color Emoji',
-            'Segoe UI Emoji';
+            "Apple Color Emoji",
+            "Segoe UI Emoji";
           font-size: ${fontSize}px;
           letter-spacing: 2px;
           fill: black;
         }
       `}</style>
 
-      <div className={`ring ${hovering ? 'rotating' : ''}`}>
+      <div className={`ring ${hovering ? "rotating" : ""}`}>
         <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size}>
           <defs>
             <path

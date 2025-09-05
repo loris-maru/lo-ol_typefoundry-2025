@@ -1,5 +1,5 @@
-import { getAllTypefaces } from '@/api/typefaces';
-import HomePage from '@/ui/segments/home';
+import { getAllTypefaces } from "@/api/typefaces";
+import HomePage from "@/ui/segments/home";
 
 export default async function Home() {
   try {
@@ -7,7 +7,7 @@ export default async function Home() {
 
     return <HomePage typefaces={typefaces} />;
   } catch (error) {
-    console.error('Failed to fetch typefaces:', error);
+    console.error("Failed to fetch typefaces:", error);
     return (
       <main className="relative w-full">
         <div className="p-8 text-center">

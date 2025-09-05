@@ -11,9 +11,9 @@ export default function Users({
       <select
         name="license"
         id="license"
-        value={users.join(',')}
+        value={users.join(",")}
         onChange={(e) => {
-          const numbers = e.target.value.split(',').map(Number);
+          const numbers = e.target.value.split(",").map(Number);
           setUsers([numbers[0], numbers[1]]);
         }}
         className="font-whisper rounded-full border border-solid border-gray-600 px-3 py-2 text-base text-white"

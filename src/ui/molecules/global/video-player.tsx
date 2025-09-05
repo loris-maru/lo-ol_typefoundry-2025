@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import MuxPlayer from '@mux/mux-player-react';
+import MuxPlayer from "@mux/mux-player-react";
 
 export default function VideoPlayerMux({
   title,
   className,
   playbackId,
-  preload = 'none',
+  preload = "none",
   bgOpacity = 1,
   autoplay = true,
   onLoaded,
@@ -39,11 +39,11 @@ export default function VideoPlayerMux({
       onCanPlayThrough={handleVideoReady}
       onLoadedMetadata={handleVideoReady}
       style={{
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
         opacity: bgOpacity,
-        position: 'absolute',
+        position: "absolute",
         top: 0,
         left: 0,
         right: 0,

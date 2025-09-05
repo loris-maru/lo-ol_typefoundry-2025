@@ -1,5 +1,6 @@
-import { cn } from '@/utils/classNames';
-import Link from 'next/link';
+import Link from "next/link";
+
+import { cn } from "@/utils/classNames";
 
 export type Link = {
   label: string;
@@ -7,11 +8,11 @@ export type Link = {
   className?: string;
 };
 
-export function SmallLink({ link, label, className = 'border-white' }: Link) {
+export function SmallLink({ link, label, className = "border-white" }: Link) {
   return (
     <Link
       className={cn(
-        'font-whisper relative mt-2 rounded-full border border-solid px-8 py-2 text-base transition-colors duration-300 ease-in-out hover:bg-black hover:text-white',
+        "font-whisper relative mt-2 rounded-full border border-solid px-8 py-2 text-base transition-colors duration-300 ease-in-out hover:bg-black hover:text-white",
         className,
       )}
       href={link}

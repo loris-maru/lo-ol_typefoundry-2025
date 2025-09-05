@@ -1,13 +1,15 @@
-import { WeightDef } from '@/app/content/WEIGHTS-LIST';
-import { typeface } from '@/types/typefaces';
-import ButtonScript from '@/ui/segments/collection/weight-grid/button-script';
-import OpticalSizeSlider from '@/ui/segments/collection/weight-grid/sliders/optical-size';
-import SlantSlider from '@/ui/segments/collection/weight-grid/sliders/slant';
-import WidthSlider from '@/ui/segments/collection/weight-grid/sliders/width';
-import { cn } from '@/utils/classNames';
-import slugify from '@/utils/slugify';
-import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState } from "react";
+
+import { motion } from "framer-motion";
+
+import { WeightDef } from "@/app/content/WEIGHTS-LIST";
+import { typeface } from "@/types/typefaces";
+import ButtonScript from "@/ui/segments/collection/weight-grid/button-script";
+import OpticalSizeSlider from "@/ui/segments/collection/weight-grid/sliders/optical-size";
+import SlantSlider from "@/ui/segments/collection/weight-grid/sliders/slant";
+import WidthSlider from "@/ui/segments/collection/weight-grid/sliders/width";
+import { cn } from "@/utils/classNames";
+import slugify from "@/utils/slugify";
 
 export default function WeightCard({
   card,
@@ -28,7 +30,7 @@ export default function WeightCard({
   const [widthValue, setWidthValue] = useState<number>(100);
   const [opticalSizeValue, setOpticalSizeValue] = useState<number>(100);
   const [slantValue, setSlantValue] = useState<number>(0);
-  const [script, setScript] = useState<'latin' | 'hangul'>('latin');
+  const [script, setScript] = useState<"latin" | "hangul">("latin");
 
   const widthSettings = {
     min: 100,
@@ -108,15 +110,15 @@ export default function WeightCard({
           {isHovered && (
             <div
               style={{
-                top: script === 'latin' ? '-4' : '0',
+                top: script === "latin" ? "-4" : "0",
               }}
               className="relative overflow-hidden text-[5.5vw] whitespace-nowrap"
             >
               {/* Weight Name - Slides in first */}
               <motion.span
                 className={cn(
-                  'mr-6 inline-block',
-                  script === 'latin' ? 'text-[7.6vw]' : 'text-[5.5vw]',
+                  "mr-6 inline-block",
+                  script === "latin" ? "text-[7.6vw]" : "text-[5.5vw]",
                 )}
                 style={{
                   fontFamily: fontName,
@@ -126,16 +128,16 @@ export default function WeightCard({
                     content.has_opsz ? opticalSizeValue : 900
                   }, 'slnt' ${content.has_slnt ? slantValue : 0} `,
                 }}
-                initial={{ y: '100%', opacity: 0 }}
+                initial={{ y: "100%", opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.4, ease: 'easeOut' }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
               >
-                {content.hasHangul ? (script === 'latin' ? card.name : card.hangul) : card.name}
+                {content.hasHangul ? (script === "latin" ? card.name : card.hangul) : card.name}
               </motion.span>
 
               {/* Weight Value - Slides in second with delay */}
               <motion.span
-                className={cn(script === 'latin' ? 'text-[7.6vw]' : 'text-[5.5vw]')}
+                className={cn(script === "latin" ? "text-[7.6vw]" : "text-[5.5vw]")}
                 style={{
                   fontFamily: fontName,
                   fontVariationSettings: `'wght' ${card.value}, 'wdth' ${
@@ -144,9 +146,9 @@ export default function WeightCard({
                     content.has_opsz ? opticalSizeValue : 900
                   }, 'slnt' ${content.has_slnt ? slantValue : 0} `,
                 }}
-                initial={{ y: '100%', opacity: 0 }}
+                initial={{ y: "100%", opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.4, ease: 'easeOut', delay: 0.3 }}
+                transition={{ duration: 0.4, ease: "easeOut", delay: 0.3 }}
               >
                 {card.value}
               </motion.span>

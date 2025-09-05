@@ -1,15 +1,18 @@
-'use client';
+"use client";
 
-import { useScrollBlock } from '@/hooks/useScrollBlock';
-import { useCartStore } from '@/states/cart';
-import { useMenuStore } from '@/states/menu';
-import { typeface } from '@/types/typefaces';
-import CollectionLink from '@/ui/molecules/global/collection-link';
-import { MediumLink } from '@/ui/molecules/global/links';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
-import { FiMenu } from 'react-icons/fi';
-import CloseButton from './close-button';
+import { useEffect, useState } from "react";
+
+import { AnimatePresence, motion } from "framer-motion";
+import { FiMenu } from "react-icons/fi";
+
+import { useScrollBlock } from "@/hooks/useScrollBlock";
+import { useCartStore } from "@/states/cart";
+import { useMenuStore } from "@/states/menu";
+import { typeface } from "@/types/typefaces";
+import CollectionLink from "@/ui/molecules/global/collection-link";
+import { MediumLink } from "@/ui/molecules/global/links";
+
+import CloseButton from "./close-button";
 
 export default function MenuButton({ allTypefaces }: { allTypefaces: typeface[] }) {
   const { menuOpen, setMenuOpen } = useMenuStore();
@@ -26,11 +29,11 @@ export default function MenuButton({ allTypefaces }: { allTypefaces: typeface[] 
     };
 
     if (menuOpen) {
-      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener("mousemove", handleMouseMove);
     }
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener("mousemove", handleMouseMove);
     };
   }, [menuOpen]);
 
@@ -44,18 +47,18 @@ export default function MenuButton({ allTypefaces }: { allTypefaces: typeface[] 
 
   // Calculate position based on cart visibility
   const hasCartItems = cart.length > 0;
-  const rightPosition = hasCartItems ? 'right-[94px]' : 'right-[30px]'; // 94px = 30px + 64px (cart button right-4 = 16px + 64px cart width + 14px spacing)
+  const rightPosition = hasCartItems ? "right-[94px]" : "right-[30px]"; // 94px = 30px + 64px (cart button right-4 = 16px + 64px cart width + 14px spacing)
 
   return (
     <motion.nav
       className={`fixed ${rightPosition} top-4 z-50`}
       animate={{
-        width: menuOpen ? '100vw' : '64px',
-        height: menuOpen ? '100vh' : '64px',
-        right: menuOpen ? 0 : hasCartItems ? '107px' : '30px',
-        top: menuOpen ? 0 : '16px',
+        width: menuOpen ? "100vw" : "64px",
+        height: menuOpen ? "100vh" : "64px",
+        right: menuOpen ? 0 : hasCartItems ? "107px" : "30px",
+        top: menuOpen ? 0 : "16px",
       }}
-      transition={{ duration: 0.3, ease: 'easeInOut' }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
       style={{
         zIndex: menuOpen ? 60 : 50, // Menu above shop when open
       }}
@@ -64,9 +67,9 @@ export default function MenuButton({ allTypefaces }: { allTypefaces: typeface[] 
         onClick={handleMenuClick}
         className="flex h-full w-full items-center justify-center rounded-full bg-black text-white transition-colors duration-200 hover:bg-gray-800"
         animate={{
-          borderRadius: menuOpen ? '0px' : '9999px',
+          borderRadius: menuOpen ? "0px" : "9999px",
         }}
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
       >
         {!menuOpen && <FiMenu className="h-5 w-5" />}
       </motion.button>

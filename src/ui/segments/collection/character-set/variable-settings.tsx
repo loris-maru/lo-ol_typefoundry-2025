@@ -15,9 +15,11 @@ export default function VariableSettings({
   };
 
   return (
-    <div className={`relative flex h-full w-full flex-col gap-4 rounded-lg ${
-      isInverted ? "text-black" : "text-white"
-    }`}>
+    <div
+      className={`relative flex h-full w-full flex-col gap-4 rounded-lg ${
+        isInverted ? "text-black" : "text-white"
+      }`}
+    >
       <div className="relative flex flex-col gap-5">
         {/* Weight Slider - Always available */}
         <SliderComponent
@@ -72,24 +74,30 @@ export default function VariableSettings({
         {/* Italic Toggle - Only if font has italic variation */}
         {content.has_italic && (
           <div className="flex items-center gap-3">
-            <label className={`font-whisper text-base font-medium ${
-              isInverted ? "text-black" : "text-white"
-            }`}>Italic</label>
+            <label
+              className={`font-whisper text-base font-medium ${
+                isInverted ? "text-black" : "text-white"
+              }`}
+            >
+              Italic
+            </label>
             <button
               type="button"
               onClick={() => updateSetting("italic", !axisSettings.italic)}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                axisSettings.italic 
-                  ? isInverted ? "bg-black" : "bg-white"
-                  : isInverted ? "bg-gray-300" : "bg-gray-600"
+                axisSettings.italic
+                  ? isInverted
+                    ? "bg-black"
+                    : "bg-white"
+                  : isInverted
+                    ? "bg-gray-300"
+                    : "bg-gray-600"
               }`}
             >
               <span
                 className={`inline-block h-4 w-4 transform rounded-full transition-transform ${
                   isInverted ? "bg-white" : "bg-black"
-                } ${
-                  axisSettings.italic ? "translate-x-6" : "translate-x-1"
-                }`}
+                } ${axisSettings.italic ? "translate-x-6" : "translate-x-1"}`}
               />
             </button>
           </div>

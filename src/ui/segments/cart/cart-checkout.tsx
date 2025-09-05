@@ -1,8 +1,10 @@
 "use client";
 
-import { useCartStore } from "@/states/cart";
-import { loadStripe } from "@stripe/stripe-js";
 import { useState } from "react";
+
+import { loadStripe } from "@stripe/stripe-js";
+
+import { useCartStore } from "@/states/cart";
 
 // Check if Stripe key is available
 const stripePromise = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
@@ -60,8 +62,7 @@ export default function CartCheckout({
         clearCart();
       }
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "An unexpected error occurred";
+      const errorMessage = err instanceof Error ? err.message : "An unexpected error occurred";
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -104,11 +105,7 @@ export default function CartCheckout({
         disabled={loading}
         onClick={handleCheckout}
         className={`inline-flex items-center justify-center rounded-2xl px-5 py-3 font-medium shadow-md transition disabled:opacity-50 ${className}`}
-        aria-label={
-          loading
-            ? "Processing checkout..."
-            : `${label} - $${totalPrice.toFixed(2)}`
-        }
+        aria-label={loading ? "Processing checkout..." : `${label} - $${totalPrice.toFixed(2)}`}
         aria-busy={loading}
       >
         {loading ? (

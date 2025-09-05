@@ -1,7 +1,8 @@
-'use client';
+"use client";
 
-import { typeface } from '@/types/typefaces';
-import Link from 'next/link';
+import Link from "next/link";
+
+import { typeface } from "@/types/typefaces";
 
 export default function MenuButton({ allTypefaces }: { allTypefaces: typeface[] }) {
   return (

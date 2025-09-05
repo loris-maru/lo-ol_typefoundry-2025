@@ -1,4 +1,4 @@
-import slugify from '@/utils/slugify';
+import slugify from "@/utils/slugify";
 
 /**
  * Generates a unique cart item key with slugification and date
@@ -11,7 +11,7 @@ export function generateCartKey(familyName: string): string {
 
   // Get current date in YYYYMMDD-HHMMSS format
   const now = new Date();
-  const dateString = now.toISOString().slice(0, 19).replace(/[-:T]/g, '').replace(/\..+/, '');
+  const dateString = now.toISOString().slice(0, 19).replace(/[-:T]/g, "").replace(/\..+/, "");
 
   // Slugify the family name
   const slugifiedFamily = slugify(familyName);

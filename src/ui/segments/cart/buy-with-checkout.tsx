@@ -1,8 +1,9 @@
 // components/BuyWithCheckout.tsx
-'use client';
+"use client";
 
-import { loadStripe } from '@stripe/stripe-js';
-import { useState } from 'react';
+import { useState } from "react";
+
+import { loadStripe } from "@stripe/stripe-js";
 
 // Check if Stripe key is available
 const stripePromise = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
@@ -12,8 +13,8 @@ const stripePromise = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 export default function BuyWithCheckout({
   priceId,
   quantity = 1,
-  label = 'Buy now',
-  className = '',
+  label = "Buy now",
+  className = "",
 }: {
   priceId: string;
   quantity?: number;
@@ -26,7 +27,7 @@ export default function BuyWithCheckout({
   const handleClick = async () => {
     // Check if Stripe is available
     if (!stripePromise) {
-      setError('Stripe is not configured. Please contact support.');
+      setError("Stripe is not configured. Please contact support.");
       return;
     }
 
@@ -34,27 +35,27 @@ export default function BuyWithCheckout({
     setError(null);
 
     try {
-      const res = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ priceId, quantity }),
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Checkout failed');
+      if (!res.ok) throw new Error(data.error || "Checkout failed");
 
       const stripe = await stripePromise;
-      if (!stripe) throw new Error('Stripe failed to load');
+      if (!stripe) throw new Error("Stripe failed to load");
 
       const { error: stripeError } = await stripe.redirectToCheckout({
         sessionId: data.sessionId,
       });
 
       if (stripeError) {
-        setError(stripeError.message || 'Checkout redirect failed');
+        setError(stripeError.message || "Checkout redirect failed");
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
+      const errorMessage = err instanceof Error ? err.message : "An unexpected error occurred";
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -81,7 +82,7 @@ export default function BuyWithCheckout({
         disabled={loading}
         onClick={handleClick}
         className={`inline-flex items-center justify-center rounded-2xl px-5 py-3 font-medium shadow-md transition disabled:opacity-50 ${className}`}
-        aria-label={loading ? 'Processing checkout...' : label}
+        aria-label={loading ? "Processing checkout..." : label}
         aria-busy={loading}
       >
         {loading ? (

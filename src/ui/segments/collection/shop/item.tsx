@@ -1,14 +1,15 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import { useCartStore } from '@/states/cart';
-import { FontSettings, singleFont } from '@/types/typefaces';
-import License from '@/ui/segments/collection/shop/license';
-import Users from '@/ui/segments/collection/shop/users';
-import { cn } from '@/utils/classNames';
-import { generateCartKey } from '@/utils/generateCartKey';
-import slugify from '@/utils/slugify';
-import { FiPlus } from 'react-icons/fi';
-import { RiDeleteBinLine } from 'react-icons/ri';
+import { FiPlus } from "react-icons/fi";
+import { RiDeleteBinLine } from "react-icons/ri";
+
+import { useCartStore } from "@/states/cart";
+import { FontSettings, singleFont } from "@/types/typefaces";
+import License from "@/ui/segments/collection/shop/license";
+import Users from "@/ui/segments/collection/shop/users";
+import { cn } from "@/utils/classNames";
+import { generateCartKey } from "@/utils/generateCartKey";
+import slugify from "@/utils/slugify";
 
 export default function SingleFontItem({
   content,
@@ -22,14 +23,14 @@ export default function SingleFontItem({
   price: number;
 }) {
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  const [license, setLicense] = useState<string>('');
+  const [license, setLicense] = useState<string>("");
   const [users, setUsers] = useState<[number, number]>([1, 1]);
 
   const { addToCart, removeFromCart, cart } = useCartStore();
 
   const { hasOpticalSize, hasSlant, hasWidth, isItalic } = settings;
 
-  console.log('What are my settings? ', settings);
+  console.log("What are my settings? ", settings);
 
   const itemFullName = () => {
     let fullName = familyName;
@@ -39,7 +40,7 @@ export default function SingleFontItem({
     }
 
     if (hasSlant) {
-      fullName += ' Slanted';
+      fullName += " Slanted";
     }
 
     if (hasWidth) {
@@ -49,7 +50,7 @@ export default function SingleFontItem({
     fullName += ` ${content.weightName}`;
 
     if (isItalic) {
-      fullName += ' Italic';
+      fullName += " Italic";
     }
 
     return fullName;
@@ -91,7 +92,7 @@ export default function SingleFontItem({
     }
 
     // License type multiplier
-    if (license === 'desktop & web') {
+    if (license === "desktop & web") {
       multiplier *= 1.5;
     }
 
@@ -152,10 +153,10 @@ export default function SingleFontItem({
       );
 
       if (cartItem) {
-        console.log('Removing cart item:', cartItem);
+        console.log("Removing cart item:", cartItem);
         removeFromCart(cartItem._key);
       } else {
-        console.log('Cart item not found for removal');
+        console.log("Cart item not found for removal");
       }
     } else {
       addToCart(item);
@@ -192,12 +193,12 @@ export default function SingleFontItem({
             onClick={handleCartAction}
             disabled={!isInCart && !license}
             className={cn(
-              'flex w-32 cursor-pointer items-center justify-between rounded-full border px-4 py-2 text-base transition-all duration-300 ease-in-out',
+              "flex w-32 cursor-pointer items-center justify-between rounded-full border px-4 py-2 text-base transition-all duration-300 ease-in-out",
               isInCart
-                ? 'border-white bg-white text-black'
+                ? "border-white bg-white text-black"
                 : !license
-                  ? 'cursor-not-allowed border-neutral-500 text-neutral-500 opacity-50'
-                  : 'border-neutral-700 text-neutral-400 hover:border-white hover:text-white',
+                  ? "cursor-not-allowed border-neutral-500 text-neutral-500 opacity-50"
+                  : "border-neutral-700 text-neutral-400 hover:border-white hover:text-white",
             )}
             style={{
               fontVariationSettings: `'wght' ${isHovered ? 900 : 400}`,

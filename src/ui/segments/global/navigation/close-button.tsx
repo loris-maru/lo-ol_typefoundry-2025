@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 interface CloseButtonProps {
   onClick: () => void;
@@ -10,7 +10,7 @@ interface CloseButtonProps {
 
 export default function CloseButton({
   onClick,
-  className = 'bg-black text-white hover:bg-gray-800',
+  className = "bg-black text-white hover:bg-gray-800",
   zIndex = 50,
 }: CloseButtonProps) {
   return (

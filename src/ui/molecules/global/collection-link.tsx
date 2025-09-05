@@ -1,8 +1,10 @@
-'use client';
+"use client";
 
-import { useMenuStore } from '@/states/menu';
-import Link from 'next/link';
-import { useState } from 'react';
+import { useState } from "react";
+
+import Link from "next/link";
+
+import { useMenuStore } from "@/states/menu";
 
 export default function CollectionLink({
   link,

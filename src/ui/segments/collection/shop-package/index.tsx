@@ -14,8 +14,9 @@ export default function ShopPackages({ content }: { content: typeface }) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isFixed, setIsFixed] = useState(false);
   const [sectionTop, setSectionTop] = useState(0);
+  const [animationPhase, setAnimationPhase] = useState<"stack" | "spread">("stack");
   const isInView = useInView(sectionRef, {
-    amount: 0.4, // Trigger when 40% of the section is visible
+    amount: 0.1, // Trigger when 10% of the section is visible (earlier)
     once: false,
   });
 
@@ -48,26 +49,41 @@ export default function ShopPackages({ content }: { content: typeface }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isFixed, sectionTop]);
 
+  // Trigger spread animation after stack arrives
+  useEffect(() => {
+    if (isInView) {
+      const timer = setTimeout(() => {
+        setAnimationPhase("spread");
+      }, 1500); // Wait 1.5s after stack arrives, then spread
+
+      return () => clearTimeout(timer);
+    }
+  }, [isInView]);
+
   return (
     <section
       ref={sectionRef}
       className={cn(
-        "flex h-screen flex-row gap-x-2 overflow-hidden bg-[#EFEFEF] px-[14vw] py-[8vh]",
+        "relative flex h-screen items-center justify-center overflow-hidden bg-[#EFEFEF]",
         isFixed && "fixed top-0 left-0 z-20 w-full",
       )}
     >
-      {PACKAGES.map((pkg, idx) => (
-        <PackageCard
-          key={pkg.key}
-          content={content}
-          isInView={isInView}
-          videoUrl={videoUrl}
-          pkg={pkg}
-          idx={idx}
-          isHovered={hoveredIndex === idx}
-          onHoverChange={(isHovered) => setHoveredIndex(isHovered ? idx : null)}
-        />
-      ))}
+      {/* Stack Container */}
+      <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden">
+        {PACKAGES.map((pkg, idx) => (
+          <PackageCard
+            key={pkg.key}
+            content={content}
+            isInView={isInView}
+            videoUrl={videoUrl}
+            pkg={pkg}
+            idx={idx}
+            isHovered={hoveredIndex === idx}
+            onHoverChange={(isHovered) => setHoveredIndex(isHovered ? idx : null)}
+            animationPhase={animationPhase}
+          />
+        ))}
+      </div>
     </section>
   );
 }

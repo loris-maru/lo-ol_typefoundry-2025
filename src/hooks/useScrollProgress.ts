@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 export function useScrollProgress(targetRef: React.RefObject<HTMLElement>) {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -21,10 +21,10 @@ export function useScrollProgress(targetRef: React.RefObject<HTMLElement>) {
       setScrollProgress(progress);
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll(); // Initial calculation
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [targetRef]);
 
   return scrollProgress;

@@ -1,5 +1,6 @@
-import { typeface } from '@/types/typefaces';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from "react";
+
+import { typeface } from "@/types/typefaces";
 
 interface UseTypefacesOptions {
   search?: string;
@@ -34,12 +35,12 @@ export function useTypefaces(options: UseTypefacesOptions = {}): UseTypefacesRet
       setError(null);
 
       const params = new URLSearchParams();
-      if (options.search) params.append('search', options.search);
+      if (options.search) params.append("search", options.search);
       if (options.filters) {
         Object.entries(options.filters).forEach(([key, value]) => {
           if (value !== undefined) {
             if (Array.isArray(value)) {
-              params.append(key, value.join(','));
+              params.append(key, value.join(","));
             } else {
               params.append(key, String(value));
             }
@@ -48,12 +49,12 @@ export function useTypefaces(options: UseTypefacesOptions = {}): UseTypefacesRet
       }
 
       const response = await fetch(`/api/typefaces?${params.toString()}`);
-      if (!response.ok) throw new Error('Failed to fetch typefaces');
+      if (!response.ok) throw new Error("Failed to fetch typefaces");
 
       const data = await response.json();
       setTypefaces(data.typefaces);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
       setIsLoading(false);
     }
@@ -83,12 +84,12 @@ export function useTypeface(slug: string) {
         setError(null);
 
         const response = await fetch(`/api/typefaces/${slug}`);
-        if (!response.ok) throw new Error('Failed to fetch typeface');
+        if (!response.ok) throw new Error("Failed to fetch typeface");
 
         const data = await response.json();
         setTypeface(data.typeface);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        setError(err instanceof Error ? err.message : "An error occurred");
       } finally {
         setIsLoading(false);
       }

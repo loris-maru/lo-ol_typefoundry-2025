@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { FontSettings, singleFont, typeface } from '@/types/typefaces';
-import SingleFontItem from '@/ui/segments/collection/shop/item';
+import { FontSettings, singleFont, typeface } from "@/types/typefaces";
+import SingleFontItem from "@/ui/segments/collection/shop/item";
 
 export default function Shop({ content }: { content: typeface }) {
   return (

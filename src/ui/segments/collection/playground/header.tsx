@@ -1,9 +1,11 @@
-'use client';
+"use client";
 
-import { typeface } from '@/types/typefaces';
-import slugify from '@/utils/slugify';
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef } from "react";
+
+import { motion, useInView } from "framer-motion";
+
+import { typeface } from "@/types/typefaces";
+import slugify from "@/utils/slugify";
 
 export default function PlaygroundHeader({ content }: { content: typeface }) {
   const headerRef = useRef<HTMLDivElement>(null);
@@ -21,7 +23,7 @@ export default function PlaygroundHeader({ content }: { content: typeface }) {
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 50 }}
-      transition={{ duration: 0.6, ease: 'easeInOut' }}
+      transition={{ duration: 0.6, ease: "easeInOut" }}
     >
       <div className="font-whisper grid grid-cols-1 gap-6 border-y border-solid border-neutral-200 py-4 text-left text-sm font-normal text-neutral-500 sm:grid-cols-3">
         <div>
@@ -55,7 +57,7 @@ export default function PlaygroundHeader({ content }: { content: typeface }) {
             }}
             initial={{ y: 300 }}
             animate={{ y: isInView ? 0 : 300 }}
-            transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
           >
             Normalize
           </motion.span>
@@ -73,7 +75,7 @@ export default function PlaygroundHeader({ content }: { content: typeface }) {
             }}
             initial={{ y: 300 }}
             animate={{ y: isInView ? 0 : 300 }}
-            transition={{ duration: 0.8, ease: 'easeOut', delay: 0.4 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
           >
             Font Spirit
           </motion.span>

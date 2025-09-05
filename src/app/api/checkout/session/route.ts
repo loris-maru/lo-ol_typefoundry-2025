@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-12-18.acacia",
+  apiVersion: "2025-08-27.basil",
 });
 
 export async function GET(request: NextRequest) {
@@ -11,10 +12,7 @@ export async function GET(request: NextRequest) {
     const sessionId = searchParams.get("session_id");
 
     if (!sessionId) {
-      return NextResponse.json(
-        { error: "Session ID is required" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Session ID is required" }, { status: 400 });
     }
 
     // Retrieve the session from Stripe
@@ -38,9 +36,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error retrieving session:", error);
-    return NextResponse.json(
-      { error: "Failed to retrieve session" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to retrieve session" }, { status: 500 });
   }
 }

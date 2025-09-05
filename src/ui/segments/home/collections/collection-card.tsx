@@ -1,12 +1,15 @@
 // CollectionCard.tsx
-'use client';
+"use client";
 
-import type { typeface } from '@/types/typefaces';
-import slugify from '@/utils/slugify';
-import { useFont } from '@react-hooks-library/core';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { useRef, useState } from 'react';
+import { useRef, useState } from "react";
+
+import Link from "next/link";
+
+import { useFont } from "@react-hooks-library/core";
+import { motion } from "framer-motion";
+
+import type { typeface } from "@/types/typefaces";
+import slugify from "@/utils/slugify";
 
 type HoverPayload = { hovering: false } | { hovering: true; cardRect: DOMRect; nameRect: DOMRect };
 
@@ -79,7 +82,7 @@ export default function CollectionCard({
           style={{
             fontFamily,
             fontVariationSettings: `'wght' ${isMouseHover ? 900 : 400}, 'wdth' 900, 'opsz' 900, 'slnt' 0`,
-            paddingLeft: isMouseHover ? '72px' : 0,
+            paddingLeft: isMouseHover ? "72px" : 0,
           }}
         >
           {typeface.name}
@@ -88,7 +91,7 @@ export default function CollectionCard({
         <div
           className="relative transition-all duration-300 ease-in-out"
           style={{
-            paddingRight: isMouseHover ? '60px' : 0,
+            paddingRight: isMouseHover ? "60px" : 0,
             opacity: isMouseHover ? 1 : 0,
           }}
         >

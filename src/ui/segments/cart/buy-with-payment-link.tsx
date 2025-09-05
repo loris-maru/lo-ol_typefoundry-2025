@@ -1,7 +1,7 @@
 export default function BuyWithPaymentLink({
   paymentLinkUrl,
-  label = 'Buy now',
-  className = '',
+  label = "Buy now",
+  className = "",
 }: {
   paymentLinkUrl: string;
   label?: string;

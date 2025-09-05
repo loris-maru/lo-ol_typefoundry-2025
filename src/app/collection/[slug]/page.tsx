@@ -1,8 +1,9 @@
-import { getAllTypefaces, getTypefaceBySlug } from '@/api/typefaces';
-import { PageProps } from '@/types/common';
-import CollectionPage from '@/ui/segments/collection';
-import Footer from '@/ui/segments/global/footer';
-import { notFound } from 'next/navigation';
+import { notFound } from "next/navigation";
+
+import { getAllTypefaces, getTypefaceBySlug } from "@/api/typefaces";
+import { PageProps } from "@/types/common";
+import CollectionPage from "@/ui/segments/collection";
+import Footer from "@/ui/segments/global/footer";
 
 export default async function Page({ params }: PageProps) {
   try {
@@ -21,7 +22,7 @@ export default async function Page({ params }: PageProps) {
       </main>
     );
   } catch (error) {
-    console.error('Failed to fetch typeface:', error);
+    console.error("Failed to fetch typeface:", error);
     return (
       <main className="relative w-full">
         <div className="p-8 text-center">
