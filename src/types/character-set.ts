@@ -19,4 +19,5 @@ export type VariableSettingsProps = {
   content: typeface;
   axisSettings: AxisSettings;
   onAxisSettingsChange: (settings: AxisSettings) => void;
+  isInverted?: boolean;
 };

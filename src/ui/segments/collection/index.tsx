@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { useFont } from "@react-hooks-library/core";
+import { AnimatePresence, motion } from "framer-motion";
 import { useMediaQuery } from "usehooks-ts";
 
 import { typeface } from "@/types/typefaces";
@@ -25,34 +26,40 @@ export default function CollectionPage({
   const fontName = slugify(content.name);
   const fontUrl = content.varFont;
   const [videoLoaded, setVideoLoaded] = useState<boolean>(false);
-  const [fakeProgress, setFakeProgress] = useState<number>(0);
+  const [showLoader, setShowLoader] = useState<boolean>(true);
+  const [progress, setProgress] = useState<number>(0);
 
   const { error, loaded: fontLoaded } = useFont(fontName, fontUrl);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
-  // Combined loading state
+  // Combined loading state - now properly tracks both video and font loading
   const isFullyLoaded = fontLoaded && videoLoaded;
 
-  // Fake progress animation
+  // Progress animation
   useEffect(() => {
     if (!isFullyLoaded) {
       const startTime = Date.now();
-      const duration = 4000;
+      const duration = 3000; // 3 seconds total
 
       const animateProgress = () => {
-        // Check if both are loaded - if so, stop animation
-        if (fontLoaded && videoLoaded) {
-          return;
-        }
-
         const elapsed = Date.now() - startTime;
-        const progress = Math.min((elapsed / duration) * 100, 100);
+        const timeProgress = Math.min((elapsed / duration) * 80, 80); // Max 80% from time
 
-        // Main progress bar
-        setFakeProgress(progress);
+        // Calculate actual loading progress
+        let actualProgress = 0;
+        if (fontLoaded) actualProgress += 40; // Font loading is 40% of progress
+        if (videoLoaded) actualProgress += 40; // Video loading is 40% of progress
 
-        if (progress < 100 && !(fontLoaded && videoLoaded)) {
+        // Combine time-based and actual loading progress
+        const totalProgress = Math.min(timeProgress + actualProgress, 100);
+        setProgress(totalProgress);
+
+        // Continue animation if not fully loaded
+        if (totalProgress < 100 && !isFullyLoaded) {
           requestAnimationFrame(animateProgress);
+        } else if (isFullyLoaded) {
+          // When fully loaded, ensure we show 100%
+          setProgress(100);
         }
       };
 
@@ -71,6 +78,18 @@ export default function CollectionPage({
     }
   }, [fontLoaded, videoLoaded]);
 
+  // Trigger loader animation when fully loaded
+  useEffect(() => {
+    if (isFullyLoaded) {
+      // Wait a moment to show the loaded status, then start exit animation
+      const timer = setTimeout(() => {
+        setShowLoader(false);
+      }, 1000); // Wait 1 second after loading completes before starting animation
+
+      return () => clearTimeout(timer);
+    }
+  }, [isFullyLoaded]);
+
   if (error) {
     return (
       <div className="relative flex h-screen w-screen items-center justify-center text-lg text-red-700">
@@ -79,62 +98,72 @@ export default function CollectionPage({
     );
   }
 
-  if (!isFullyLoaded) {
-    return (
-      <div className="font-whisper relative h-screen w-screen overflow-hidden bg-black p-6 text-white">
-        {/* Progress Bar Background */}
-        <div className="absolute inset-0 bg-black">
-          {/* Main Progress Bar */}
-          <div
-            className="absolute bottom-0 left-0 h-full transition-all duration-100 ease-out"
-            style={{
-              width: `${fakeProgress}vw`,
-              background: "rgba(139, 92, 246, 1)", // Violet
-            }}
-          />
-        </div>
-
-        {/* Loading text with progress indicators */}
-        <div className="relative z-10 flex flex-col items-start text-left leading-[1.05] font-normal text-white">
-          <div className="flex flex-col divide-y divide-white border border-solid border-white">
-            <div className="px-4 py-3">Loading...</div>
-            <div className="px-4 py-3">Collection: {content.name}</div>
-          </div>
-          {/* Progress percentage indicators */}
-          <div className="text-[50vw]">{Math.round(fakeProgress)}%</div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <main className="w-full">
-      {/* Hero section */}
-      <VideoHero content={content} isMobile={isMobile} onVideoLoaded={() => setVideoLoaded(true)} />
+    <>
+      <AnimatePresence>
+        {showLoader && (
+          <motion.div
+            initial={{ height: "100vh" }}
+            exit={{ height: "0vh" }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
+            className="font-whisper fixed inset-0 overflow-hidden p-6 text-white"
+            style={{
+              zIndex: 999999,
+              background: "rgba(139, 92, 246, 1)", // Violet background
+            }}
+          >
+            {/* Loading text with status indicators */}
+            <div className="relative z-10 flex flex-col items-start text-left leading-[1.05] font-normal text-white">
+              <div className="flex flex-col divide-y divide-white border border-solid border-white">
+                <div className="px-4 py-3">Loading...</div>
+                <div className="px-4 py-3">Collection: {content.name}</div>
+                <div className="px-4 py-3">
+                  Font: {fontLoaded ? "✓" : "⏳"} | Video: {videoLoaded ? "✓" : "⏳"}
+                </div>
+              </div>
+              {/* Huge percentage progress */}
+              <div className="font-whisper text-[38vw] font-medium text-white">
+                {Math.round(progress)}%
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Playground section */}
-      <Playground content={content} />
+      {!showLoader && (
+        <main className="w-full">
+          {/* Hero section */}
+          <VideoHero
+            content={content}
+            isMobile={isMobile}
+            onVideoLoaded={() => setVideoLoaded(true)}
+          />
 
-      {/* Horizontal scrolling section (Weights, Character Set, Font Info) */}
-      <CollectionHorizontal content={content} />
+          {/* Playground section */}
+          <Playground content={content} />
 
-      {/* Shop Packages section - becomes fixed when scrolled to */}
-      <section className="relative h-screen w-screen bg-transparent">
-        <ShopPackages content={content} />
-      </section>
+          {/* Horizontal scrolling section (Weights, Character Set, Font Info) */}
+          <CollectionHorizontal content={content} />
 
-      {/* Spacer to maintain scroll position when ShopPackage becomes fixed */}
-      <div className="h-screen w-full bg-transparent" />
+          {/* Shop Packages section - becomes fixed when scrolled to */}
+          <section className="relative h-screen w-screen bg-transparent">
+            <ShopPackages content={content} />
+          </section>
 
-      {/* Discover More Collections section - scrolls over ShopPackage */}
-      <section className="relative z-30 h-screen w-full bg-transparent">
-        <DiscoverMoreCollections content={allTypefaces} />
-      </section>
+          {/* Spacer to maintain scroll position when ShopPackage becomes fixed */}
+          <div className="h-screen w-full bg-transparent" />
 
-      {/* Footer - positioned after all content with high z-index */}
-      <div className="relative z-50 bg-black">
-        <Footer />
-      </div>
-    </main>
+          {/* Discover More Collections section - scrolls over ShopPackage */}
+          <section className="relative z-30 h-screen w-full bg-transparent">
+            <DiscoverMoreCollections content={allTypefaces} />
+          </section>
+
+          {/* Footer - positioned after all content with high z-index */}
+          <div className="relative z-50 bg-black">
+            <Footer />
+          </div>
+        </main>
+      )}
+    </>
   );
 }

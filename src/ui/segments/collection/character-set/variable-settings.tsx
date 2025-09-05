@@ -7,6 +7,7 @@ export default function VariableSettings({
   content,
   axisSettings,
   onAxisSettingsChange,
+  isInverted = false,
 }: VariableSettingsProps) {
   const updateSetting = (key: string, value: number | boolean) => {
     const newSettings = { ...axisSettings, [key]: value };
@@ -14,7 +15,9 @@ export default function VariableSettings({
   };
 
   return (
-    <div className="relative flex h-full w-full flex-col gap-4 rounded-lg text-white">
+    <div className={`relative flex h-full w-full flex-col gap-4 rounded-lg ${
+      isInverted ? "text-black" : "text-white"
+    }`}>
       <div className="relative flex flex-col gap-5">
         {/* Weight Slider - Always available */}
         <SliderComponent
@@ -24,6 +27,7 @@ export default function VariableSettings({
           max={900}
           step={1}
           onChange={(value) => updateSetting("wght", value)}
+          isInverted={isInverted}
         />
 
         {/* Width Slider - Only if font has width variation */}
@@ -35,6 +39,7 @@ export default function VariableSettings({
             max={900}
             step={1}
             onChange={(value) => updateSetting("wdth", value)}
+            isInverted={isInverted}
           />
         )}
 
@@ -47,6 +52,7 @@ export default function VariableSettings({
             max={90}
             step={1}
             onChange={(value) => updateSetting("slnt", value)}
+            isInverted={isInverted}
           />
         )}
 
@@ -59,22 +65,29 @@ export default function VariableSettings({
             max={900}
             step={1}
             onChange={(value) => updateSetting("opsz", value)}
+            isInverted={isInverted}
           />
         )}
 
         {/* Italic Toggle - Only if font has italic variation */}
         {content.has_italic && (
           <div className="flex items-center gap-3">
-            <label className="font-whisper text-base font-medium text-white">Italic</label>
+            <label className={`font-whisper text-base font-medium ${
+              isInverted ? "text-black" : "text-white"
+            }`}>Italic</label>
             <button
               type="button"
               onClick={() => updateSetting("italic", !axisSettings.italic)}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                axisSettings.italic ? "bg-white" : "bg-gray-600"
+                axisSettings.italic 
+                  ? isInverted ? "bg-black" : "bg-white"
+                  : isInverted ? "bg-gray-300" : "bg-gray-600"
               }`}
             >
               <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-black transition-transform ${
+                className={`inline-block h-4 w-4 transform rounded-full transition-transform ${
+                  isInverted ? "bg-white" : "bg-black"
+                } ${
                   axisSettings.italic ? "translate-x-6" : "translate-x-1"
                 }`}
               />
