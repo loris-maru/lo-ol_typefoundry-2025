@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import { AxisSettings } from "@/types/character-set";
 import { CharacterSetProps, typeface } from "@/types/typefaces";
-import Legend from "@/ui/segments/collection/character-set/legend";
 import VariableSettings from "@/ui/segments/collection/character-set/variable-settings";
 import Variants from "@/ui/segments/collection/character-set/variants";
 import { cn } from "@/utils/classNames";
@@ -42,6 +41,28 @@ function measureRenderedMetrics(
   return { ascent, descent, xHeight, capHeight, fontSizePx: fontSizePx || 1 };
 }
 
+function measureDOMTextMetrics(element: HTMLElement): Measured {
+  const computedStyle = getComputedStyle(element);
+  const fontSize = parseFloat(computedStyle.fontSize);
+  
+  // Create a temporary canvas with the same font settings
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d")!;
+  ctx.font = computedStyle.font;
+  
+  const m = (s: string) => ctx.measureText(s);
+  const mCommon = m("Hg");
+  const mCap = m("H");
+  const mX = m("x");
+
+  const ascent = mCommon.actualBoundingBoxAscent ?? mCap.actualBoundingBoxAscent ?? 0;
+  const descent = mCommon.actualBoundingBoxDescent ?? 0;
+  const capHeight = mCap.actualBoundingBoxAscent ?? null;
+  const xHeight = mX.actualBoundingBoxAscent ?? null;
+
+  return { ascent, descent, xHeight, capHeight, fontSizePx: fontSize };
+}
+
 export default function CharacterViewer({
   activeCharacter,
   characterSet,
@@ -68,8 +89,11 @@ export default function CharacterViewer({
 
   // NEW: precise metrics + baseline placement
   const characterRef = useRef<HTMLDivElement>(null);
-  const glyphRef = useRef<HTMLSpanElement>(null);
+  const glyphRef = useRef<HTMLDivElement>(null);
   const [metrics, setMetrics] = useState<Measured | null>(null);
+  
+  // Fixed baseline offset
+  const baselineOffset = 360;
 
   // Reset selected variant when active character changes
   useEffect(() => {
@@ -126,22 +150,30 @@ export default function CharacterViewer({
   const slnt = content.has_slnt ? axisSettings.slnt : 0;
   const opsz = content.has_opsz ? axisSettings.opsz : 900;
 
+  // Construct font URL - use varFont for variable fonts, fallback to regular font
+  const fontUrl = content.varFont ? `/api/fonts/${content.varFont.split('/').pop()}` : null;
+
   // === NEW: Measure actual metrics of the rendered font size ===
   useEffect(() => {
     if (!glyphRef.current) return;
 
-    // Get the computed font-size in px from the actual rendered element
-    const cs = getComputedStyle(glyphRef.current);
-    const sizePx = parseFloat(cs.fontSize || "0") || 0;
-
-    if (!sizePx) return;
-
-    // Map variable weight into the canvas "font-weight" slot (others may not be honored by canvas)
-    const weightForCanvas = Math.round(Math.min(900, Math.max(100, wght)));
-
-    const m = measureRenderedMetrics(fontName, sizePx, weightForCanvas);
+    // Use the DOM-based measurement for more accuracy
+    const m = measureDOMTextMetrics(glyphRef.current);
     setMetrics(m);
   }, [fontName, displayCharacter, wght, wdth, slnt, opsz]);
+
+  // Force guides recalculation when character changes
+  useEffect(() => {
+    // Small delay to ensure DOM has updated
+    const timer = setTimeout(() => {
+      if (glyphRef.current && characterRef.current) {
+        // Trigger a re-render by updating a dummy state
+        setMetrics(prev => prev ? { ...prev } : null);
+      }
+    }, 50);
+    
+    return () => clearTimeout(timer);
+  }, [displayCharacter]);
 
   // === NEW: Convert metrics to Y positions inside the centered box ===
   // The glyph box is vertically centered inside characterRef (items-center, leading-none).
@@ -150,16 +182,20 @@ export default function CharacterViewer({
     if (!characterRef.current || !glyphRef.current || !metrics) return null;
 
     const box = characterRef.current;
+    const glyph = glyphRef.current;
     const boxH = box.clientHeight;
 
-    // The line box height ~ fontSizePx when line-height: 1 (Tailwind "leading-none")
-    const lineH = metrics.fontSizePx;
+    // Get the actual position of the glyph within the container
+    const glyphRect = glyph.getBoundingClientRect();
+    const boxRect = box.getBoundingClientRect();
+    
+    // Calculate the glyph's top position relative to the container
+    const glyphTop = glyphRect.top - boxRect.top;
 
-    // Top of the line box relative to the viewer box (because it's vertically centered)
-    const lineTop = boxH / 2 - lineH / 2;
-
-    // Baseline is lineTop + ascent
-    const baselineY = lineTop + metrics.ascent;
+    // The baseline should be at the actual baseline of the text
+    // Since the text is vertically centered, the baseline is at glyphTop + ascent
+    // Add manual offset for fine-tuning
+    const baselineY = glyphTop + metrics.ascent + baselineOffset;
 
     return {
       baselineY,
@@ -168,7 +204,7 @@ export default function CharacterViewer({
       xHeightY: metrics.xHeight != null ? baselineY - metrics.xHeight : null,
       capHeightY: metrics.capHeight != null ? baselineY - metrics.capHeight : null,
     };
-  }, [metrics, characterRef.current]);
+  }, [metrics, characterRef.current, glyphRef.current, baselineOffset]);
 
   return (
     <div className="relative flex h-full w-full flex-col gap-y-2 py-8 pl-8">
@@ -194,6 +230,7 @@ export default function CharacterViewer({
           </button>
         </div>
       )}
+
 
       {/* Main Character Display */}
       <div
@@ -238,52 +275,9 @@ export default function CharacterViewer({
             fontVariationSettings: `'wght' ${wght}, 'wdth' ${wdth}, 'slnt' ${slnt}, 'opsz' ${opsz}`,
           }}
         >
-          {/* === Guides (now driven by real measurements) === */}
-          {guides && (
-            <div className="pointer-events-none absolute inset-0 z-0">
-              {/* Baseline */}
-              <div
-                className={cn("absolute h-px w-full", isInverted ? "bg-red-500" : "bg-red-400")}
-                style={{ top: `${guides.baselineY}px` }}
-              />
-              {/* Ascender line */}
-              <div
-                className={cn("absolute h-px w-full", isInverted ? "bg-blue-500" : "bg-blue-400")}
-                style={{ top: `${guides.ascenderY}px` }}
-              />
-              {/* Cap height */}
-              {guides.capHeightY != null && (
-                <div
-                  className={cn(
-                    "absolute h-px w-full",
-                    isInverted ? "bg-green-500" : "bg-green-400",
-                  )}
-                  style={{ top: `${guides.capHeightY}px` }}
-                />
-              )}
-              {/* x-height */}
-              {guides.xHeightY != null && (
-                <div
-                  className={cn(
-                    "absolute h-px w-full",
-                    isInverted ? "bg-yellow-500" : "bg-yellow-400",
-                  )}
-                  style={{ top: `${guides.xHeightY}px` }}
-                />
-              )}
-              {/* Descender line */}
-              <div
-                className={cn(
-                  "absolute h-px w-full",
-                  isInverted ? "bg-purple-500" : "bg-purple-400",
-                )}
-                style={{ top: `${guides.descenderY}px` }}
-              />
-            </div>
-          )}
 
           {/* Rendered glyph */}
-          <span
+          <div
             ref={glyphRef}
             className="relative z-10 block"
             style={{
@@ -292,10 +286,41 @@ export default function CharacterViewer({
             }}
           >
             {displayCharacter}
-          </span>
-        </div>
+            {/* <MetricGlyphPreview
+              fontUrl={fontUrl ?? ''}
+              char={activeCharacter}
+              fontSizePx={600}
+              paddingPx={16}
+              style={{
+                transform: 'scale(2)',
+              }}
+            /> */}
+          </div>
 
-        <Legend isInverted={isInverted} />
+          {/* Baseline indicator */}
+          {guides && (
+            <>
+              {/* Baseline line */}
+              <div
+                className="absolute w-full h-px bg-white z-20"
+                style={{
+                  top: `${guides.baselineY}px`,
+                  left: 0,
+                }}
+              />
+              {/* Baseline label */}
+              <div
+                className="absolute text-xs font-whisper text-white z-20"
+                style={{
+                  top: `${guides.baselineY + 12}px`,
+                  left: '12px',
+                }}
+              >
+                Baseline
+              </div>
+            </>
+          )}
+        </div>
 
         {/* Variants */}
         <div className="relative flex h-auto w-full items-center px-6 pb-6">
