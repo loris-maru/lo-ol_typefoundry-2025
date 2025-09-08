@@ -37,19 +37,7 @@ export default function CharacterSetPanel({ content }: { content: typeface }) {
   // Determine which font to use (only use italic if it's available)
   const canUseItalic = italicFont && italicFont !== "";
   const currentFontName = axisSettings.italic && canUseItalic ? italicFontName : uprightFontName;
-  const currentFontFile = axisSettings.italic && canUseItalic ? italicFont : uprightFont;
 
-  // Debug logging
-  useEffect(() => {
-    console.log("Current name: ", currentFontName);
-  }, [
-    axisSettings.italic,
-    canUseItalic,
-    currentFontName,
-    currentFontFile,
-    uprightLoaded,
-    italicLoaded,
-  ]);
 
   const handleAxisSettingsChange = (newSettings: AxisSettings) => {
     setAxisSettings({

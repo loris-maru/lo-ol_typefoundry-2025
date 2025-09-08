@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { getAllTypefaces } from "@/api/typefaces";
+import { getAllTypefaces } from "@/app/api/typefaces";
 
 export async function GET() {
   try {

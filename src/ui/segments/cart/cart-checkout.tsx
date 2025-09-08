@@ -1,133 +1,121 @@
 "use client";
 
+import { CartItem, CartPayload } from "@/lib/cart";
+import { LicenseType, UserTier } from "@/lib/pricing";
+import { useCartStore } from "@/states/cart";
 import { useState } from "react";
 
-import { loadStripe } from "@stripe/stripe-js";
-
-import { useCartStore } from "@/states/cart";
-
-// Check if Stripe key is available
-const stripePromise = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-  ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
-  : null;
-
-export default function CartCheckout({
-  label = "Proceed to Checkout",
-  className = "",
-}: {
+interface CartCheckoutProps {
   label?: string;
   className?: string;
-}) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+}
+
+export default function CartCheckout({ 
+  label = "Checkout", 
+  className = "" 
+}: CartCheckoutProps) {
   const { cart, clearCart } = useCartStore();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleCheckout = async () => {
-    // Check if Stripe is available
-    if (!stripePromise) {
-      setError("Stripe is not configured. Please contact support.");
-      return;
-    }
-
-    // Check if cart is empty
     if (cart.length === 0) {
-      setError("Your cart is empty.");
+      setError("Your cart is empty");
       return;
     }
 
-    setLoading(true);
+    setIsLoading(true);
     setError(null);
 
     try {
-      const res = await fetch("/api/checkout", {
+      // Transform cart data to API format using your pricing types
+      const cartItems: CartItem[] = cart.map((item) => {
+        // Map license format using your LicenseType
+        let licenseType: LicenseType = "Web";
+        if (item.license.toLowerCase().includes("print")) {
+          licenseType = "Print";
+        } else if (item.license.toLowerCase().includes("both")) {
+          licenseType = "Both";
+        }
+
+        // Map user tier using your UserTier
+        const userCount = item.users[1];
+        let userTier: UserTier = "1-4";
+        if (userCount <= 4) {
+          userTier = "1-4";
+        } else if (userCount <= 10) {
+          userTier = "5-10";
+        } else if (userCount <= 20) {
+          userTier = "11-20";
+        } else {
+          userTier = "21+";
+        }
+
+        return {
+          fontId: item._key, // Using _key as fontId for now
+          fontFamilyId: item.family, // Using family name as ID for now
+          licenseType,
+          userTier,
+          weight: item.weightValue,
+          width: item.widthValue,
+          slant: item.slantValue,
+          opticalSize: item.opticalSizeValue,
+          isItalic: item.isItalic,
+          qty: 1,
+        };
+      });
+
+      const cartPayload: CartPayload = {
+        items: cartItems,
+      };
+
+      // Call checkout API
+      const response = await fetch("/api/checkout", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cartItems: cart }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(cartPayload),
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Checkout failed");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Checkout failed");
+      }
 
-      const stripe = await stripePromise;
-      if (!stripe) throw new Error("Stripe failed to load");
+      const { id: sessionId, url: checkoutUrl } = await response.json();
 
-      const { error: stripeError } = await stripe.redirectToCheckout({
-        sessionId: data.sessionId,
-      });
-
-      if (stripeError) {
-        setError(stripeError.message || "Checkout redirect failed");
-      } else {
-        // Clear cart on successful redirect
+      // Redirect to Stripe Checkout
+      if (checkoutUrl) {
+        // Clear cart on successful checkout initiation
         clearCart();
+        
+        // Redirect to Stripe Checkout using the official URL
+        window.location.href = checkoutUrl;
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "An unexpected error occurred";
-      setError(errorMessage);
+      console.error("Checkout error:", err);
+      setError(err instanceof Error ? err.message : "An error occurred during checkout");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  // Don't render if Stripe is not configured
-  if (!stripePromise) {
-    return (
-      <div className="inline-flex flex-col items-stretch">
-        <button
-          disabled
-          className={`inline-flex cursor-not-allowed items-center justify-center rounded-2xl px-5 py-3 font-medium opacity-50 shadow-md ${className}`}
-        >
-          Stripe not configured
-        </button>
-      </div>
-    );
-  }
-
-  // Don't render if cart is empty
-  if (cart.length === 0) {
-    return (
-      <div className="inline-flex flex-col items-stretch">
-        <button
-          disabled
-          className={`inline-flex cursor-not-allowed items-center justify-center rounded-2xl px-5 py-3 font-medium opacity-50 shadow-md ${className}`}
-        >
-          Cart is empty
-        </button>
-      </div>
-    );
-  }
-
-  const totalPrice = cart.reduce((sum, item) => sum + item.price, 0);
-
   return (
-    <div className="inline-flex flex-col items-stretch">
-      <button
-        disabled={loading}
-        onClick={handleCheckout}
-        className={`inline-flex items-center justify-center rounded-2xl px-5 py-3 font-medium shadow-md transition disabled:opacity-50 ${className}`}
-        aria-label={loading ? "Processing checkout..." : `${label} - $${totalPrice.toFixed(2)}`}
-        aria-busy={loading}
-      >
-        {loading ? (
-          <span className="inline-flex items-center gap-2">
-            <span
-              className="h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent"
-              aria-hidden="true"
-            />
-            Processing…
-          </span>
-        ) : (
-          <span className="inline-flex items-center gap-2">
-            {label}
-            <span className="text-sm opacity-75">${totalPrice.toFixed(2)}</span>
-          </span>
-        )}
-      </button>
+    <div className="space-y-4">
       {error && (
-        <span className="mt-2 text-sm text-red-600" role="alert">
-          {error}
-        </span>
+        <div className="rounded-md bg-red-50 p-4">
+          <div className="text-sm text-red-700">{error}</div>
+        </div>
       )}
+      
+      <button
+        onClick={handleCheckout}
+        disabled={isLoading || cart.length === 0}
+        className={`rounded-md px-4 py-2 font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+      >
+        {isLoading ? "Processing..." : label}
+      </button>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { getAllTypefaces, getTypefaceBySlug } from "@/api/typefaces";
+import { getAllTypefaces, getTypefaceBySlug } from "@/app/api/typefaces";
 import { PageProps } from "@/types/common";
 import CollectionPage from "@/ui/segments/collection";
 import Footer from "@/ui/segments/global/footer";

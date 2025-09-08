@@ -1,5 +1,5 @@
-import { typefaces } from "@/api/query/typefaces";
-import { sanityFetch, sanityFetchAll } from "@/api/sanityFetch";
+import { typefaces } from "@/app/api/query/typefaces";
+import { sanityFetch, sanityFetchAll } from "@/lib/sanity/sanityFetch";
 import { typeface } from "@/types/typefaces";
 
 export async function getAllTypefaces(): Promise<typeface[]> {

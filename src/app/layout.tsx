@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { getAllTypefaces } from "@/api/typefaces";
+import { getAllTypefaces } from "@/app/api/typefaces";
 import GlobalNavigation from "@/ui/segments/global/navigation/global-navigation";
 
 import "./globals.css";

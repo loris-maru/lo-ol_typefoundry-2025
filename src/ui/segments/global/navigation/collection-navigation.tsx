@@ -14,8 +14,8 @@ export default function CollectionNavigation({
 }) {
   return (
     <>
-      <MenuButton allTypefaces={allTypefaces} />
       <ShopButton content={content} />
+      <MenuButton allTypefaces={allTypefaces} />
       <CartButton />
     </>
   );

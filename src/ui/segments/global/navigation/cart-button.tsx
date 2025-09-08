@@ -6,6 +6,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { RiShoppingCart2Fill } from "react-icons/ri";
 
 import { useScrollBlock } from "@/hooks/useScrollBlock";
+import { CartItem, CartPayload } from "@/lib/cart";
+import { LicenseType, UserTier } from "@/lib/pricing";
 import { useCartStore } from "@/states/cart";
 
 import CloseButton from "./close-button";
@@ -13,6 +15,8 @@ import CloseButton from "./close-button";
 export default function CartButton() {
   const { cart, removeFromCart, clearCart } = useCartStore();
   const [cartOpen, setCartOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Block page scrolling when cart is open
   useScrollBlock(cartOpen);
@@ -27,6 +31,97 @@ export default function CartButton() {
 
   const handleClearCart = () => {
     clearCart();
+  };
+
+  const handleCheckout = async () => {
+    console.log("Cart button checkout clicked!");
+    console.log("Cart length:", cart.length);
+    console.log("Cart items:", cart);
+    
+    if (cart.length === 0) {
+      setError("Your cart is empty");
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Transform cart data to API format using your pricing types
+      const cartItems: CartItem[] = cart.map((item) => {
+        // Map license format using your LicenseType
+        let licenseType: LicenseType = "Web";
+        if (item.license.toLowerCase().includes("print")) {
+          licenseType = "Print";
+        } else if (item.license.toLowerCase().includes("both")) {
+          licenseType = "Both";
+        }
+
+        // Map user tier using your UserTier
+        const userCount = item.users[1];
+        let userTier: UserTier = "1-4";
+        if (userCount <= 4) {
+          userTier = "1-4";
+        } else if (userCount <= 10) {
+          userTier = "5-10";
+        } else if (userCount <= 20) {
+          userTier = "11-20";
+        } else {
+          userTier = "21+";
+        }
+
+        return {
+          fontId: item._key,
+          fontFamilyId: item.family, // This might be the issue - using family name instead of ID
+          licenseType,
+          userTier,
+          weight: item.weightValue,
+          width: item.widthValue,
+          slant: item.slantValue,
+          opticalSize: item.opticalSizeValue,
+          isItalic: item.isItalic,
+          qty: 1,
+        };
+      });
+
+      const cartPayload: CartPayload = {
+        items: cartItems,
+      };
+
+      console.log("Sending cart payload:", cartPayload);
+
+      // Call checkout API
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(cartPayload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Checkout failed");
+      }
+
+      const { id: sessionId, url: checkoutUrl } = await response.json();
+      console.log("Received session ID:", sessionId);
+      console.log("Received checkout URL:", checkoutUrl);
+
+      // Redirect to Stripe Checkout
+      if (checkoutUrl) {
+        // Clear cart on successful checkout initiation
+        clearCart();
+        
+        // Redirect to Stripe Checkout using the official URL
+        window.location.href = checkoutUrl;
+      }
+    } catch (err) {
+      console.error("Checkout error:", err);
+      setError(err instanceof Error ? err.message : "An error occurred during checkout");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Only show cart button if there are items
@@ -127,14 +222,27 @@ export default function CartButton() {
             </div>
 
             <div className="mt-4 border-t border-gray-700 pt-4">
+              {error && (
+                <div className="mb-4 rounded-md bg-red-900/20 p-3">
+                  <div className="text-sm text-red-300">{error}</div>
+                </div>
+              )}
+              
               <div className="mb-4 flex items-center justify-between">
                 <span className="text-lg font-medium">Total:</span>
                 <span className="text-xl font-bold">
                   ${cart.reduce((sum, item) => sum + item.price, 0)}
                 </span>
               </div>
-              <button className="w-full rounded-lg bg-white px-6 py-3 font-medium text-black transition-colors hover:bg-gray-100">
-                Checkout
+              
+              <button 
+              type="button"
+              aria-label="Checkout"
+                onClick={handleCheckout}
+                disabled={isLoading || cart.length === 0}
+                className="w-full rounded-lg bg-white px-6 py-3 font-medium text-black transition-colors cursor-pointer hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isLoading ? "Processing..." : "Checkout"}
               </button>
             </div>
           </motion.div>

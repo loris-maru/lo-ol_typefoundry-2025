@@ -1,4 +1,4 @@
-import { getAllTypefaces } from "@/api/typefaces";
+import { getAllTypefaces } from "@/app/api/typefaces";
 import HomePage from "@/ui/segments/home";
 
 export default async function Home() {

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { notFound } from "next/navigation";
 
-import { getAllTypefaces, getTypefaceBySlug } from "@/api/typefaces";
+import { getAllTypefaces, getTypefaceBySlug } from "@/app/api/typefaces";
 import CollectionNavigation from "@/ui/segments/global/navigation/collection-navigation";
 
 export const metadata: Metadata = {

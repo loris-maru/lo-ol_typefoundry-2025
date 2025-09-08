@@ -5,6 +5,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { useScrollBlock } from "@/hooks/useScrollBlock";
+import { useCartStore } from "@/states/cart";
 import { useShopStore } from "@/states/shop";
 import { typeface } from "@/types/typefaces";
 import Shop from "@/ui/segments/collection/shop";
@@ -18,6 +19,7 @@ interface ShopButtonProps {
 export default function ShopButton({ content }: ShopButtonProps) {
   const { shopOpen, setShopOpen } = useShopStore();
   const [isHovered, setIsHovered] = useState(false);
+  const { cart } = useCartStore();
 
   // Block page scrolling when shop is open
   useScrollBlock(shopOpen);
@@ -26,13 +28,16 @@ export default function ShopButton({ content }: ShopButtonProps) {
     setShopOpen(false);
   };
 
+  const hasCartItems = cart.length > 0;
+  const rightPosition = hasCartItems ? "right-[168px]" : "right-[116px]"; // 64px (menu) + 12px (spacing) + 40px (menu position) = 116px, or 64px (menu) + 12px (spacing) + 92px (menu position) = 168px when cart has items
+
   return (
     <motion.nav
-      className="fixed top-4 right-20 z-[60]"
+      className={`fixed top-4 ${rightPosition} z-[60]`}
       animate={{
         width: shopOpen ? "100vw" : isHovered ? "168px" : "64px",
         height: shopOpen ? "100vh" : "64px",
-        right: shopOpen ? 0 : "100px",
+        right: shopOpen ? 0 : hasCartItems ? "168px" : "116px",
         top: shopOpen ? 0 : "16px",
       }}
       transition={{ duration: 0.4, ease: [0.68, -0.55, 0.265, 1.55] }}
@@ -83,14 +88,6 @@ export default function ShopButton({ content }: ShopButtonProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, delay: 0.3 }}
           >
-            <motion.h1
-              className="font-whisper mb-8 text-2xl font-medium"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.5, ease: [0.68, -0.55, 0.265, 1.55] }}
-            >
-              Buy fonts
-            </motion.h1>
             <Shop content={content} />
           </motion.div>
         )}

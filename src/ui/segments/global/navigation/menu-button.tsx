@@ -47,7 +47,7 @@ export default function MenuButton({ allTypefaces }: { allTypefaces: typeface[] 
 
   // Calculate position based on cart visibility
   const hasCartItems = cart.length > 0;
-  const rightPosition = hasCartItems ? "right-[94px]" : "right-[30px]"; // 94px = 30px + 64px (cart button right-4 = 16px + 64px cart width + 14px spacing)
+  const rightPosition = hasCartItems ? "right-[92px]" : "right-[40px]"; // 64px (cart) + 12px (spacing) + 16px (cart right margin) = 92px when cart has items, or 40px when no cart (rightmost position)
 
   return (
     <motion.nav
@@ -55,7 +55,7 @@ export default function MenuButton({ allTypefaces }: { allTypefaces: typeface[] 
       animate={{
         width: menuOpen ? "100vw" : "64px",
         height: menuOpen ? "100vh" : "64px",
-        right: menuOpen ? 0 : hasCartItems ? "107px" : "30px",
+        right: menuOpen ? 0 : hasCartItems ? "92px" : "40px",
         top: menuOpen ? 0 : "16px",
       }}
       transition={{ duration: 0.3, ease: "easeInOut" }}

@@ -17,7 +17,8 @@ export default function VideoHero({
   onVideoLoaded: () => void;
 }) {
   const fontName = slugify(content.name);
-  const fontUrl = content.varFont;
+  // Use font proxy to avoid CORS issues
+  const fontUrl = content.varFont ? `/api/fonts/${content.varFont.split('/').pop()}` : null;
 
   const { error, loaded: fontLoaded } = useFont(fontName, fontUrl);
 

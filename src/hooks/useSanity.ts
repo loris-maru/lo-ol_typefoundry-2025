@@ -1,8 +1,8 @@
 "use client";
 
+import { sanityServer } from "@/lib/sanity/sanity.server";
 import useSWR, { SWRConfiguration } from "swr";
 
-import { sanityServer } from "@/api/sanity";
 
 /**
  * A global hook to fetch data from Sanity using GROQ.
