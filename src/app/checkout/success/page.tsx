@@ -15,7 +15,7 @@ export default function CheckoutSuccess() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
+      <div className="text-center">
         <div className="mb-6">
           <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
             <svg
@@ -32,32 +32,32 @@ export default function CheckoutSuccess() {
               />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl font-bold text-green-600 mb-2">
             Payment Successful!
           </h1>
-          <p className="text-gray-600">
+          <p className="text-green-600">
             Thank you for your purchase. Your fonts will be available for download shortly.
           </p>
         </div>
-
+{/* 
         {sessionId && (
           <div className="mb-6 p-4 bg-gray-100 rounded-md">
             <p className="text-sm text-gray-600">
               <strong>Session ID:</strong> {sessionId}
             </p>
           </div>
-        )}
+        )} */}
 
         <div className="space-y-4">
           <Link
             href="/"
-            className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition-colors inline-block"
+            className="w-full bg-black text-white text-xl font-semibold py-5 px-8 rounded-full hover:bg-gray-800 transition-colors inline-block font-whisper"
           >
-            Continue Shopping
+            Download fonts
           </Link>
           <Link
             href="/cart"
-            className="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors inline-block"
+            className="text-black inline-block"
           >
             View Cart
           </Link>

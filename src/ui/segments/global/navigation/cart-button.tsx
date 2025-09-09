@@ -152,7 +152,7 @@ export default function CartButton() {
           <div className="flex items-center justify-center">
             <RiShoppingCart2Fill className="h-5 w-5" />
             {cart.length > 0 && (
-              <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+              <span className="absolute -top-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-sm text-white">
                 {cart.length}
               </span>
             )}
