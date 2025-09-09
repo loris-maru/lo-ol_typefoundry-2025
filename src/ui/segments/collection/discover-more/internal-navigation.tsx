@@ -54,31 +54,33 @@ export default function InternalNavigation({
               animate={{ x: -navStartIndex * 120 }} // Adjust 120px based on your gap and text width
               transition={{ duration: 0.5, ease: "easeInOut" }}
             >
-              {content.map((collection: typeface, index: number) => (
-                <button
-                  key={collection.slug}
-                  onClick={() => {
-                    instanceRef.current?.moveToIdx(index);
-                    setCurrentSlide(index);
-                  }}
-                  className={cn(
-                    "font-whisper relative text-sm whitespace-nowrap text-white transition-all duration-200 hover:opacity-80",
-                    index === currentSlide ? "font-bold" : "",
-                  )}
-                >
-                  {collection.name}
-                  {index === currentSlide && (
-                    <div className="absolute -bottom-2 left-1/2 h-1 w-6 -translate-x-1/2 rounded-[20px] bg-white" />
-                  )}
-                </button>
-              ))}
+              {Array.isArray(content) && content
+                .filter((collection: typeface) => collection && collection.slug)
+                .map((collection: typeface, index: number) => (
+                  <button
+                    key={collection.slug}
+                    onClick={() => {
+                      instanceRef.current?.moveToIdx(index);
+                      setCurrentSlide(index);
+                    }}
+                    className={cn(
+                      "font-whisper relative text-sm whitespace-nowrap text-white transition-all duration-200 hover:opacity-80",
+                      index === currentSlide ? "font-bold" : "",
+                    )}
+                  >
+                    {collection.name || 'Unknown Font'}
+                    {index === currentSlide && (
+                      <div className="absolute -bottom-2 left-1/2 h-1 w-6 -translate-x-1/2 rounded-[20px] bg-white" />
+                    )}
+                  </button>
+                ))}
             </motion.div>
           </div>
 
           {/* Right Chevron */}
           <button
             onClick={goToNextNav}
-            disabled={navStartIndex + 5 >= content.length}
+            disabled={!Array.isArray(content) || navStartIndex + 5 >= content.length}
             className="text-white transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
             aria-label="Next navigation page"
           >

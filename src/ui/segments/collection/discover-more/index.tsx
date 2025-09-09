@@ -66,7 +66,7 @@ export default function DiscoverMoreCollections({ content }: { content: typeface
   };
 
   const goToNextNav = () => {
-    if (navStartIndex + 5 < content.length) {
+    if (Array.isArray(content) && navStartIndex + 5 < content.length) {
       setNavStartIndex(navStartIndex + 1);
     }
   };
@@ -95,19 +95,21 @@ export default function DiscoverMoreCollections({ content }: { content: typeface
           {/* Slider Container */}
           <div className="flex h-full w-full items-center justify-center">
             <div ref={sliderRef} className="keen-slider h-full w-full">
-              {content.map((collection: typeface, index: number) => (
-                <div
-                  key={collection.slug}
-                  className="keen-slider__slide flex items-center justify-center"
-                >
-                  <CollectionCard
-                    content={collection}
-                    index={index}
-                    isActive={index === currentSlide}
-                    onNavigate={handleNavigate}
-                  />
-                </div>
-              ))}
+              {Array.isArray(content) && content
+                .filter((collection: typeface) => collection && collection.slug) // Filter out invalid collections
+                .map((collection: typeface, index: number) => (
+                  <div
+                    key={collection.slug}
+                    className="keen-slider__slide flex items-center justify-center"
+                  >
+                    <CollectionCard
+                      content={collection}
+                      index={index}
+                      isActive={index === currentSlide}
+                      onNavigate={handleNavigate}
+                    />
+                  </div>
+                ))}
             </div>
           </div>
 

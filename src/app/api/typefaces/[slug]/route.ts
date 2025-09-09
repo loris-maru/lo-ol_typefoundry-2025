@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { getTypefaceBySlug } from "@/api/typefaces";
+import { getTypefaceBySlug } from "@/app/api/typefaces";
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {

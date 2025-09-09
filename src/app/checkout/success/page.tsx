@@ -57,7 +57,7 @@ export default function CheckoutSuccess() {
           </Link>
           <Link
             href="/cart"
-            className="text-black inline-block"
+            className="text-black inline-block font-whisper text-base"
           >
             View Cart
           </Link>

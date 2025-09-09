@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
+import { createOrderFromSession } from "@/lib/orders";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -31,17 +32,29 @@ export async function POST(request: NextRequest) {
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
-
+        
+        console.log("Processing checkout.session.completed for session:", session.id);
+        
+        try {
+          const orderId = await createOrderFromSession(session);
+          console.log("Order created successfully with ID:", orderId);
+        } catch (error) {
+          console.error("Failed to create order:", error);
+          return NextResponse.json({ error: "Failed to create order" }, { status: 500 });
+        }
+        
         break;
       }
 
       case "payment_intent.succeeded": {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
+        console.log("Payment intent succeeded:", paymentIntent.id);
         break;
       }
 
       case "payment_intent.payment_failed": {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
+        console.log("Payment intent failed:", paymentIntent.id);
         break;
       }
 

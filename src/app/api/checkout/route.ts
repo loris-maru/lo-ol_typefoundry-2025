@@ -3,7 +3,7 @@ export const runtime = 'nodejs';
 
 import { CartPayload, CartSchema } from '@/lib/cart';
 import { LicenseType, priceForItem, UserTier } from '@/lib/pricing';
-import { sanityFetch } from '@/lib/sanity/sanityFetch';
+import { createClient } from '@sanity/client';
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { z } from 'zod';
@@ -19,8 +19,15 @@ type TypefaceRow = {
 };
 
 async function fetchTypefacesByNames(names: string[]): Promise<TypefaceRow[]> {
+  const sanityClient = createClient({
+    projectId: process.env.SANITY_PROJECT_ID || 'kszrpogt',
+    dataset: process.env.SANITY_DATASET || 'production',
+    apiVersion: '2024-08-01',
+    useCdn: false,
+  });
+  
   const query = `*[_type == "typefaces" && name in $names]{ _id, name, pricePerFont, customFontPrice, variableFontPrice }`;
-  return sanityFetch<TypefaceRow[]>(query, { names });
+  return sanityClient.fetch<TypefaceRow[]>(query, { names });
 }
 
 function getFontStyleName(item: any): string {
@@ -28,7 +35,7 @@ function getFontStyleName(item: any): string {
   
   // Add weight name if available
   if (item.weight !== undefined) {
-    const weightNames = {
+    const weightNames: Record<number, string> = {
       100: 'Thin', 200: 'Extra Light', 300: 'Light', 400: 'Regular', 500: 'Medium',
       600: 'Semi Bold', 700: 'Bold', 800: 'Extra Bold', 900: 'Black'
     };
@@ -37,7 +44,7 @@ function getFontStyleName(item: any): string {
   
   // Add width name if available
   if (item.width !== undefined) {
-    const widthNames = {
+    const widthNames: Record<number, string> = {
       50: 'Ultra Condensed', 62.5: 'Extra Condensed', 75: 'Condensed', 87.5: 'Semi Condensed',
       100: 'Normal', 112.5: 'Semi Expanded', 125: 'Expanded', 150: 'Extra Expanded', 200: 'Ultra Expanded'
     };
@@ -53,7 +60,7 @@ function getFontStyleName(item: any): string {
   
   // Add optical size if available
   if (item.opticalSize !== undefined) {
-    const opticalNames = {
+    const opticalNames: Record<number, string> = {
       8: 'Caption', 10: 'Small Text', 12: 'Body', 14: 'Subheading', 16: 'Heading', 20: 'Display', 24: 'Large Display'
     };
     parts.push(opticalNames[item.opticalSize] || `Optical ${item.opticalSize}`);

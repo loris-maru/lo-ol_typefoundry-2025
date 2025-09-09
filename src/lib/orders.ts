@@ -1,5 +1,14 @@
-import { sanityWrite } from '@/lib/sanity/sanity.server';
+import { createClient } from '@sanity/client';
 import Stripe from 'stripe';
+
+// Create Sanity write client
+const sanityWrite = createClient({
+  projectId: process.env.SANITY_PROJECT_ID || 'kszrpogt',
+  dataset: process.env.SANITY_DATASET || 'production',
+  apiVersion: '2024-08-01',
+  useCdn: false,
+  token: process.env.SANITY_WRITE_TOKEN,
+});
 
 function decodeCartFingerprint(s?: string) {
   try {
@@ -21,7 +30,17 @@ export async function createOrderFromSession(session: Stripe.Checkout.Session) {
     totalPaid: (session.amount_total ?? 0) / 100,
     items: Array.isArray(cartMini)
       ? cartMini.map((i: any) => ({
-          fontId: i.f, fontFamilyId: i.FF, licenseType: i.L, userTier: i.T, qty: i.q ?? 1,
+          fontId: i.f, 
+          fontFamilyId: i.FF, 
+          licenseType: i.L, 
+          userTier: i.T, 
+          qty: i.q ?? 1,
+          // Add additional fields from your schema
+          weight: i.weight || 400,
+          width: i.width || 100,
+          slant: i.slant || 0,
+          opticalSize: i.opticalSize || 100,
+          isItalic: i.isItalic || false,
         }))
       : [],
   });
