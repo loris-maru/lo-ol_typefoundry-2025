@@ -21,6 +21,25 @@ function SuccessPageContent() {
   const sessionId = searchParams.get("session_id");
 
   useEffect(() => {
+    const run = async () => {
+      if (!sessionId) {
+        console.log("[success] No session_id in URL");
+        return;
+      }
+      console.log("[success] Will call /api/orders/create with", sessionId);
+  
+      const res = await fetch("/api/orders/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId }),
+      });
+      const json = await res.json();
+      console.log("[success] API response:", res.status, json);
+    };
+    run();
+  }, [sessionId]);
+
+  useEffect(() => {
     if (sessionId) {
       // Fetch session details from your backend
       fetch(`/api/checkout/session?session_id=${sessionId}`)
@@ -69,6 +88,9 @@ function SuccessPageContent() {
     );
   }
 
+  console.log("session_id param:", sessionId);
+  console.log("Calling /api/orders/create…");
+
   return (
     <main className="mx-auto max-w-xl p-8 text-center">
       <h1 className="text-2xl font-semibold">Thanks! 🎉</h1>
@@ -107,6 +129,7 @@ function SuccessPageContent() {
 }
 
 export default function SuccessPage() {
+
   return (
     <Suspense
       fallback={

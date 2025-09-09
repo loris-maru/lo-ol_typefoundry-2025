@@ -30,7 +30,6 @@ export default function SingleFontItem({
 
   const { hasOpticalSize, hasSlant, hasWidth, isItalic } = settings;
 
-  console.log("What are my settings? ", settings);
 
   const itemFullName = () => {
     let fullName = familyName;

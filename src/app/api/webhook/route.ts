@@ -21,9 +21,8 @@ export async function POST(req: NextRequest) {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
-
     // 1) Create order in Sanity (status: paid)
-    const orderId = await createOrderFromSession(session);
+    const orderId = await createOrderFromSession(session.id);
 
     // 2) Kick off fulfillment (async worker recommended)
     await enqueueFulfillment({ orderId, stripeSessionId: session.id });
