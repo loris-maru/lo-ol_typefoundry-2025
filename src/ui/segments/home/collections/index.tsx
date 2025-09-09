@@ -18,6 +18,56 @@ export default function CollectionsList({ typefaces }: CollectionsListProp) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [showHeroHeader, setShowHeroHeader] = useState(false);
   const [showContent, setShowContent] = useState(false);
+  
+  // Filter states
+  const [filters, setFilters] = useState({
+    serif: false,
+    sansSerif: false,
+    hasHangul: false,
+  });
+
+  // Filter the typefaces based on current filters
+  const filteredTypefaces = typefaces.filter((typeface) => {
+    // If no filters are active, show all
+    if (!filters.serif && !filters.sansSerif && !filters.hasHangul) {
+      return true;
+    }
+
+    let matches = true;
+
+    // Check serif/sans-serif filters
+    if (filters.serif || filters.sansSerif) {
+      const isSerif = typeface.category?.toLowerCase().includes('serif') || false;
+      const isSansSerif = typeface.category?.toLowerCase().includes('sans') || 
+                         typeface.category?.toLowerCase().includes('grotesk') || false;
+      
+      if (filters.serif && filters.sansSerif) {
+        // Show both serif and sans-serif
+        matches = matches && (isSerif || isSansSerif);
+      } else if (filters.serif) {
+        // Show only serif
+        matches = matches && isSerif;
+      } else if (filters.sansSerif) {
+        // Show only sans-serif
+        matches = matches && isSansSerif;
+      }
+    }
+
+    // Check Hangul filter
+    if (filters.hasHangul) {
+      matches = matches && typeface.hasHangul === true;
+    }
+
+    return matches;
+  });
+
+  // Handle filter changes
+  const handleFilterChange = (filterType: keyof typeof filters) => {
+    setFilters(prev => ({
+      ...prev,
+      [filterType]: !prev[filterType]
+    }));
+  };
 
   // --- cursor/highlighter state
   const [locked, setLocked] = useState(false);
@@ -138,6 +188,64 @@ export default function CollectionsList({ typefaces }: CollectionsListProp) {
             <HeroHeader showContent />
           </motion.div>
 
+          {/* Filter Controls */}
+          <motion.div
+            className="mt-8 mb-12"
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: showContent ? 0 : 100, opacity: showContent ? 1 : 0 }}
+            transition={{
+              duration: 0.8,
+              ease: [0.25, 0.46, 0.45, 0.94],
+              delay: 0.2,
+            }}
+          >
+            <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
+              {/* Serif/Sans-serif Checkboxes */}
+              <div className="flex gap-6">
+                <label className="flex items-center gap-2 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={filters.serif}
+                    onChange={() => handleFilterChange('serif')}
+                    className="w-4 h-4 text-white bg-transparent border-2 border-white rounded focus:ring-white focus:ring-2"
+                  />
+                  <span className="text-white font-whisper text-sm group-hover:text-gray-300 transition-colors">
+                    Serif
+                  </span>
+                </label>
+                
+                <label className="flex items-center gap-2 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={filters.sansSerif}
+                    onChange={() => handleFilterChange('sansSerif')}
+                    className="w-4 h-4 text-white bg-transparent border-2 border-white rounded focus:ring-white focus:ring-2"
+                  />
+                  <span className="text-white font-whisper text-sm group-hover:text-gray-300 transition-colors">
+                    Sans-serif
+                  </span>
+                </label>
+              </div>
+
+              {/* Has Hangul Toggle */}
+              <div className="flex items-center gap-3">
+                <span className="text-white font-whisper text-sm">Has Hangul</span>
+                <button
+                  onClick={() => handleFilterChange('hasHangul')}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black ${
+                    filters.hasHangul ? 'bg-white' : 'bg-gray-600'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-black transition-transform ${
+                      filters.hasHangul ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+            </div>
+          </motion.div>
+
           <motion.div
             id="collections-list-content"
             className="mt-12 gap-y-6"
@@ -149,7 +257,7 @@ export default function CollectionsList({ typefaces }: CollectionsListProp) {
               delay: 0.3,
             }}
           >
-            {typefaces.map((typeface: typeface, index: number) => (
+            {filteredTypefaces.map((typeface: typeface, index: number) => (
               <CollectionCard
                 key={typeface.slug}
                 typeface={typeface}

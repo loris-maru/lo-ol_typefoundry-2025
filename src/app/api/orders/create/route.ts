@@ -20,31 +20,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-
-// import { upsertOrderFromCheckoutSession } from "@/lib/orders";
-// import { NextRequest, NextResponse } from "next/server";
-
-// export const runtime = "nodejs";
-// export const dynamic = "force-dynamic";
-
-// export async function POST(req: NextRequest) {
-//   try {
-//     const { sessionId } = await req.json();
-//     console.log("[orders/create] payload sessionId:", sessionId);
-
-//     if (!sessionId) {
-//       return NextResponse.json({ error: "Missing sessionId" }, { status: 400 });
-//     }
-
-//     const orderId = await upsertOrderFromCheckoutSession(sessionId);
-//     console.log("[orders/create] created/updated order:", orderId);
-
-//     return NextResponse.json({ ok: true, orderId });
-//   } catch (err: any) {
-//     console.error("[orders/create] ERROR:", err);
-//     return NextResponse.json(
-//       { error: err?.message ?? "Unknown error", stack: err?.stack },
-//       { status: 500 }
-//     );
-//   }
-// }
