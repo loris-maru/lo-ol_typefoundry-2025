@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { MotionValue } from "motion/react";
 import { typeface } from "@/types/typefaces";
 import FontList from "@/ui/segments/collection/story/font-list";
 import Introduction from "@/ui/segments/collection/story/introduction";
@@ -10,10 +11,12 @@ export default function StoryContent({
   content,
   uprightFontUrl,
   italicFontUrl,
+  scrollProgress,
 }: {
   content: typeface;
   uprightFontUrl: string;
   italicFontUrl: string;
+  scrollProgress: MotionValue<number>;
 }) {
   const [mouseX, setMouseX] = useState(0);
   const [currentWeight, setCurrentWeight] = useState(100);
@@ -54,6 +57,7 @@ export default function StoryContent({
         onItalicToggle={() => setIsItalic(!isItalic)}
         uprightFontUrl={uprightFontUrl}
         italicFontUrl={italicFontUrl}
+        scrollProgress={scrollProgress}
       />
       <FontList
         singleFontList={content.singleFontList}

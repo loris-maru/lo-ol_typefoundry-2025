@@ -15,15 +15,15 @@ type StoryProps = {
 // Tunables
 const START_SIZE = "38vh";
 const TRACK_H = "600vh"; // increase to linger longer at full screen
-const LINGER_AT = 0.2; // reach full screen by 20% of the track, then hold
+const LINGER_AT = 0.15; // reach full screen by 15% of the track, then hold
 
 export default function Story({ uprightFontUrl, italicFontUrl, content }: StoryProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  // Progress is 0 -> 1 from section center at viewport center, to section end at viewport center
+  // Progress is 0 -> 1 from section start at viewport bottom with offset, to section end at viewport center
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["center center", "end center"],
+    offset: ["start end", "end center"],
   });
 
   // Size morph: circle (60vh) -> full screen (100vw x 100vh) - bidirectional
@@ -43,7 +43,7 @@ export default function Story({ uprightFontUrl, italicFontUrl, content }: StoryP
         {/* Sticky viewport */}
         <div className="sticky top-0 flex h-screen items-center justify-center">
           {/* Background behind the expanding shape */}
-          <div className="pointer-events-none absolute inset-0 z-0">
+          <div className="pointer-events-none absolute inset-0 z-0 p-8">
             <StoryBackground content={content} />
           </div>
 
@@ -75,6 +75,7 @@ export default function Story({ uprightFontUrl, italicFontUrl, content }: StoryP
                 content={content}
                 uprightFontUrl={uprightFontUrl}
                 italicFontUrl={italicFontUrl}
+                scrollProgress={scrollYProgress}
               />
             </motion.div>
           </motion.div>

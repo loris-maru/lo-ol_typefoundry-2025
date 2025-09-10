@@ -294,30 +294,6 @@ export default function CharacterViewer({
               }}
             /> */}
           </div>
-
-          {/* Baseline indicator */}
-          {guides && (
-            <>
-              {/* Baseline line */}
-              <div
-                className="absolute z-20 h-px w-full bg-white"
-                style={{
-                  top: `${guides.baselineY}px`,
-                  left: 0,
-                }}
-              />
-              {/* Baseline label */}
-              <div
-                className="font-whisper absolute z-20 text-xs text-white"
-                style={{
-                  top: `${guides.baselineY + 12}px`,
-                  left: "12px",
-                }}
-              >
-                Baseline
-              </div>
-            </>
-          )}
         </div>
 
         {/* Variants */}

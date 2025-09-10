@@ -15,7 +15,7 @@
     "check:deps": "depcheck",
     "check:files": "unimported",
     "check:exports": "ts-prune",
-    "check:unused": "npm run check:deps && npm run check:files && npm run check:exports"
+    "check:unused": "pnpm check:deps && pnpm check:files && pnpm check:exports"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -27,6 +27,8 @@
     "clsx": "^2.1.1",
     "keen-slider": "^6.8.6",
     "motion": "^12.23.12",
+    "motion-plus": "^1.5.1",
+    "motion-plus-react": "^1.5.1",
     "next": "15.5.2",
     "opentype.js": "^1.3.4",
     "postcss": "^8.5.6",

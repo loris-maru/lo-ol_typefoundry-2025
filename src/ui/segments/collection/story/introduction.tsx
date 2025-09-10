@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform, MotionValue } from "motion/react";
+import { Typewriter } from "motion-plus-react";
 import { cn } from "@/utils/classNames";
 import useWebFontPair from "@/utils/use-web-font-pair";
 
@@ -19,6 +20,7 @@ type IntroductionProps = {
 
   uprightFontUrl: string;
   italicFontUrl?: string;
+  scrollProgress?: MotionValue<number>;
 
   onItalicToggle?: () => void;
 };
@@ -31,6 +33,7 @@ export default function Introduction({
   hasItalic = false,
   uprightFontUrl,
   italicFontUrl,
+  scrollProgress,
   onItalicToggle,
 }: IntroductionProps) {
   // Hooks at the top (fixed order)
@@ -41,6 +44,26 @@ export default function Introduction({
   });
   const scale = useTransform(scrollYProgress, [0, 1], [0.96, 1.04]);
   const opacity = useTransform(scrollYProgress, [0, 0.3, 1], [0.0, 1, 1]);
+
+  // State to control when Typewriter should start animating
+  const [shouldStartTypewriter, setShouldStartTypewriter] = useState(false);
+
+  // Listen to scroll progress to determine when circle reaches fullscreen (LINGER_AT = 0.15)
+  useEffect(() => {
+    if (!scrollProgress) return;
+
+    const unsubscribe = scrollProgress.on("change", (latest) => {
+      // Start typewriter when circle reaches fullscreen (0.15) and is visible
+      if (latest >= 0.15) {
+        setShouldStartTypewriter(true);
+      } else {
+        // Reset typewriter when scrolling away from fullscreen
+        setShouldStartTypewriter(false);
+      }
+    });
+
+    return unsubscribe;
+  }, [scrollProgress]);
 
   // Stable preview family name
   const previewFamilyName = useMemo(
@@ -86,9 +109,26 @@ export default function Introduction({
             <p className="text-sm text-red-600">Couldn’t load font preview.</p>
           ) : (
             <div className="space-y-6">
-              <p className="text-left text-[4.8vw] leading-tight text-white" style={fontStyle}>
+              {/* <p className="text-left text-[4.8vw] leading-tight text-white" style={fontStyle}>
                 {content?.description ?? `The quick brown fox jumps over the lazy dog. 0123456789`}
-              </p>
+              </p> */}
+
+              {shouldStartTypewriter ? (
+                <Typewriter
+                  as="p"
+                  className="text-left text-[4.8vw] leading-tight text-white"
+                  style={fontStyle}
+                  cursorStyle={fontStyle}
+                >
+                  {content?.description ??
+                    `The quick brown fox jumps over the lazy dog. 0123456789`}
+                </Typewriter>
+              ) : (
+                <p className="text-left text-[4.8vw] leading-tight text-white" style={fontStyle}>
+                  {content?.description ??
+                    `The quick brown fox jumps over the lazy dog. 0123456789`}
+                </p>
+              )}
 
               {/* 🔒 Unchanged design for your weight/italic UI */}
               <div className="mt-3 flex items-center gap-4">

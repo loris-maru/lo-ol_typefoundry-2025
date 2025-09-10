@@ -5,9 +5,8 @@ const sanityClient = createClient({
   projectId: process.env.SANITY_PROJECT_ID || "kszrpogt",
   dataset: process.env.SANITY_DATASET || "production",
   apiVersion: "2024-08-01",
-  useCdn: true,
-  // Temporarily remove token to test public access
-  // token: process.env.SANITY_READ_TOKEN,
+  useCdn: process.env.NODE_ENV === "production",
+  token: process.env.SANITY_READ_TOKEN, // Use the read token for authenticated access
 });
 
 export async function GET() {
