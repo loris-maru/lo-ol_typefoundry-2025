@@ -26,7 +26,6 @@ function SuccessPageContent() {
         console.log("[success] No session_id in URL");
         return;
       }
-      console.log("[success] Will call /api/orders/create with", sessionId);
 
       const res = await fetch("/api/orders/create", {
         method: "POST",
@@ -34,7 +33,6 @@ function SuccessPageContent() {
         body: JSON.stringify({ sessionId }),
       });
       const json = await res.json();
-      console.log("[success] API response:", res.status, json);
     };
     run();
   }, [sessionId]);
@@ -87,9 +85,6 @@ function SuccessPageContent() {
       </main>
     );
   }
-
-  console.log("session_id param:", sessionId);
-  console.log("Calling /api/orders/create…");
 
   return (
     <main className="mx-auto max-w-xl p-8 text-center">

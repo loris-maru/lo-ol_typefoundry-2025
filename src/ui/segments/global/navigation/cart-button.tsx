@@ -34,9 +34,6 @@ export default function CartButton() {
   };
 
   const handleCheckout = async () => {
-    console.log("Cart button checkout clicked!");
-    console.log("Cart length:", cart.length);
-    console.log("Cart items:", cart);
 
     if (cart.length === 0) {
       setError("Your cart is empty");
@@ -88,8 +85,6 @@ export default function CartButton() {
         items: cartItems,
       };
 
-      console.log("Sending cart payload:", cartPayload);
-
       // Call checkout API
       const response = await fetch("/api/checkout", {
         method: "POST",
@@ -105,8 +100,7 @@ export default function CartButton() {
       }
 
       const { id: sessionId, url: checkoutUrl } = await response.json();
-      console.log("Received session ID:", sessionId);
-      console.log("Received checkout URL:", checkoutUrl);
+
 
       // Redirect to Stripe Checkout
       if (checkoutUrl) {

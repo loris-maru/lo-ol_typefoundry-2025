@@ -125,24 +125,3 @@ export function isFormValid<T extends Record<string, unknown>>(
 ): boolean {
   return Object.values(results).every((result) => result.isValid);
 }
-
-// Example usage:
-/*
-const formData = {
-  email: "user@example.com",
-  password: "password123",
-  age: "25"
-};
-
-const validators = {
-  email: [commonRules.required(), commonRules.email()],
-  password: [commonRules.required(), commonRules.minLength(8)],
-  age: [commonRules.numeric(), commonRules.positiveNumber()]
-};
-
-const validationResults = validateForm(formData, validators);
-const isValid = isFormValid(validationResults);
-
-console.log(validationResults);
-console.log("Form is valid:", isValid);
-*/

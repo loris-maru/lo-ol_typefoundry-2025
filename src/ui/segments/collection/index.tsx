@@ -25,13 +25,20 @@ export default function CollectionPage({
   content: typeface;
   allTypefaces: typeface[];
 }) {
+
+  // FONTS
   const fontName = slugify(content.name);
-  const fontUrl = content.varFont;
+  const uprightFontUrl = content.varFont;
+  const italicFontUrl = content.varFontItalic;
+
+  const uprightFontName = slugify(content.name);
+  const italicFontName = `${content.name}Italic`;
+
   const [videoLoaded, setVideoLoaded] = useState<boolean>(false);
   const [showLoader, setShowLoader] = useState<boolean>(true);
   const [progress, setProgress] = useState<number>(0);
 
-  const { error, loaded: fontLoaded } = useFont(fontName, fontUrl);
+  const { error, loaded: fontLoaded } = useFont(fontName, uprightFontUrl);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   // Combined loading state - now properly tracks both video and font loading
@@ -126,7 +133,7 @@ export default function CollectionPage({
           {/* Playground section */}
           <Playground content={content} />
 
-          <Story content={content} />
+          <Story uprightFontUrl={uprightFontUrl} italicFontUrl={italicFontUrl} content={content} />
 
           {/* Horizontal scrolling section (Weights, Character Set, Font Info) */}
           <CollectionHorizontal content={content} />

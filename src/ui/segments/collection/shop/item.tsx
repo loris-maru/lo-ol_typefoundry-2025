@@ -151,7 +151,6 @@ export default function SingleFontItem({
       );
 
       if (cartItem) {
-        console.log("Removing cart item:", cartItem);
         removeFromCart(cartItem._key);
       } else {
         console.log("Cart item not found for removal");

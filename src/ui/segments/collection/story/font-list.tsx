@@ -1,6 +1,12 @@
 import { singleFont } from "@/types/typefaces";
 
-export default function FontList({ singleFontList }: { singleFontList: singleFont[] }) {
+export default function FontList({ 
+  singleFontList, 
+  currentWeight 
+}: { 
+  singleFontList: singleFont[];
+  currentWeight: number;
+}) {
   // Check if family has optical size or width variations
   const hasOpticalSize = singleFontList.some(font => font.hasOpticalSize);
   const hasWidth = singleFontList.some(font => font.hasWidth);
@@ -80,9 +86,18 @@ export default function FontList({ singleFontList }: { singleFontList: singleFon
                 f.hasSlant
               );
 
+              // Check if current weight is within ±50 range of this font's weight
+              const isMatchingWeight = currentWeight >= (font.weightValue - 50) && currentWeight <= (font.weightValue + 50);
+              const textColor = isMatchingWeight ? 'text-black' : 'text-white';
+              const bgColor = isMatchingWeight ? 'bg-white' : 'bg-transparent';
+
+
               return (
-                <div key={fontIndex} className="font-whisper text-sm font-normal text-white text-left">
-                  <div className="flex flex-row gap-x-2 ">
+                <div 
+                  key={fontIndex} 
+                  className={`font-whisper text-sm font-normal text-left rounded-3xl px-3 py-2 transition-all duration-300 ease-in-out ${textColor} ${bgColor}`}
+                >
+                  <div className="flex flex-row gap-x-2">
                     <span className="block capitalize">{fontName}</span>
                     {font.isItalic && (
                       <span className="block">
