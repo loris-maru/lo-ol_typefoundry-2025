@@ -1,4 +1,4 @@
-import { markOrderFulfilled } from './orders';
+import { markOrderFulfilled } from "./orders";
 
 // In production, push to SQS / PubSub / Cloud Tasks.
 // Here we show a direct call for simplicity (replace with enqueue).
@@ -10,7 +10,9 @@ export async function enqueueFulfillment(payload: { orderId: string; stripeSessi
 }
 
 // Placeholder that pretends a background job ran and produced a signed URL.
-async function runLocalFulfillment(orderId: string): Promise<{ signedUrl: string; expiresAt: string }> {
+async function runLocalFulfillment(
+  orderId: string,
+): Promise<{ signedUrl: string; expiresAt: string }> {
   const expires = new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(); // +24h
   return {
     signedUrl: `https://example-downloads/secure/${orderId}.zip?sig=...`,

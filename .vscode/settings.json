@@ -1,1 +1,20 @@
-{}
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // Run ESLint auto-fixes on save (remove if you don't use ESLint)
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "never"
+  },
+
+  // Make sure Prettier is the formatter for relevant languages
+  "[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[javascriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[typescriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+
+  // Tailwind class sorting via Prettier plugin (see step 4)
+  "tailwindCSS.experimental.classRegex": ["clsx\\(([^)]*)\\)", "cva\\(([^)]*)\\)"]
+}

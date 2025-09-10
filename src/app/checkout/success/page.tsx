@@ -34,13 +34,13 @@ export default function CheckoutSuccess() {
   }, [sessionId]);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="flex min-h-screen items-center justify-center bg-gray-50">
       <div className="text-center">
         <div className="mb-8">
           {/* Check Animation */}
-          <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-6">
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
             <svg
-              className="h-8 w-8 text-green-600 animate-pulse"
+              className="h-8 w-8 animate-pulse text-green-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -53,17 +53,16 @@ export default function CheckoutSuccess() {
               />
             </svg>
           </div>
-          
+
           {/* Payment Successful Text */}
-          <h1 className="text-3xl font-bold text-green-600 mb-4 font-whisper">
+          <h1 className="font-whisper mb-4 text-3xl font-bold text-green-600">
             Payment successful
           </h1>
-          
         </div>
 
         {/* Download Button */}
         <div className="space-y-4">
-          <button className="w-full bg-black text-white text-xl font-semibold py-5 px-8 rounded-full hover:bg-gray-800 transition-colors font-whisper">
+          <button className="font-whisper w-full rounded-full bg-black px-8 py-5 text-xl font-semibold text-white transition-colors hover:bg-gray-800">
             Download your fonts
           </button>
         </div>

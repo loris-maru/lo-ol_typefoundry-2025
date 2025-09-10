@@ -3,7 +3,6 @@
 import { sanityServer } from "@/lib/sanity/sanity.server";
 import useSWR, { SWRConfiguration } from "swr";
 
-
 /**
  * A global hook to fetch data from Sanity using GROQ.
  *

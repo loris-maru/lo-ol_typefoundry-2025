@@ -74,12 +74,12 @@ export async function POST(req: NextRequest) {
 //     switch (event.type) {
 //       case "checkout.session.completed": {
 //         const session = event.data.object as Stripe.Checkout.Session;
-        
+
 //         console.log("Processing checkout.session.completed for session:", session.id);
 //         console.log("Session payment status:", session.payment_status);
 //         console.log("Session amount total:", session.amount_total);
 //         console.log("Session customer email:", session.customer_details?.email);
-        
+
 //         try {
 //           const orderId = await createOrderFromSession(session.id);
 //           console.log("Order created successfully with ID:", orderId);
@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
 //           console.error("Error details:", error instanceof Error ? error.stack : error);
 //           return NextResponse.json({ error: "Failed to create order" }, { status: 500 });
 //         }
-        
+
 //         break;
 //       }
 

@@ -38,7 +38,6 @@ export default function CharacterSetPanel({ content }: { content: typeface }) {
   const canUseItalic = italicFont && italicFont !== "";
   const currentFontName = axisSettings.italic && canUseItalic ? italicFontName : uprightFontName;
 
-
   const handleAxisSettingsChange = (newSettings: AxisSettings) => {
     setAxisSettings({
       wght: newSettings.wght ?? 400,

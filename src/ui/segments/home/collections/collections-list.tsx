@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { motion, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
+import { motion, useMotionValueEvent, useScroll, useTransform } from "motion/react";
 
 import type { typeface } from "@/types/typefaces";
 import CollectionCard from "@/ui/segments/home/collections/collection-card";

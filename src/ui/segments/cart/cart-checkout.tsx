@@ -10,10 +10,7 @@ interface CartCheckoutProps {
   className?: string;
 }
 
-export default function CartCheckout({ 
-  label = "Checkout", 
-  className = "" 
-}: CartCheckoutProps) {
+export default function CartCheckout({ label = "Checkout", className = "" }: CartCheckoutProps) {
   const { cart, clearCart } = useCartStore();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -89,7 +86,7 @@ export default function CartCheckout({
       if (checkoutUrl) {
         // Clear cart on successful checkout initiation
         clearCart();
-        
+
         // Redirect to Stripe Checkout using the official URL
         window.location.href = checkoutUrl;
       }
@@ -108,7 +105,7 @@ export default function CartCheckout({
           <div className="text-sm text-red-700">{error}</div>
         </div>
       )}
-      
+
       <button
         onClick={handleCheckout}
         disabled={isLoading || cart.length === 0}

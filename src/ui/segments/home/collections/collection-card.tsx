@@ -6,7 +6,7 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 
 import { useFont } from "@react-hooks-library/core";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 import type { typeface } from "@/types/typefaces";
 import slugify from "@/utils/slugify";

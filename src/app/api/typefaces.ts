@@ -1,12 +1,12 @@
 import { typefaces } from "@/app/api/query/typefaces";
 import { typeface } from "@/types/typefaces";
-import { createClient } from '@sanity/client';
+import { createClient } from "@sanity/client";
 
 // Create Sanity client
 const sanityClient = createClient({
-  projectId: process.env.SANITY_PROJECT_ID || 'kszrpogt',
-  dataset: process.env.SANITY_DATASET || 'production',
-  apiVersion: '2024-08-01',
+  projectId: process.env.SANITY_PROJECT_ID || "kszrpogt",
+  dataset: process.env.SANITY_DATASET || "production",
+  apiVersion: "2024-08-01",
   useCdn: true, // Enable CDN for public data
   // Temporarily remove token to test public access
   // token: process.env.SANITY_READ_TOKEN,

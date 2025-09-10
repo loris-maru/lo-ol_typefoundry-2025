@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "motion/react";
 
 import { typeface } from "@/types/typefaces";
 import AddBlock from "@/ui/segments/collection/playground/blocks/add-block";

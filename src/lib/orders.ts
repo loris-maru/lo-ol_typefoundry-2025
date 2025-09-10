@@ -26,12 +26,10 @@ export async function upsertOrderFromCheckoutSession(sessionId: string) {
   // Build items[] to match your schema
   const items = (session.line_items?.data ?? []).map((li) => {
     const price = li.price as Stripe.Price | null | undefined;
-    const product =
-      (price?.product as Stripe.Product | string | undefined) ?? undefined;
+    const product = (price?.product as Stripe.Product | string | undefined) ?? undefined;
 
     const pmeta = price?.metadata ?? {};
-    const prodmeta =
-      (typeof product === "string" ? {} : product?.metadata ?? {}) ?? {};
+    const prodmeta = (typeof product === "string" ? {} : (product?.metadata ?? {})) ?? {};
 
     const read = (k: string) => (prodmeta as any)[k] ?? (pmeta as any)[k];
 
@@ -66,7 +64,7 @@ export async function upsertOrderFromCheckoutSession(sessionId: string) {
 
   const existingId = await sanityWrite.fetch<string | null>(
     '*[_type == "order" && stripeSessionId == $id][0]._id',
-    { id: session.id }
+    { id: session.id },
   );
 
   if (existingId) {

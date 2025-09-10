@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { FiMenu } from "react-icons/fi";
 
 import { useScrollBlock } from "@/hooks/useScrollBlock";

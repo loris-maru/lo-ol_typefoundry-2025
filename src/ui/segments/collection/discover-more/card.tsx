@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useFont } from "@react-hooks-library/core";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { BounceLoader } from "react-spinners";
 import { useMediaQuery } from "usehooks-ts";
 

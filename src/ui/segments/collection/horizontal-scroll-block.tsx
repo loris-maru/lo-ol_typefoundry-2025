@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "motion/react";
 
 import { typeface } from "@/types/typefaces";
 import CharacterSetPanel from "@/ui/segments/collection/character-set";

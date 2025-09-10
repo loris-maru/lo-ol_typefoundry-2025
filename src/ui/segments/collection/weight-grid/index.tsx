@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 import { WeightDef, WEIGHTS } from "@/app/content/WEIGHTS-LIST";
 import { typeface } from "@/types/typefaces";

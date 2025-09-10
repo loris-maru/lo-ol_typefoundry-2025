@@ -1,7 +1,7 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-export const LicenseEnum = z.enum(['Web', 'Print', 'Both']);
-export const UserTierEnum = z.enum(['1-4', '5-10', '11-20', '21+']);
+export const LicenseEnum = z.enum(["Web", "Print", "Both"]);
+export const UserTierEnum = z.enum(["1-4", "5-10", "11-20", "21+"]);
 
 export const CartItemSchema = z.object({
   fontId: z.string().min(1),

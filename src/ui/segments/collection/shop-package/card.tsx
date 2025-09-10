@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 import { Package } from "@/app/content/PACKAGES";
 import { useShopStore } from "@/states/shop";

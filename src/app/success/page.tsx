@@ -27,7 +27,7 @@ function SuccessPageContent() {
         return;
       }
       console.log("[success] Will call /api/orders/create with", sessionId);
-  
+
       const res = await fetch("/api/orders/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -129,7 +129,6 @@ function SuccessPageContent() {
 }
 
 export default function SuccessPage() {
-
   return (
     <Suspense
       fallback={

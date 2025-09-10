@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { motion, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
+import { motion, useMotionValueEvent, useScroll, useTransform } from "motion/react";
 
 import type { typeface } from "@/types/typefaces";
 import CollectionCard from "@/ui/segments/home/collections/collection-card";
@@ -18,7 +18,7 @@ export default function CollectionsList({ typefaces }: CollectionsListProp) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [showHeroHeader, setShowHeroHeader] = useState(false);
   const [showContent, setShowContent] = useState(false);
-  
+
   // Filter states
   const [filters, setFilters] = useState({
     serif: false,
@@ -37,10 +37,12 @@ export default function CollectionsList({ typefaces }: CollectionsListProp) {
 
     // Check serif/sans-serif filters
     if (filters.serif || filters.sansSerif) {
-      const isSerif = typeface.category?.toLowerCase().includes('serif') || false;
-      const isSansSerif = typeface.category?.toLowerCase().includes('sans') || 
-                         typeface.category?.toLowerCase().includes('grotesk') || false;
-      
+      const isSerif = typeface.category?.toLowerCase().includes("serif") || false;
+      const isSansSerif =
+        typeface.category?.toLowerCase().includes("sans") ||
+        typeface.category?.toLowerCase().includes("grotesk") ||
+        false;
+
       if (filters.serif && filters.sansSerif) {
         // Show both serif and sans-serif
         matches = matches && (isSerif || isSansSerif);
@@ -63,9 +65,9 @@ export default function CollectionsList({ typefaces }: CollectionsListProp) {
 
   // Handle filter changes
   const handleFilterChange = (filterType: keyof typeof filters) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
-      [filterType]: !prev[filterType]
+      [filterType]: !prev[filterType],
     }));
   };
 
@@ -199,29 +201,29 @@ export default function CollectionsList({ typefaces }: CollectionsListProp) {
               delay: 0.2,
             }}
           >
-            <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
+            <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center">
               {/* Serif/Sans-serif Checkboxes */}
               <div className="flex gap-6">
-                <label className="flex items-center gap-2 cursor-pointer group">
+                <label className="group flex cursor-pointer items-center gap-2">
                   <input
                     type="checkbox"
                     checked={filters.serif}
-                    onChange={() => handleFilterChange('serif')}
-                    className="w-4 h-4 text-white bg-transparent border-2 border-white rounded focus:ring-white focus:ring-2"
+                    onChange={() => handleFilterChange("serif")}
+                    className="h-4 w-4 rounded border-2 border-white bg-transparent text-white focus:ring-2 focus:ring-white"
                   />
-                  <span className="text-white font-whisper text-sm group-hover:text-gray-300 transition-colors">
+                  <span className="font-whisper text-sm text-white transition-colors group-hover:text-gray-300">
                     Serif
                   </span>
                 </label>
-                
-                <label className="flex items-center gap-2 cursor-pointer group">
+
+                <label className="group flex cursor-pointer items-center gap-2">
                   <input
                     type="checkbox"
                     checked={filters.sansSerif}
-                    onChange={() => handleFilterChange('sansSerif')}
-                    className="w-4 h-4 text-white bg-transparent border-2 border-white rounded focus:ring-white focus:ring-2"
+                    onChange={() => handleFilterChange("sansSerif")}
+                    className="h-4 w-4 rounded border-2 border-white bg-transparent text-white focus:ring-2 focus:ring-white"
                   />
-                  <span className="text-white font-whisper text-sm group-hover:text-gray-300 transition-colors">
+                  <span className="font-whisper text-sm text-white transition-colors group-hover:text-gray-300">
                     Sans-serif
                   </span>
                 </label>
@@ -229,16 +231,16 @@ export default function CollectionsList({ typefaces }: CollectionsListProp) {
 
               {/* Has Hangul Toggle */}
               <div className="flex items-center gap-3">
-                <span className="text-white font-whisper text-sm">Has Hangul</span>
+                <span className="font-whisper text-sm text-white">Has Hangul</span>
                 <button
-                  onClick={() => handleFilterChange('hasHangul')}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black ${
-                    filters.hasHangul ? 'bg-white' : 'bg-gray-600'
+                  onClick={() => handleFilterChange("hasHangul")}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black focus:outline-none ${
+                    filters.hasHangul ? "bg-white" : "bg-gray-600"
                   }`}
                 >
                   <span
                     className={`inline-block h-4 w-4 transform rounded-full bg-black transition-transform ${
-                      filters.hasHangul ? 'translate-x-6' : 'translate-x-1'
+                      filters.hasHangul ? "translate-x-6" : "translate-x-1"
                     }`}
                   />
                 </button>

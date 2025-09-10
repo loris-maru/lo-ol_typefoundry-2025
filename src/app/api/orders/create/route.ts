@@ -14,9 +14,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, orderId });
   } catch (err: any) {
     console.error("[orders/create] ERROR:", err);
-    return NextResponse.json(
-      { error: err?.message ?? "Unknown error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: err?.message ?? "Unknown error" }, { status: 500 });
   }
 }

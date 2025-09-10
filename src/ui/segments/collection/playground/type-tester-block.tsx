@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 import { TypefaceSettings } from "@/types/playground";
 import { typeface } from "@/types/typefaces";

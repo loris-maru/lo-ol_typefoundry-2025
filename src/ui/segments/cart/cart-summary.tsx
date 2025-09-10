@@ -1,8 +1,7 @@
 "use client";
 
-import { useCartStore, type SingleCartItem } from "@/states/cart";
+import { useCartStore, SingleCartItem } from "@/states/cart";
 import CartCheckout from "@/ui/segments/cart/cart-checkout";
-
 
 export default function CartSummary() {
   const { cart, removeFromCart } = useCartStore();

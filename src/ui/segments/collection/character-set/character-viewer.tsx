@@ -44,12 +44,12 @@ function measureRenderedMetrics(
 function measureDOMTextMetrics(element: HTMLElement): Measured {
   const computedStyle = getComputedStyle(element);
   const fontSize = parseFloat(computedStyle.fontSize);
-  
+
   // Create a temporary canvas with the same font settings
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d")!;
   ctx.font = computedStyle.font;
-  
+
   const m = (s: string) => ctx.measureText(s);
   const mCommon = m("Hg");
   const mCap = m("H");
@@ -91,7 +91,7 @@ export default function CharacterViewer({
   const characterRef = useRef<HTMLDivElement>(null);
   const glyphRef = useRef<HTMLDivElement>(null);
   const [metrics, setMetrics] = useState<Measured | null>(null);
-  
+
   // Fixed baseline offset
   const baselineOffset = 360;
 
@@ -151,7 +151,7 @@ export default function CharacterViewer({
   const opsz = content.has_opsz ? axisSettings.opsz : 900;
 
   // Construct font URL - use varFont for variable fonts, fallback to regular font
-  const fontUrl = content.varFont ? `/api/fonts/${content.varFont.split('/').pop()}` : null;
+  const fontUrl = content.varFont ? `/api/fonts/${content.varFont.split("/").pop()}` : null;
 
   // === NEW: Measure actual metrics of the rendered font size ===
   useEffect(() => {
@@ -168,10 +168,10 @@ export default function CharacterViewer({
     const timer = setTimeout(() => {
       if (glyphRef.current && characterRef.current) {
         // Trigger a re-render by updating a dummy state
-        setMetrics(prev => prev ? { ...prev } : null);
+        setMetrics((prev) => (prev ? { ...prev } : null));
       }
     }, 50);
-    
+
     return () => clearTimeout(timer);
   }, [displayCharacter]);
 
@@ -188,7 +188,7 @@ export default function CharacterViewer({
     // Get the actual position of the glyph within the container
     const glyphRect = glyph.getBoundingClientRect();
     const boxRect = box.getBoundingClientRect();
-    
+
     // Calculate the glyph's top position relative to the container
     const glyphTop = glyphRect.top - boxRect.top;
 
@@ -230,7 +230,6 @@ export default function CharacterViewer({
           </button>
         </div>
       )}
-
 
       {/* Main Character Display */}
       <div
@@ -275,7 +274,6 @@ export default function CharacterViewer({
             fontVariationSettings: `'wght' ${wght}, 'wdth' ${wdth}, 'slnt' ${slnt}, 'opsz' ${opsz}`,
           }}
         >
-
           {/* Rendered glyph */}
           <div
             ref={glyphRef}
@@ -302,7 +300,7 @@ export default function CharacterViewer({
             <>
               {/* Baseline line */}
               <div
-                className="absolute w-full h-px bg-white z-20"
+                className="absolute z-20 h-px w-full bg-white"
                 style={{
                   top: `${guides.baselineY}px`,
                   left: 0,
@@ -310,10 +308,10 @@ export default function CharacterViewer({
               />
               {/* Baseline label */}
               <div
-                className="absolute text-xs font-whisper text-white z-20"
+                className="font-whisper absolute z-20 text-xs text-white"
                 style={{
                   top: `${guides.baselineY + 12}px`,
-                  left: '12px',
+                  left: "12px",
                 }}
               >
                 Baseline

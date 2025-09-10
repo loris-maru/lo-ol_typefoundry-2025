@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { useFont } from "@react-hooks-library/core";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { useMediaQuery } from "usehooks-ts";
 
 import { typeface } from "@/types/typefaces";
@@ -15,6 +15,8 @@ import Playground from "@/ui/segments/collection/playground";
 import ShopPackages from "@/ui/segments/collection/shop-package";
 import Footer from "@/ui/segments/global/footer";
 import slugify from "@/utils/slugify";
+import Story from "./story";
+import Loader from "./loader";
 
 export default function CollectionPage({
   content,
@@ -102,31 +104,13 @@ export default function CollectionPage({
     <>
       <AnimatePresence>
         {showLoader && (
-          <motion.div
-            initial={{ height: "100vh" }}
-            exit={{ height: "0vh" }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
-            className="font-whisper fixed inset-0 overflow-hidden p-6 text-white"
-            style={{
-              zIndex: 999999,
-              background: "rgba(139, 92, 246, 1)", // Violet background
-            }}
-          >
-            {/* Loading text with status indicators */}
-            <div className="relative z-10 flex flex-col items-start text-left leading-[1.05] font-normal text-white">
-              <div className="flex flex-col divide-y divide-white border border-solid border-white">
-                <div className="px-4 py-3">Loading...</div>
-                <div className="px-4 py-3">Collection: {content.name}</div>
-                <div className="px-4 py-3">
-                  Font: {fontLoaded ? "✓" : "⏳"} | Video: {videoLoaded ? "✓" : "⏳"}
-                </div>
-              </div>
-              {/* Huge percentage progress */}
-              <div className="font-whisper text-[38vw] font-medium text-white">
-                {Math.round(progress)}%
-              </div>
-            </div>
-          </motion.div>
+          <Loader
+            showLoader={showLoader}
+            content={content}
+            fontLoaded={fontLoaded}
+            videoLoaded={videoLoaded}
+            progress={progress}
+          />
         )}
       </AnimatePresence>
 
@@ -141,6 +125,8 @@ export default function CollectionPage({
 
           {/* Playground section */}
           <Playground content={content} />
+
+          <Story content={content} />
 
           {/* Horizontal scrolling section (Weights, Character Set, Font Info) */}
           <CollectionHorizontal content={content} />

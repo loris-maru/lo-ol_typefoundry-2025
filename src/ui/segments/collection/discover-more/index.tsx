@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "motion/react";
 import { KeenSliderInstance, useKeenSlider } from "keen-slider/react";
 
 import { typeface } from "@/types/typefaces";
@@ -95,21 +95,22 @@ export default function DiscoverMoreCollections({ content }: { content: typeface
           {/* Slider Container */}
           <div className="flex h-full w-full items-center justify-center">
             <div ref={sliderRef} className="keen-slider h-full w-full">
-              {Array.isArray(content) && content
-                .filter((collection: typeface) => collection && collection.slug) // Filter out invalid collections
-                .map((collection: typeface, index: number) => (
-                  <div
-                    key={collection.slug}
-                    className="keen-slider__slide flex items-center justify-center"
-                  >
-                    <CollectionCard
-                      content={collection}
-                      index={index}
-                      isActive={index === currentSlide}
-                      onNavigate={handleNavigate}
-                    />
-                  </div>
-                ))}
+              {Array.isArray(content) &&
+                content
+                  .filter((collection: typeface) => collection && collection.slug) // Filter out invalid collections
+                  .map((collection: typeface, index: number) => (
+                    <div
+                      key={collection.slug}
+                      className="keen-slider__slide flex items-center justify-center"
+                    >
+                      <CollectionCard
+                        content={collection}
+                        index={index}
+                        isActive={index === currentSlide}
+                        onNavigate={handleNavigate}
+                      />
+                    </div>
+                  ))}
             </div>
           </div>
 

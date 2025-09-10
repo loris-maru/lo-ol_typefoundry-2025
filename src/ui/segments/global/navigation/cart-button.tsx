@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { RiShoppingCart2Fill } from "react-icons/ri";
 
 import { useScrollBlock } from "@/hooks/useScrollBlock";
@@ -37,7 +37,7 @@ export default function CartButton() {
     console.log("Cart button checkout clicked!");
     console.log("Cart length:", cart.length);
     console.log("Cart items:", cart);
-    
+
     if (cart.length === 0) {
       setError("Your cart is empty");
       return;
@@ -112,7 +112,7 @@ export default function CartButton() {
       if (checkoutUrl) {
         // Clear cart on successful checkout initiation
         clearCart();
-        
+
         // Redirect to Stripe Checkout using the official URL
         window.location.href = checkoutUrl;
       }
@@ -227,20 +227,20 @@ export default function CartButton() {
                   <div className="text-sm text-red-300">{error}</div>
                 </div>
               )}
-              
+
               <div className="mb-4 flex items-center justify-between">
                 <span className="text-lg font-medium">Total:</span>
                 <span className="text-xl font-bold">
                   ${cart.reduce((sum, item) => sum + item.price, 0)}
                 </span>
               </div>
-              
-              <button 
-              type="button"
-              aria-label="Checkout"
+
+              <button
+                type="button"
+                aria-label="Checkout"
                 onClick={handleCheckout}
                 disabled={isLoading || cart.length === 0}
-                className="w-full rounded-lg bg-white px-6 py-3 font-medium text-black transition-colors cursor-pointer hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full cursor-pointer rounded-lg bg-white px-6 py-3 font-medium text-black transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isLoading ? "Processing..." : "Checkout"}
               </button>

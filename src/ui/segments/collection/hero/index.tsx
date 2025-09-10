@@ -3,7 +3,7 @@
 import { useRef } from "react";
 
 import { useFont } from "@react-hooks-library/core";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, useScroll, useSpring, useTransform } from "motion/react";
 
 import { typeface } from "@/types/typefaces";
 import slugify from "@/utils/slugify";
@@ -18,7 +18,7 @@ export default function VideoHero({
 }) {
   const fontName = slugify(content.name);
   // Use font proxy to avoid CORS issues
-  const fontUrl = content.varFont ? `/api/fonts/${content.varFont.split('/').pop()}` : null;
+  const fontUrl = content.varFont ? `/api/fonts/${content.varFont.split("/").pop()}` : null;
 
   const { error, loaded: fontLoaded } = useFont(fontName, fontUrl);
 
