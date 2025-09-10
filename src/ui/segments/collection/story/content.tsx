@@ -55,7 +55,11 @@ export default function StoryContent({
         uprightFontUrl={uprightFontUrl}
         italicFontUrl={italicFontUrl}
       />
-      <FontList singleFontList={content.singleFontList} currentWeight={currentWeight} />
+      <FontList
+        singleFontList={content.singleFontList}
+        currentWeight={currentWeight}
+        isItalic={isItalic}
+      />
     </div>
   );
 }

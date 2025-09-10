@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { cn } from "@/utils/classNames";
+import useWebFontPair from "@/utils/use-web-font-pair";
 
 type IntroductionProps = {
   content?: {
@@ -21,81 +22,6 @@ type IntroductionProps = {
 
   onItalicToggle?: () => void;
 };
-
-function useWebFontPair(fontFamilyName: string, uprightUrl: string, italicUrl?: string) {
-  const [loaded, setLoaded] = useState(false);
-  const [error, setError] = useState<unknown>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function injectFace(id: string, css: string) {
-      // Reuse style tag if present, else create it
-      let el = document.getElementById(id) as HTMLStyleElement | null;
-      if (!el) {
-        el = document.createElement("style");
-        el.id = id;
-        document.head.appendChild(el);
-      }
-      el.textContent = css;
-    }
-
-    async function load() {
-      setLoaded(false);
-      setError(null);
-      try {
-        const fmt = uprightUrl.endsWith(".woff2") ? "woff2" : "opentype";
-
-        // Always load the upright face
-        await injectFace(
-          `font-${fontFamilyName}-upright`,
-          `
-          @font-face {
-            font-family: "${fontFamilyName}";
-            src: url("${uprightUrl}") format("${fmt}");
-            font-style: normal;
-            font-weight: 1 1000; /* variable-safe range */
-            font-display: swap;
-          }
-        `,
-        );
-
-        // Conditionally load italic face (still not a hook; just runtime CSS)
-        if (italicUrl) {
-          const fmtItalic = italicUrl.endsWith(".woff2") ? "woff2" : "opentype";
-          await injectFace(
-            `font-${fontFamilyName}-italic`,
-            `
-            @font-face {
-              font-family: "${fontFamilyName}";
-              src: url("${italicUrl}") format("${fmtItalic}");
-              font-style: italic;
-              font-weight: 1 1000;
-              font-display: swap;
-            }
-          `,
-          );
-        } else {
-          // If no italic provided, make sure any previous italic tag is cleared
-          const prevItalic = document.getElementById(`font-${fontFamilyName}-italic`);
-          if (prevItalic) prevItalic.textContent = "";
-        }
-        // Nudge the font subsystem so layout can pick it up immediately
-        await document.fonts?.load(`1rem "${fontFamilyName}"`);
-        if (!cancelled) setLoaded(true);
-      } catch (e) {
-        if (!cancelled) setError(e);
-      }
-    }
-
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, [fontFamilyName, uprightUrl, italicUrl]);
-
-  return { loaded, error };
-}
 
 export default function Introduction({
   content,
@@ -160,7 +86,7 @@ export default function Introduction({
             <p className="text-sm text-red-600">Couldn’t load font preview.</p>
           ) : (
             <div className="space-y-6">
-              <p className="text-left text-[4.6vw] leading-tight text-white" style={fontStyle}>
+              <p className="text-left text-[4.8vw] leading-tight text-white" style={fontStyle}>
                 {content?.description ?? `The quick brown fox jumps over the lazy dog. 0123456789`}
               </p>
 
@@ -182,12 +108,13 @@ export default function Introduction({
                       id="italic-toggle"
                       aria-label="Toggle italic"
                       onClick={onItalicToggle}
-                      className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black focus:outline-none"
+                      className="relative inline-flex h-6 w-11 items-center rounded-full border border-solid border-white transition-colors duration-300 focus:outline-none"
                     >
                       <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${
-                          isItalic ? "translate-x-6" : "translate-x-1"
-                        }`}
+                        className={cn(
+                          "inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300",
+                          isItalic ? "translate-x-6" : "translate-x-1",
+                        )}
                       />
                     </button>
                   </div>
