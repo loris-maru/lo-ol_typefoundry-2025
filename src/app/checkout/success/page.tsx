@@ -1,11 +1,15 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import type { OrderedFont } from "@/types/order";
 
 export default function CheckoutSuccess() {
   const searchParams = useSearchParams();
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setSessionId(searchParams.get("session_id"));
@@ -32,6 +36,57 @@ export default function CheckoutSuccess() {
     };
     run();
   }, [sessionId]);
+
+  // TODO: Build this array from your cart/order state you persisted pre-checkout
+  const orderedFonts: OrderedFont[] = [
+    // example:
+    // {
+    //   fontID: "fuzar-black",
+    //   fontFamilyID: "fuzar",
+    //   license: "webAndDesktop",
+    //   weight: 900,
+    //   width: null,
+    //   slant: 0,
+    //   opticalSize: null,
+    //   isItalic: false,
+    //   specimen: "specimens/Fuzar.pdf",
+    //   eula: "eulas/LO-OL-EULA.pdf",
+    // },
+  ];
+
+  const handleDownload = useCallback(async () => {
+    if (!sessionId) {
+      setError("Missing Stripe session_id in URL.");
+      return;
+    }
+    if (orderedFonts.length === 0) {
+      setError("No items in the order payload.");
+      return;
+    }
+    setIsLoading(true);
+    setError(null);
+    setDownloadUrl(null);
+
+    try {
+      const res = await fetch("/api/orders/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId, items: orderedFonts }),
+      });
+
+      if (!res.ok) {
+        const msg = await res.text();
+        throw new Error(msg || `Failed with ${res.status}`);
+      }
+
+      const data = await res.json();
+      setDownloadUrl(data.downloadUrl);
+    } catch (e: any) {
+      setError(e?.message || "Something went wrong.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [sessionId, orderedFonts]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50">
@@ -62,8 +117,14 @@ export default function CheckoutSuccess() {
 
         {/* Download Button */}
         <div className="space-y-4">
-          <button className="font-whisper w-full rounded-full bg-black px-8 py-5 text-xl font-semibold text-white transition-colors hover:bg-gray-800">
-            Download your fonts
+          <button
+            type="button"
+            aria-label="Download file"
+            onClick={handleDownload}
+            disabled={isLoading}
+            className="mt-6 rounded-full border border-white px-6 py-3 text-sm font-medium tracking-wider uppercase disabled:opacity-60"
+          >
+            {isLoading ? "Preparing…" : "Download file"}
           </button>
         </div>
       </div>

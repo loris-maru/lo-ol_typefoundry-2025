@@ -1,8 +1,9 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 
 import { motion, useInView } from "motion/react";
+import { Typewriter } from "motion-plus-react";
 
 import { typeface } from "@/types/typefaces";
 import slugify from "@/utils/slugify";
@@ -13,6 +14,24 @@ export default function PlaygroundHeader({ content }: { content: typeface }) {
     amount: 0.7,
     once: false,
   });
+
+  // State to control when Typewriter should start animating
+  const [shouldStartTypewriter, setShouldStartTypewriter] = useState(false);
+
+  // Check if header has entered 80% of the screen
+  const isInView80 = useInView(headerRef, {
+    amount: 0.8,
+    once: false,
+  });
+
+  // Start typewriter when 80% of header is in view
+  useEffect(() => {
+    if (isInView80 && !shouldStartTypewriter) {
+      setShouldStartTypewriter(true);
+    } else if (!isInView80 && shouldStartTypewriter) {
+      setShouldStartTypewriter(false);
+    }
+  }, [isInView80, shouldStartTypewriter]);
 
   return (
     <motion.div
@@ -48,37 +67,33 @@ export default function PlaygroundHeader({ content }: { content: typeface }) {
           style={{
             fontFamily: slugify(content.name),
           }}
-          className="relative h-[28vh] overflow-hidden"
+          className="relative h-[52vh] overflow-hidden"
         >
-          <motion.span
-            className="absolute text-[14vw] leading-[1]"
-            style={{
-              fontVariationSettings: `'wght' 900, 'wdth' 900, 'opsz' 900`,
-            }}
-            initial={{ y: 300 }}
-            animate={{ y: isInView ? 0 : 300 }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-          >
-            Normalize
-          </motion.span>
-        </div>
-        <div
-          style={{
-            fontFamily: slugify(content.name),
-          }}
-          className="relative h-[28vh] overflow-hidden"
-        >
-          <motion.span
-            className="absolute text-[14vw] leading-[1]"
-            style={{
-              fontVariationSettings: `'wght' 900, 'wdth' 900, 'opsz' 900`,
-            }}
-            initial={{ y: 300 }}
-            animate={{ y: isInView ? 0 : 300 }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
-          >
-            Font Spirit
-          </motion.span>
+          {shouldStartTypewriter ? (
+            <Typewriter
+              as="span"
+              className="absolute text-[14vw] leading-[1]"
+              style={{
+                fontVariationSettings: `'wght' 900, 'wdth' 900, 'opsz' 900, 'slnt' 0`,
+              }}
+              cursorStyle={{
+                fontVariationSettings: `'wght' 900, 'wdth' 900, 'opsz' 900`,
+              }}
+            >
+              {`Normalize
+Font Spirit`}
+            </Typewriter>
+          ) : (
+            <span
+              className="absolute text-[14vw] leading-[1]"
+              style={{
+                fontVariationSettings: `'wght' 900, 'wdth' 900, 'opsz' 900, 'slnt' 0`,
+              }}
+            >
+              {`Normalize
+Font Spirit`}
+            </span>
+          )}
         </div>
       </motion.div>
     </motion.div>
