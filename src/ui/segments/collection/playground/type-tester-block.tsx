@@ -8,6 +8,7 @@ import { TypefaceSettings } from "@/types/playground";
 import { typeface } from "@/types/typefaces";
 import SettingButton from "@/ui/segments/collection/playground/setting-button";
 import SettingMenu from "@/ui/segments/collection/playground/setting-menu";
+import SelectionSettingMenu from "@/ui/segments/collection/playground/selection-setting-menu";
 import { cn } from "@/utils/classNames";
 import slugify from "@/utils/slugify";
 
@@ -45,10 +46,38 @@ export default function TypeTesterBlock({
   // EDITABLE CONTENT
   const [editableContent, setEditableContent] = useState(defaultText);
 
+  // TEXT SELECTION
+  const [selection, setSelection] = useState<{
+    start: number;
+    end: number;
+    text: string;
+  } | null>(null);
+  const [selectionPosition, setSelectionPosition] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+  const [storedRange, setStoredRange] = useState<Range | null>(null);
+
+  // SELECTION-SPECIFIC SETTINGS (only used when text is selected)
+  const [selectionWght, setSelectionWght] = useState(defaultWeight);
+  const [selectionWdth, setSelectionWdth] = useState(defaultWidth);
+  const [selectionSlnt, setSelectionSlnt] = useState(defaultSlant);
+  const [selectionOpsz, setSelectionOpsz] = useState(900);
+  const [selectionItalic, setSelectionItalic] = useState(false);
+
+  // BLOCK-LEVEL SETTINGS
+  const [textColor, setTextColor] = useState("#000000");
+  const [backgroundColor, setBackgroundColor] = useState("transparent");
+  const [paddingTop, setPaddingTop] = useState(0);
+  const [paddingRight, setPaddingRight] = useState(0);
+  const [paddingBottom, setPaddingBottom] = useState(0);
+  const [paddingLeft, setPaddingLeft] = useState(0);
+
   // REF
   const editableRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
+  const selectionMenuRef = useRef<HTMLDivElement>(null);
 
   // Calculate min height: 2 lines
   const minHeightPx = Math.max(0, fontSize * lh * 2);
@@ -109,12 +138,83 @@ export default function TypeTesterBlock({
     setEditableContent(newContent);
   };
 
+  const handleSelectionChange = () => {
+    const windowSelection = window.getSelection();
+    if (!windowSelection || windowSelection.rangeCount === 0) {
+      setSelection(null);
+      setSelectionPosition(null);
+      setMenuOpen(false);
+      return;
+    }
+
+    const range = windowSelection.getRangeAt(0);
+    const selectedText = windowSelection.toString().trim();
+
+    if (selectedText.length === 0) {
+      setSelection(null);
+      setSelectionPosition(null);
+      setStoredRange(null);
+      setMenuOpen(false);
+      return;
+    }
+
+    // Get selection position relative to the editable element
+    const rect = range.getBoundingClientRect();
+    const editableRect = editableRef.current?.getBoundingClientRect();
+
+    if (editableRect) {
+      setSelectionPosition({
+        x: rect.left - editableRect.left + rect.width / 2,
+        y: rect.top - editableRect.top + rect.height + 40, // 40px below selection
+      });
+    }
+
+    // Get selection range within the editable content
+    const startOffset = range.startOffset;
+    const endOffset = range.endOffset;
+
+    setSelection({
+      start: startOffset,
+      end: endOffset,
+      text: selectedText,
+    });
+
+    // Store the range for later use
+    const clonedRange = range.cloneRange();
+    setStoredRange(clonedRange);
+    console.log("Stored range:", clonedRange, "Selection:", selectedText);
+
+    // Reset selection-specific settings to current global values
+    setSelectionWght(wght);
+    setSelectionWdth(wdth);
+    setSelectionSlnt(slnt);
+    setSelectionOpsz(opsz);
+    setSelectionItalic(italic);
+
+    console.log("Selection made - setting italic to:", italic);
+
+    // Open menu when text is selected
+    setMenuOpen(true);
+  };
+
   const handleFocus = () => {
     // Handle focus event
   };
 
-  const handleBlur = () => {
-    // Handle blur event
+  const handleBlur = (e: React.FocusEvent<HTMLDivElement>) => {
+    // Check if focus is moving to the selection menu
+    const relatedTarget = e.relatedTarget as HTMLElement;
+    if (selectionMenuRef.current && selectionMenuRef.current.contains(relatedTarget)) {
+      return; // Don't close menu if focus is moving to the selection menu
+    }
+
+    // Close menu when losing focus (with a small delay to allow menu interaction)
+    setTimeout(() => {
+      setMenuOpen(false);
+      setSelection(null);
+      setSelectionPosition(null);
+      setStoredRange(null);
+    }, 150);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -122,6 +222,107 @@ export default function TypeTesterBlock({
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       document.execCommand("insertLineBreak");
+    }
+  };
+
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Check if click is on the selection menu
+    const target = e.target as HTMLElement;
+    if (selectionMenuRef.current && selectionMenuRef.current.contains(target)) {
+      e.preventDefault();
+      return;
+    }
+  };
+
+  const applySettingsToSelection = () => {
+    console.log("applySettingsToSelection called", {
+      selection,
+      storedRange,
+      selectionWght,
+      selectionWdth,
+      selectionSlnt,
+      selectionOpsz,
+      selectionItalic,
+    });
+
+    if (!selection || !editableRef.current) {
+      console.log("No selection or editable ref, returning");
+      return;
+    }
+
+    // Find the selected text in the editable content and wrap it with a span
+    const editableElement = editableRef.current;
+    const textContent = editableElement.textContent || "";
+
+    if (selection.start >= 0 && selection.end <= textContent.length) {
+      // Create a new content with the selected text wrapped in a span
+      const beforeText = textContent.substring(0, selection.start);
+      const selectedText = textContent.substring(selection.start, selection.end);
+      const afterText = textContent.substring(selection.end);
+
+      // Create the span with the current selection settings
+      const span = document.createElement("span");
+
+      // Build fontVariationSettings string with only available axes
+      let fontVariationSettings = `'wght' ${selectionWght}`;
+
+      if (content.has_wdth) {
+        fontVariationSettings += `, 'wdth' ${selectionWdth}`;
+      }
+      if (content.has_slnt) {
+        fontVariationSettings += `, 'slnt' ${selectionSlnt}`;
+      }
+      if (content.has_opsz) {
+        fontVariationSettings += `, 'opsz' ${selectionOpsz}`;
+      }
+
+      span.style.fontVariationSettings = fontVariationSettings;
+
+      // Handle italic - use separate font family for italic
+      if (selectionItalic && content.has_italic) {
+        // Use italic font family
+        span.style.fontFamily = italicFontFamily;
+        span.style.fontStyle = "normal"; // Reset fontStyle since we're using a different font family
+      } else {
+        // Use regular font family
+        span.style.fontFamily = fontFamily;
+        span.style.fontStyle = "normal";
+      }
+      span.textContent = selectedText;
+
+      console.log("Content axes available:", {
+        has_wdth: content.has_wdth,
+        has_slnt: content.has_slnt,
+        has_opsz: content.has_opsz,
+        has_italic: content.has_italic,
+      });
+      console.log("Selection values:", {
+        selectionWght,
+        selectionWdth,
+        selectionSlnt,
+        selectionOpsz,
+        selectionItalic,
+      });
+      console.log("Italic handling:", {
+        selectionItalic,
+        has_italic: content.has_italic,
+        has_slnt: content.has_slnt,
+        fontFamily: selectionItalic && content.has_italic ? italicFontFamily : fontFamily,
+        finalFontStyle: "normal",
+      });
+      console.log(
+        "Created span with styles:",
+        span.style.fontVariationSettings,
+        span.style.fontStyle,
+      );
+      console.log("Text parts:", { beforeText, selectedText, afterText });
+
+      // Update the content
+      editableElement.innerHTML = beforeText + span.outerHTML + afterText;
+
+      console.log("Updated content with styled span");
+    } else {
+      console.log("Selection range is invalid for current content");
     }
   };
 
@@ -138,26 +339,63 @@ export default function TypeTesterBlock({
     }
   };
 
-  const typefaceSettings: TypefaceSettings = {
-    wght: wght,
-    setWght: setWght,
+  // Selection-specific settings (for SelectionSettingMenu)
+  const selectionSettings: TypefaceSettings = {
+    wght: selectionWght,
+    setWght: (value) => {
+      setSelectionWght(value);
+      applySettingsToSelection();
+    },
     has_wdth: content.has_wdth,
-    wdth: wdth,
-    setWdth: setWdth,
+    wdth: selectionWdth,
+    setWdth: (value) => {
+      setSelectionWdth(value);
+      applySettingsToSelection();
+    },
     has_slnt: content.has_slnt,
-    slnt: slnt,
-    setSlnt: setSlant,
+    slnt: selectionSlnt,
+    setSlnt: (value) => {
+      setSelectionSlnt(value);
+      applySettingsToSelection();
+    },
     has_opsz: content.has_opsz,
-    opsz: opsz,
-    setOpsz: setOpsz,
+    opsz: selectionOpsz,
+    setOpsz: (value) => {
+      setSelectionOpsz(value);
+      applySettingsToSelection();
+    },
     has_italic: content.has_italic,
-    italic: italic,
-    setItalic: setItalic,
+    italic: selectionItalic,
+    setItalic: (value) => {
+      setSelectionItalic(value);
+      applySettingsToSelection();
+    },
+    lh: lh, // Not used in selection menu
+    setLh: setLh, // Not used in selection menu
+  };
+
+  // Block-level settings (for SettingMenu)
+  const blockSettings: TypefaceSettings = {
+    wght: wght, // Not used in block menu
+    setWght: setWght, // Not used in block menu
+    has_wdth: content.has_wdth, // Not used in block menu
+    wdth: wdth, // Not used in block menu
+    setWdth: setWdth, // Not used in block menu
+    has_slnt: content.has_slnt, // Not used in block menu
+    slnt: slnt, // Not used in block menu
+    setSlnt: setSlant, // Not used in block menu
+    has_opsz: content.has_opsz, // Not used in block menu
+    opsz: opsz, // Not used in block menu
+    setOpsz: setOpsz, // Not used in block menu
+    has_italic: content.has_italic, // Not used in block menu
+    italic: italic, // Not used in block menu
+    setItalic: setItalic, // Not used in block menu
     lh: lh,
     setLh: setLh,
   };
 
   const fontFamily = slugify(content.name);
+  const italicFontFamily = slugify(`${content.name}Italic`);
 
   // const fontFile = italic ? content.varFont : content.varFont
 
@@ -174,13 +412,22 @@ export default function TypeTesterBlock({
               onFocus={handleFocus}
               onBlur={handleBlur}
               onKeyDown={handleKeyDown}
-              className="w-full cursor-text resize-none overflow-hidden border-0 whitespace-pre-wrap text-black outline-none focus:ring-0"
+              onMouseUp={handleSelectionChange}
+              onKeyUp={handleSelectionChange}
+              onClick={handleClick}
+              className="w-full cursor-text resize-none overflow-hidden border-0 whitespace-pre-wrap outline-none focus:ring-0"
               style={{
                 fontFamily: fontFamily,
                 fontVariationSettings: `'wght' ${wght}, 'wdth' ${wdth}, 'slnt' ${slnt}, 'opsz' ${opsz}`,
                 fontSize: `${fontSize}px`,
                 lineHeight: lh,
                 minHeight: `${minHeightPx}px`,
+                color: textColor,
+                backgroundColor: backgroundColor,
+                paddingTop: `${paddingTop}px`,
+                paddingRight: `${paddingRight}px`,
+                paddingBottom: `${paddingBottom}px`,
+                paddingLeft: `${paddingLeft}px`,
               }}
             >
               {defaultText}
@@ -192,13 +439,48 @@ export default function TypeTesterBlock({
 
         {menuOpen && (
           <motion.div
-            className="absolute top-14 right-4 z-20 w-64"
+            className="absolute z-20 w-64"
+            style={{
+              left: selectionPosition ? `${selectionPosition.x - 128}px` : "right-4",
+              top: selectionPosition ? `${selectionPosition.y}px` : "56px", // 8px below button (48px button height + 8px)
+            }}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.1 }}
           >
-            <SettingMenu settings={typefaceSettings} />
+            {selection ? (
+              <div ref={selectionMenuRef}>
+                <SelectionSettingMenu
+                  settings={selectionSettings}
+                  onClose={() => {
+                    setMenuOpen(false);
+                    setSelection(null);
+                    setSelectionPosition(null);
+                    setStoredRange(null);
+                  }}
+                />
+              </div>
+            ) : (
+              <SettingMenu
+                settings={blockSettings}
+                textColor={textColor}
+                setTextColor={setTextColor}
+                backgroundColor={backgroundColor}
+                setBackgroundColor={setBackgroundColor}
+                paddingTop={paddingTop}
+                setPaddingTop={setPaddingTop}
+                paddingRight={paddingRight}
+                setPaddingRight={setPaddingRight}
+                paddingBottom={paddingBottom}
+                setPaddingBottom={setPaddingBottom}
+                paddingLeft={paddingLeft}
+                setPaddingLeft={setPaddingLeft}
+                onClose={() => {
+                  setMenuOpen(false);
+                }}
+              />
+            )}
           </motion.div>
         )}
       </div>
