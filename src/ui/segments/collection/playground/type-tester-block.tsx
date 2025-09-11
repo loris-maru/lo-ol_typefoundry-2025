@@ -67,7 +67,11 @@ export default function TypeTesterBlock({
 
   // BLOCK-LEVEL SETTINGS
   const [textColor, setTextColor] = useState("#000000");
-  const [backgroundColor, setBackgroundColor] = useState("transparent");
+  const [backgroundColor, setBackgroundColor] = useState("#ffffff");
+  const [backgroundType, setBackgroundType] = useState<"transparent" | "color" | "image">(
+    "transparent",
+  );
+  const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
   const [paddingTop, setPaddingTop] = useState(0);
   const [paddingRight, setPaddingRight] = useState(0);
   const [paddingBottom, setPaddingBottom] = useState(0);
@@ -92,12 +96,17 @@ export default function TypeTesterBlock({
     // Auto-expand height based on content
     el.style.height = "auto";
     el.style.height = `${el.scrollHeight}px`;
-  }, [minHeightPx]);
+  }, [minHeightPx, paddingTop, paddingBottom]);
 
   // Resize when content changes
   useLayoutEffect(() => {
     autosize();
   }, [editableContent, autosize]);
+
+  // Resize when padding changes
+  useLayoutEffect(() => {
+    autosize();
+  }, [paddingTop, paddingBottom, autosize]);
 
   // Resize when typography/axes change
   useLayoutEffect(() => {
@@ -423,7 +432,19 @@ export default function TypeTesterBlock({
                 lineHeight: lh,
                 minHeight: `${minHeightPx}px`,
                 color: textColor,
-                backgroundColor: backgroundColor,
+                backgroundColor:
+                  backgroundType === "transparent"
+                    ? "transparent"
+                    : backgroundType === "color"
+                      ? backgroundColor
+                      : "transparent",
+                backgroundImage:
+                  backgroundType === "image" && backgroundImage
+                    ? `url(${backgroundImage})`
+                    : "none",
+                backgroundSize: backgroundType === "image" ? "cover" : "auto",
+                backgroundPosition: backgroundType === "image" ? "center" : "initial",
+                backgroundRepeat: backgroundType === "image" ? "no-repeat" : "repeat",
                 paddingTop: `${paddingTop}px`,
                 paddingRight: `${paddingRight}px`,
                 paddingBottom: `${paddingBottom}px`,
@@ -468,6 +489,10 @@ export default function TypeTesterBlock({
                 setTextColor={setTextColor}
                 backgroundColor={backgroundColor}
                 setBackgroundColor={setBackgroundColor}
+                backgroundType={backgroundType}
+                setBackgroundType={setBackgroundType}
+                backgroundImage={backgroundImage}
+                setBackgroundImage={setBackgroundImage}
                 paddingTop={paddingTop}
                 setPaddingTop={setPaddingTop}
                 paddingRight={paddingRight}
