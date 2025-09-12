@@ -1,7 +1,14 @@
 import { createClient } from "@sanity/client";
 import Stripe from "stripe";
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+// Use test key for development, fallback to live key
+const stripeKey = process.env.STRIPE_SECRET_KEY_DEV || process.env.STRIPE_SECRET_KEY;
+
+if (!stripeKey) {
+  throw new Error("No Stripe secret key found (STRIPE_SECRET_KEY_DEV or STRIPE_SECRET_KEY)");
+}
+
+export const stripe = new Stripe(stripeKey, {
   apiVersion: "2025-08-27.basil",
 });
 
@@ -14,10 +21,22 @@ export const sanityWrite = createClient({
   ignoreBrowserTokenWarning: true,
 });
 
+console.log("=== SANITY WRITE CLIENT CONFIG ===");
+console.log("Project ID:", process.env.SANITY_PROJECT_ID);
+console.log("Dataset:", process.env.SANITY_DATASET);
+console.log("API Version:", process.env.SANITY_API_VERSION || "2025-01-01");
+console.log("Has Write Token:", !!process.env.SANITY_WRITE_TOKEN);
+
 export async function upsertOrderFromCheckoutSession(sessionId: string) {
+  console.log("=== UPSERT ORDER FROM CHECKOUT SESSION ===");
+  console.log("Session ID:", sessionId);
+
   const session = await stripe.checkout.sessions.retrieve(sessionId, {
     expand: ["line_items.data.price.product"],
   });
+
+  console.log("Session payment status:", session.payment_status);
+  console.log("Session amount total:", session.amount_total);
 
   if (session.payment_status !== "paid") {
     throw new Error("Checkout Session is not paid yet.");
@@ -31,11 +50,17 @@ export async function upsertOrderFromCheckoutSession(sessionId: string) {
     const pmeta = price?.metadata ?? {};
     const prodmeta = (typeof product === "string" ? {} : (product?.metadata ?? {})) ?? {};
 
+    console.log("Stripe metadata for item:", {
+      priceMetadata: pmeta,
+      productMetadata: prodmeta,
+      productName: typeof product === "string" ? product : product?.name,
+    });
+
     const read = (k: string) => (prodmeta as any)[k] ?? (pmeta as any)[k];
 
     return {
       fontId: read("fontId") ?? null,
-      fontFamilyId: read("fontFamilyId") ?? null,
+      fontFamilyId: read("typefaceId") ?? null, // Changed from "fontFamilyId" to "typefaceId"
       licenseType: read("licenseType") ?? null,
       userTier: read("userTier") ?? null,
       qty: li.quantity ?? 1,
@@ -51,6 +76,7 @@ export async function upsertOrderFromCheckoutSession(sessionId: string) {
   const doc = {
     _id: docId,
     _type: "order",
+    _key: `order-${session.id.replace("cs_test_", "").replace("cs_live_", "")}`, // unique key for the order
     stripeSessionId: session.id,
     status: "paid",
     email: session.customer_details?.email || session.customer_email || "",
@@ -62,16 +88,21 @@ export async function upsertOrderFromCheckoutSession(sessionId: string) {
     artifacts: [] as any[],
   };
 
+  console.log("Creating order document:", JSON.stringify(doc, null, 2));
+
   const existingId = await sanityWrite.fetch<string | null>(
     '*[_type == "order" && stripeSessionId == $id][0]._id',
     { id: session.id },
   );
 
   if (existingId) {
+    console.log("Updating existing order:", existingId);
     await sanityWrite.patch(existingId).set(doc).commit();
     return existingId;
   } else {
+    console.log("Creating new order document");
     const created = await sanityWrite.createIfNotExists(doc);
+    console.log("Order created with ID:", created._id);
     return created._id as string;
   }
 }

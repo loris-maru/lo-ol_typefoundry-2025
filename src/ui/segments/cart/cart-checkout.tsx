@@ -1,8 +1,8 @@
 "use client";
 
-import { CartItem, CartPayload } from "@/lib/cart";
 import { LicenseType, UserTier } from "@/lib/pricing";
 import { useCartStore } from "@/states/cart";
+import { CartItem, CartPayload } from "@/lib/cart";
 import { useState } from "react";
 
 interface CartCheckoutProps {
@@ -25,6 +25,18 @@ export default function CartCheckout({ label = "Checkout", className = "" }: Car
     setError(null);
 
     try {
+      console.log("Cart items before transformation:", cart);
+      console.log("Cart length:", cart.length);
+      console.log(
+        "Cart items details:",
+        cart.map((item) => ({
+          _key: item._key,
+          family: item.family,
+          fullName: item.fullName,
+          license: item.license,
+        })),
+      );
+
       // Transform cart data to API format using your pricing types
       const cartItems: CartItem[] = cart.map((item) => {
         // Map license format using your LicenseType
@@ -48,9 +60,36 @@ export default function CartCheckout({ label = "Checkout", className = "" }: Car
           userTier = "21+";
         }
 
+        // Slugify the family name for fontFamilyId
+        console.log(`Processing item:`, {
+          _key: item._key,
+          family: item.family,
+          fullName: item.fullName,
+          license: item.license,
+          allKeys: Object.keys(item),
+        });
+
+        // Try to extract family name from different possible fields
+        let familyName = item.family;
+        if (!familyName && item.fullName) {
+          // Try to extract family name from fullName (e.g., "Banya Mist Regular" -> "Banya Mist")
+          familyName = item.fullName.split(" ").slice(0, -1).join(" ");
+        }
+
+        const fontFamilyId = familyName
+          ? familyName
+              .toLowerCase()
+              .replace(/\s+/g, "-")
+              .replace(/[^a-z0-9-]/g, "")
+          : "unknown-family";
+
+        console.log(
+          `Generated fontFamilyId: ${fontFamilyId} from family: ${familyName} (original: ${item.family})`,
+        );
+
         return {
           fontId: item._key, // Using _key as fontId for now
-          fontFamilyId: item.family, // Using family name as ID for now
+          fontFamilyId, // Slugified family name
           licenseType,
           userTier,
           weight: item.weightValue,
@@ -66,7 +105,20 @@ export default function CartCheckout({ label = "Checkout", className = "" }: Car
         items: cartItems,
       };
 
+      console.log("Transformed cart items:", cartItems);
+      console.log("Cart payload:", cartPayload);
+      console.log(
+        "Cart payload items details:",
+        cartPayload.items.map((item) => ({
+          fontId: item.fontId,
+          fontFamilyId: item.fontFamilyId,
+          licenseType: item.licenseType,
+          userTier: item.userTier,
+        })),
+      );
+
       // Call checkout API
+      console.log("Calling /api/checkout with payload:", cartPayload);
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: {
@@ -75,12 +127,31 @@ export default function CartCheckout({ label = "Checkout", className = "" }: Car
         body: JSON.stringify(cartPayload),
       });
 
+      console.log("Checkout response status:", response.status);
+      console.log("Checkout response headers:", Object.fromEntries(response.headers.entries()));
+
       if (!response.ok) {
-        const errorData = await response.json();
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch (jsonError) {
+          // If response is not JSON, get the text content
+          const errorText = await response.text();
+          console.error("Non-JSON error response:", errorText);
+          throw new Error(`Checkout failed: ${response.status} ${response.statusText}`);
+        }
         throw new Error(errorData.error || "Checkout failed");
       }
 
-      const { id: sessionId, url: checkoutUrl } = await response.json();
+      let checkoutData;
+      try {
+        checkoutData = await response.json();
+      } catch (jsonError) {
+        console.error("Failed to parse checkout response as JSON:", jsonError);
+        throw new Error("Invalid response from checkout server");
+      }
+
+      const { id: sessionId, url: checkoutUrl } = checkoutData;
 
       // Redirect to Stripe Checkout
       if (checkoutUrl) {

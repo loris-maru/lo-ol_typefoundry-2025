@@ -8,7 +8,15 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { z } from "zod";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2025-08-27.basil" });
+// Check if Stripe key is available
+// Use test key for development
+const stripeKey = process.env.STRIPE_SECRET_KEY_DEV || process.env.STRIPE_SECRET_KEY;
+
+if (!stripeKey) {
+  console.error("No Stripe secret key found (STRIPE_SECRET_KEY_DEV or STRIPE_SECRET_KEY)");
+}
+
+const stripe = stripeKey ? new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" }) : null;
 
 type TypefaceRow = {
   _id: string;
@@ -97,6 +105,21 @@ function getFontStyleName(item: any): string {
 export async function POST(req: NextRequest) {
   try {
     console.log("=== CHECKOUT API START ===");
+    console.log("Using Stripe key:", stripeKey?.substring(0, 20) + "...");
+
+    // Check if Stripe is properly configured
+    if (!stripe) {
+      console.error("Stripe is not configured - missing Stripe secret key");
+      return NextResponse.json(
+        {
+          error: "Payment system not configured",
+          details:
+            "Stripe secret key (STRIPE_SECRET_KEY_DEV or STRIPE_SECRET_KEY) is missing. Please contact support.",
+        },
+        { status: 500 },
+      );
+    }
+
     const body = await req.json();
     console.log("Request body:", JSON.stringify(body, null, 2));
 
@@ -173,7 +196,7 @@ export async function POST(req: NextRequest) {
           request_three_d_secure: "automatic",
         },
         paypal: {
-          // PayPal configuration
+          // PayPal configuration for test mode
         },
       },
       metadata: {

@@ -26,7 +26,7 @@ export default function SelectionSettingMenu({
 
   return (
     <div
-      className="absolute right-0 z-30 w-64 rounded-lg border border-black/10 bg-white p-3 shadow-lg"
+      className="absolute right-0 z-[99999] w-64 rounded-lg bg-white p-3 shadow-lg"
       onClick={(e) => e.stopPropagation()}
     >
       {onClose && (
@@ -49,9 +49,6 @@ export default function SelectionSettingMenu({
         </button>
       )}
       <div className="space-y-3 text-sm font-normal">
-        <div className="mb-2 text-xs font-medium tracking-wider text-gray-600 uppercase">
-          Text Selection Settings
-        </div>
         <label className="block">
           <span className="mb-1 block font-sans">Weight ({wght})</span>
           <input

@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
+
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-08-27.basil",
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2025-08-27.basil" });
 
 export async function POST(req: Request) {
   try {
@@ -13,32 +12,20 @@ export async function POST(req: Request) {
       return new NextResponse("Invalid payload", { status: 400 });
     }
 
-    // 1) Verify the Stripe session
-    const session = await stripe.checkout.sessions.retrieve(sessionId, {
-      expand: ["line_items.data.price.product"],
-    });
-
+    // 1) Verify Stripe Checkout Session is paid
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
     if (!session || session.payment_status !== "paid") {
-      return new NextResponse("Session not found or unpaid.", { status: 403 });
+      return new NextResponse("Unpaid or invalid Stripe session", { status: 403 });
     }
 
-    // Optional: validate email, amount_total, or line_items against your cart contents here
-
-    // 2) Forward to the Python worker (FastAPI)
-    const workerUrl = process.env.FONT_WORKER_URL!;
-    const workerSecret = process.env.FONT_WORKER_SECRET!; // shared secret
-
-    const res = await fetch(`${workerUrl}/generate-order`, {
+    // 2) Call Cloud Run worker
+    const res = await fetch(`${process.env.FONT_WORKER_URL}/generate-order`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Worker-Auth": `Bearer ${workerSecret}`,
+        "X-Worker-Auth": `Bearer ${process.env.WORKER_SHARED_SECRET!}`,
       },
-      body: JSON.stringify({
-        orderRef: session.id,
-        customerEmail: session.customer_details?.email ?? null,
-        items,
-      }),
+      body: JSON.stringify({ sessionId, items }),
     });
 
     if (!res.ok) {
@@ -46,11 +33,10 @@ export async function POST(req: Request) {
       return new NextResponse(`Worker error: ${msg}`, { status: 500 });
     }
 
-    const data = await res.json();
-    // data = { downloadUrl: "https://..." }
+    const data = await res.json(); // { downloadUrl }
     return NextResponse.json(data);
-  } catch (err: any) {
-    console.error(err);
+  } catch (e: unknown) {
+    console.error(e);
     return new NextResponse("Server error", { status: 500 });
   }
 }

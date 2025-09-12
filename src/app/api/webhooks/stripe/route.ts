@@ -5,7 +5,14 @@ import Stripe from "stripe";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+// Use test key for development, fallback to live key
+const stripeKey = process.env.STRIPE_SECRET_KEY_DEV || process.env.STRIPE_SECRET_KEY;
+
+if (!stripeKey) {
+  throw new Error("No Stripe secret key found (STRIPE_SECRET_KEY_DEV or STRIPE_SECRET_KEY)");
+}
+
+const stripe = new Stripe(stripeKey, {
   apiVersion: "2025-08-27.basil",
 });
 
