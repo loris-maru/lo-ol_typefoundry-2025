@@ -3,13 +3,5 @@
     "src/app/api/generate-order/route.ts": {
       "maxDuration": 300
     }
-  },
-  "env": {
-    "GOOGLE_CLOUD_PROJECT_ID": "@google-cloud-project-id",
-    "GOOGLE_CLOUD_KEY_FILE": "@google-cloud-key-file",
-    "GCS_FONTS_BUCKET": "@gcs-fonts-bucket",
-    "STRIPE_SECRET_KEY": "@stripe-secret-key",
-    "FONT_WORKER_URL": "@font-worker-url",
-    "WORKER_SHARED_SECRET": "@worker-shared-secret"
   }
 }
