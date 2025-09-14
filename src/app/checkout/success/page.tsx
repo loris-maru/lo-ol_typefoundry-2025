@@ -1,10 +1,10 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, Suspense } from "react";
 import type { OrderedFont } from "@/types/order";
 
-export default function CheckoutSuccess() {
+function CheckoutSuccessContent() {
   const searchParams = useSearchParams();
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -231,5 +231,26 @@ export default function CheckoutSuccess() {
         {orderError && <p className="mt-4 text-red-400">{orderError}</p>}
       </div>
     </div>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <div className="relative flex min-h-screen items-center justify-center bg-gray-50">
+      <div className="relative text-center">
+        <div className="animate-pulse">
+          <div className="mx-auto mb-4 h-24 w-24 rounded-full bg-gray-300"></div>
+          <h1 className="font-whisper text-lg font-medium text-gray-400">Loading...</h1>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function CheckoutSuccess() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <CheckoutSuccessContent />
+    </Suspense>
   );
 }
