@@ -88,7 +88,7 @@ export default function CartCheckout({ label = "Checkout", className = "" }: Car
         );
 
         return {
-          fontId: item._key, // Using _key as fontId for now
+          fontId: item.fontID, // Use the actual filename from Sanity
           fontFamilyId, // Slugified family name
           licenseType,
           userTier,

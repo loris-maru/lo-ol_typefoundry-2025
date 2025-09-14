@@ -30,6 +30,8 @@ export default function TextBlock({ block, onUpdate }: TextBlockProps) {
     setItalic: () => {},
     lh: block.leading,
     setLh: (value: number) => onUpdate(block.id, "leading", value),
+    textAlign: block.textAlign || "left",
+    setTextAlign: (value: "left" | "center" | "right") => onUpdate(block.id, "textAlign", value),
   };
 
   // Get column classes based on block columns
@@ -78,7 +80,7 @@ export default function TextBlock({ block, onUpdate }: TextBlockProps) {
       {/* Settings menu - rendered conditionally */}
       {showMenu && (
         <div className="absolute top-14 right-4 z-20 w-64">
-          <SettingMenu settings={textBlockSettings} />
+          <SettingMenu settings={textBlockSettings} onClose={() => setShowMenu(false)} />
         </div>
       )}
 
@@ -98,6 +100,7 @@ export default function TextBlock({ block, onUpdate }: TextBlockProps) {
                 fontSize: `${block.fontSize}px`,
                 lineHeight: block.leading,
                 fontVariationSettings: `'wght' ${block.weight}, 'wdth' ${block.width}, 'slnt' ${block.slant}`,
+                textAlign: block.textAlign || "left",
               }}
               rows={Math.max(3, Math.ceil(text.length / 50))}
             />

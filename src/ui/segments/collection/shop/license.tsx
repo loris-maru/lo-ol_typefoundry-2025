@@ -17,8 +17,8 @@ export default function License({
       >
         <option value="">Select license</option>
         <option value="web">Web</option>
-        <option value="desktop">Desktop</option>
-        <option value="web-desktop">Web + Desktop</option>
+        <option value="print">Print</option>
+        <option value="web-print">Web + Print</option>
       </select>
     </div>
   );

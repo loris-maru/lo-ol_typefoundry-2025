@@ -1,385 +1,426 @@
-import { NextResponse } from "next/server";
-import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { NextRequest, NextResponse } from "next/server";
 import archiver from "archiver";
-import * as fontkit from "fontkit";
-import sfnt2woff from "sfnt2woff";
-import woff2 from "woff2";
+import Stripe from "stripe";
+import slugify from "@/utils/slugify";
+import { getStorage } from "../../../../lib/gcp/storage";
 
-export const runtime = "nodejs";
+// Type definitions
+export type FontItem = {
+  fontID?: string;
+  fontFamilyId?: string;
+  fontFamilyID?: string; // Handle case variations
+  family?: string;
+  licenseType?: string;
+  license?: string;
+  widthName?: string;
+  weightName?: string;
+  weight?: number;
+  slantName?: string;
+  isItalic?: boolean;
+};
 
-// Cloudflare R2 configuration
-const r2Client = new S3Client({
-  region: "auto",
-  endpoint: "https://0e9fe6c8e5d9d90fd9ab4a7ddaaa19f5.r2.cloudflarestorage.com",
-  credentials: {
-    accessKeyId: "d079cadbc6069fb6d263a762dedc79e8",
-    secretAccessKey: "443fe4f2c129eaf256c01cbbd3c1c876de5fbd5a0fb85aa2299ed012616a4a51",
-  },
-});
+export type PackageItem = {
+  fonts?: FontItem[];
+  [key: string]: unknown;
+};
 
-const R2_ASSETS_BUCKET = process.env.R2_ASSETS_BUCKET!;
-const R2_ORDERS_BUCKET = process.env.R2_ORDERS_BUCKET!;
-const R2_FONTS_BUCKET = "type-families"; // Your variable font source bucket
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2025-08-27.basil" });
 
-interface FontItem {
-  fontFamilyID: string;
-  weight: number;
-  width?: number;
-  slant?: number;
-  opticalSize?: number;
-  isItalic: boolean;
-  license: string;
-  specimen: string;
-  eula: string;
-}
+const GCS_ASSETS_BUCKET = "typefaces-assets_2025";
 
-async function fetchFromR2(bucket: string, key: string): Promise<Buffer> {
-  const command = new GetObjectCommand({
-    Bucket: bucket,
-    Key: key,
-  });
-
-  const response = await r2Client.send(command);
-  const chunks: Uint8Array[] = [];
-
-  if (response.Body) {
-    for await (const chunk of response.Body as any) {
-      chunks.push(chunk);
-    }
-  }
-
-  return Buffer.concat(chunks);
-}
-
-async function uploadToR2(
-  bucket: string,
-  key: string,
-  data: Buffer,
-  contentType: string,
-): Promise<void> {
-  const command = new PutObjectCommand({
-    Bucket: bucket,
-    Key: key,
-    Body: data,
-    ContentType: contentType,
-  });
-
-  await r2Client.send(command);
-}
-
-async function generatePresignedUrl(
-  bucket: string,
-  key: string,
-  expiresIn: number = 7200,
-): Promise<string> {
-  const command = new GetObjectCommand({
-    Bucket: bucket,
-    Key: key,
-  });
-
-  return await getSignedUrl(r2Client, command, { expiresIn });
-}
-
-function getFontFileName(fontFamilyID: string, item: FontItem): string {
-  const tokens = [`${item.weight}w`];
-
-  if (item.width !== undefined) tokens.push(`${item.width}wd`);
-  if (item.slant !== undefined) tokens.push(`${item.slant}sl`);
-  if (item.opticalSize !== undefined) tokens.push(`${item.opticalSize}op`);
-  if (item.isItalic) tokens.push("Italic");
-
-  return `${fontFamilyID}-${tokens.join("-")}`.replace("--", "-");
-}
-
-function getVariableFontKey(fontFamilyID: string, isItalic: boolean): string {
-  // Convert fontFamilyID to uppercase for file naming
-  const familyName = fontFamilyID.toUpperCase().replace(/-/g, "-");
-  return isItalic
-    ? `${fontFamilyID}/${familyName}-Italic-VF.ttf`
-    : `${fontFamilyID}/${familyName}-VF.ttf`;
-}
-
-async function convertToWoff(ttfBuffer: Buffer): Promise<Buffer> {
+export async function POST(req: NextRequest) {
   try {
-    console.log("Converting TTF to WOFF...");
-    const woffBuffer = sfnt2woff(ttfBuffer);
-    console.log(`✅ WOFF conversion successful, size: ${woffBuffer.length} bytes`);
-    return woffBuffer;
-  } catch (error) {
-    console.error("Error converting to WOFF:", error);
-    throw error;
-  }
-}
+    const { sessionId, items, productType } = await req.json();
 
-async function convertToWoff2(ttfBuffer: Buffer): Promise<Buffer> {
-  try {
-    console.log("Converting TTF to WOFF2...");
-    const woff2Buffer = woff2.encode(ttfBuffer);
-    console.log(`✅ WOFF2 conversion successful, size: ${woff2Buffer.length} bytes`);
-    return woff2Buffer;
-  } catch (error) {
-    console.error("Error converting to WOFF2:", error);
-    throw error;
-  }
-}
-
-async function convertToWoff3(ttfBuffer: Buffer): Promise<Buffer> {
-  // WOFF3 is not yet supported by fontkit, so we'll return the TTF as-is for now
-  // In a real implementation, you might need to use a different library or service
-  console.warn("WOFF3 conversion not yet implemented, returning TTF");
-  return ttfBuffer;
-}
-
-async function convertToOtf(ttfBuffer: Buffer): Promise<Buffer> {
-  try {
-    console.log("Converting TTF to OTF...");
-    // For now, we'll return the TTF as OTF since they're very similar
-    // In a real implementation, you might want to use a proper TTF->OTF converter
-    console.log(`✅ OTF conversion successful (using TTF), size: ${ttfBuffer.length} bytes`);
-    return ttfBuffer;
-  } catch (error) {
-    console.error("Error converting to OTF:", error);
-    throw error;
-  }
-}
-
-async function generateFontFormats(
-  variableFontBuffer: Buffer,
-  item: FontItem,
-  fontName: string,
-): Promise<{ ttf: Buffer; woff?: Buffer; woff2?: Buffer; woff3?: Buffer; otf?: Buffer }> {
-  const ttf = variableFontBuffer;
-  const result: { ttf: Buffer; woff?: Buffer; woff2?: Buffer; woff3?: Buffer; otf?: Buffer } = {
-    ttf,
-  };
-
-  console.log(`Generating font formats for ${fontName}, license: ${item.license}`);
-
-  try {
-    // Generate web formats for web licenses (case-insensitive check)
-    const license = item.license?.toLowerCase();
-    if (license === "web" || license === "webanddesktop") {
-      console.log(`Converting ${fontName} to web formats...`);
-      result.woff = await convertToWoff(ttf);
-      result.woff2 = await convertToWoff2(ttf);
-      result.woff3 = await convertToWoff3(ttf);
-      console.log(`✅ Web format conversion completed for ${fontName}`);
-    } else {
-      console.log(`Skipping web format conversion for ${fontName} (license: ${item.license})`);
-    }
-
-    // Generate desktop formats for desktop licenses (case-insensitive check)
-    if (license === "desktop" || license === "webanddesktop") {
-      console.log(`Converting ${fontName} to desktop formats...`);
-      result.otf = await convertToOtf(ttf);
-      console.log(`✅ Desktop format conversion completed for ${fontName}`);
-    } else {
-      console.log(`Skipping desktop format conversion for ${fontName} (license: ${item.license})`);
-    }
-  } catch (error) {
-    console.error(`Error converting font formats for ${fontName}:`, error);
-    // Don't throw, just log the error and continue with TTF only
-  }
-
-  return result;
-}
-
-export async function POST(req: Request) {
-  try {
-    const { orderRef, items }: { orderRef: string; items: FontItem[] } = await req.json();
-
-    console.log("=== GENERATE ORDER API START ===");
-    console.log("Order ref:", orderRef);
+    console.log("=== VERCEL ORDER GENERATION API START ===");
+    console.log("Session ID:", sessionId);
+    console.log("Product Type:", productType);
     console.log("Items:", items);
 
-    if (!orderRef || !Array.isArray(items) || items.length === 0) {
-      return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
+    // Check environment variables
+    console.log("Environment check:");
+    console.log("- STRIPE_SECRET_KEY:", process.env.STRIPE_SECRET_KEY ? "SET" : "MISSING");
+
+    // Test GCS connection
+    try {
+      const storage = getStorage();
+      console.log("- Google Cloud Storage: CONNECTED");
+    } catch (error) {
+      console.log("- Google Cloud Storage: ERROR -", error);
     }
 
-    // Group items by font family
-    const itemsByFamily = items.reduce(
-      (acc, item) => {
-        if (!acc[item.fontFamilyID]) {
-          acc[item.fontFamilyID] = [];
+    if (!sessionId || !Array.isArray(items) || items.length === 0) {
+      return new NextResponse("Invalid payload", { status: 400 });
+    }
+
+    // Validate Stripe session
+    let session;
+    try {
+      session = await stripe.checkout.sessions.retrieve(sessionId);
+    } catch (stripeError: unknown) {
+      console.error("Stripe session retrieval error:", stripeError);
+      if (
+        stripeError &&
+        typeof stripeError === "object" &&
+        "code" in stripeError &&
+        stripeError.code === "resource_missing"
+      ) {
+        const isLiveKey = process.env.STRIPE_SECRET_KEY?.startsWith("sk_live_");
+        const isTestSession = sessionId.startsWith("cs_test_");
+
+        if (isLiveKey && isTestSession) {
+          return new NextResponse(
+            "Cannot use live Stripe key with test session. Please use test key or create live session.",
+            { status: 400 },
+          );
         }
-        acc[item.fontFamilyID].push(item);
-        return acc;
-      },
-      {} as Record<string, FontItem[]>,
-    );
 
-    // Create ZIP file in memory
-    const zipBuffer = await new Promise<Buffer>((resolve, reject) => {
-      const chunks: Buffer[] = [];
-      const archive = archiver("zip", { zlib: { level: 9 } });
+        return new NextResponse("Stripe session not found or expired", { status: 404 });
+      }
+      throw stripeError;
+    }
 
-      archive.on("data", (chunk) => chunks.push(chunk));
-      archive.on("end", () => resolve(Buffer.concat(chunks)));
-      archive.on("error", reject);
+    if (!session || session.payment_status !== "paid") {
+      return new NextResponse("Unpaid or invalid Stripe session", { status: 403 });
+    }
 
-      // Process each font family
-      (async () => {
-        try {
-          for (const [fontFamilyID, familyItems] of Object.entries(itemsByFamily)) {
-            console.log(`Processing family: ${fontFamilyID}`);
+    console.log("Session payment status:", session.payment_status);
+    console.log("Session amount total:", session.amount_total);
 
-            // Add specimen PDF for this family
-            try {
-              // Try specimen in family folder first, then root
-              let specimenKey = `${fontFamilyID}/lo-ol_specimen-${fontFamilyID}.pdf`;
-              console.log(`Looking for specimen: ${specimenKey} in bucket: ${R2_FONTS_BUCKET}`);
-              let specimenBuffer;
-              try {
-                specimenBuffer = await fetchFromR2(R2_FONTS_BUCKET, specimenKey);
-              } catch (error) {
-                // Try root location as fallback
-                specimenKey = `lo-ol_specimen-${fontFamilyID}.pdf`;
-                console.log(`Trying fallback specimen location: ${specimenKey}`);
-                specimenBuffer = await fetchFromR2(R2_FONTS_BUCKET, specimenKey);
-              }
-              archive.append(specimenBuffer, {
-                name: `${fontFamilyID}/${fontFamilyID}-specimen.pdf`,
-              });
-              console.log(`✅ Added specimen for ${fontFamilyID}`);
-            } catch (error) {
-              console.warn(`Could not fetch specimen for ${fontFamilyID}:`, error);
-              // Create a placeholder file instead of failing
-              archive.append("Specimen not available", {
-                name: `${fontFamilyID}/${fontFamilyID}-specimen.txt`,
-              });
-            }
+    // Route to appropriate handler based on product type
+    let downloadUrl: string;
 
-            // Process each font item in this family
-            for (const item of familyItems) {
-              try {
-                const variableFontKey = getVariableFontKey(fontFamilyID, item.isItalic);
-                console.log(`Looking for font: ${variableFontKey} in bucket: ${R2_FONTS_BUCKET}`);
-                const variableFontBuffer = await fetchFromR2(R2_FONTS_BUCKET, variableFontKey);
+    switch (productType) {
+      case "static":
+        downloadUrl = await handleStaticProduct(items, sessionId);
+        break;
+      case "package":
+        downloadUrl = await handlePackageProduct(items, sessionId);
+        break;
+      case "custom":
+        downloadUrl = await handleCustomProduct(sessionId, items);
+        break;
+      default:
+        return new NextResponse("Invalid product type. Must be 'static', 'package', or 'custom'", {
+          status: 400,
+        });
+    }
 
-                const fontName = getFontFileName(fontFamilyID, item);
-                const fontFormats = await generateFontFormats(variableFontBuffer, item, fontName);
-
-                // Add TTF (always included)
-                archive.append(fontFormats.ttf, { name: `${fontFamilyID}/${fontName}.ttf` });
-                console.log(`✅ Added TTF: ${fontName}.ttf`);
-
-                // Add web formats for web licenses (case-insensitive check)
-                const license = item.license?.toLowerCase();
-                if (license === "web" || license === "webanddesktop") {
-                  console.log(`Adding web formats for ${fontName}:`, {
-                    hasWoff: !!fontFormats.woff,
-                    hasWoff2: !!fontFormats.woff2,
-                    hasWoff3: !!fontFormats.woff3,
-                  });
-
-                  if (fontFormats.woff) {
-                    archive.append(fontFormats.woff, { name: `${fontFamilyID}/${fontName}.woff` });
-                    console.log(`✅ Added WOFF: ${fontName}.woff`);
-                  }
-                  if (fontFormats.woff2) {
-                    archive.append(fontFormats.woff2, {
-                      name: `${fontFamilyID}/${fontName}.woff2`,
-                    });
-                    console.log(`✅ Added WOFF2: ${fontName}.woff2`);
-                  }
-                  if (fontFormats.woff3) {
-                    archive.append(fontFormats.woff3, {
-                      name: `${fontFamilyID}/${fontName}.woff3`,
-                    });
-                    console.log(`✅ Added WOFF3: ${fontName}.woff3`);
-                  }
-                }
-
-                // Add desktop formats for desktop licenses (case-insensitive check)
-                if (license === "desktop" || license === "webanddesktop") {
-                  console.log(`Adding desktop formats for ${fontName}:`, {
-                    hasOtf: !!fontFormats.otf,
-                  });
-
-                  if (fontFormats.otf) {
-                    archive.append(fontFormats.otf, { name: `${fontFamilyID}/${fontName}.otf` });
-                    console.log(`✅ Added OTF: ${fontName}.otf`);
-                  }
-                }
-              } catch (error) {
-                console.error(`Error processing font item for ${fontFamilyID}:`, error);
-                // Create a placeholder file instead of failing completely
-                const fontName = getFontFileName(fontFamilyID, item);
-                archive.append("Font file not available", {
-                  name: `${fontFamilyID}/${fontName}-error.txt`,
-                });
-                // Continue with other items even if one fails
-              }
-            }
-          }
-
-          // Add EULA PDF at root level
-          try {
-            // Try different EULA file locations
-            let eulaKey = "lo-ol_EULA.pdf";
-            console.log(`Looking for EULA: ${eulaKey} in bucket: ${R2_FONTS_BUCKET}`);
-            let eulaBuffer;
-            try {
-              eulaBuffer = await fetchFromR2(R2_FONTS_BUCKET, eulaKey);
-            } catch (error) {
-              // Try alternative EULA locations
-              const alternativeEulaKeys = [
-                "EULA.pdf",
-                "eula.pdf",
-                "lo-ol_eula.pdf",
-                "EULA/eula.pdf",
-              ];
-
-              let found = false;
-              for (const altKey of alternativeEulaKeys) {
-                try {
-                  console.log(`Trying alternative EULA location: ${altKey}`);
-                  eulaBuffer = await fetchFromR2(R2_FONTS_BUCKET, altKey);
-                  eulaKey = altKey;
-                  found = true;
-                  break;
-                } catch (e) {
-                  // Continue to next alternative
-                }
-              }
-
-              if (!found) {
-                throw new Error("No EULA file found in any location");
-              }
-            }
-            archive.append(eulaBuffer, { name: "EULA.pdf" });
-            console.log(`✅ Added EULA.pdf from ${eulaKey}`);
-          } catch (error) {
-            console.warn("Could not fetch EULA:", error);
-            // Create a placeholder EULA instead of failing
-            archive.append("EULA not available - please contact support for licensing terms", {
-              name: "EULA.txt",
-            });
-          }
-
-          archive.finalize();
-        } catch (error) {
-          reject(error);
-        }
-      })();
-    });
-
-    // Upload ZIP to R2
-    const zipKey = `orders/lo-ol_type-${orderRef}-${Date.now()}.zip`;
-    await uploadToR2(R2_ORDERS_BUCKET, zipKey, zipBuffer, "application/zip");
-
-    // Generate presigned download URL (2 hours expiry)
-    const downloadUrl = await generatePresignedUrl(R2_ORDERS_BUCKET, zipKey, 7200);
-
-    console.log("ZIP file created and uploaded:", zipKey);
-    console.log("Download URL:", downloadUrl);
-
-    return NextResponse.json({
-      downloadUrl,
-    });
-  } catch (error) {
-    console.error("Generate order error:", error);
-    return NextResponse.json({ error: "Failed to generate order" }, { status: 500 });
+    return NextResponse.json({ downloadUrl });
+  } catch (err) {
+    console.error("Vercel order generation API error:", err);
+    return new NextResponse("Server error", { status: 500 });
   }
+}
+
+async function handleStaticProduct(items: FontItem[], sessionId: string): Promise<string> {
+  console.log("=== HANDLING STATIC PRODUCT ===");
+
+  // Create ZIP file in memory
+  const zipBuffer = await new Promise<Buffer>((resolve, reject) => {
+    const chunks: Buffer[] = [];
+    const archive = archiver("zip", { zlib: { level: 9 } });
+
+    archive.on("data", (chunk) => chunks.push(chunk));
+    archive.on("end", () => resolve(Buffer.concat(chunks)));
+    archive.on("error", reject);
+
+    (async () => {
+      try {
+        // Group items by family
+        const families = new Map<string, FontItem[]>();
+        for (const item of items) {
+          // Handle both fontFamilyId and fontFamilyID (case variations)
+          const familyId = slugify(item.fontFamilyId || (item as any).fontFamilyID || item.family);
+          if (!families.has(familyId)) {
+            families.set(familyId, []);
+          }
+          families.get(familyId)!.push(item);
+        }
+
+        console.log("Processing families:", Array.from(families.keys()));
+
+        // Process each family
+        for (const [familyId, familyItems] of families) {
+          console.log(`Processing family: ${familyId} with ${familyItems.length} items`);
+
+          // Create family folder structure
+          await createFamilyFolder(archive, familyId, familyItems);
+        }
+
+        // Add EULA to root
+        await addEulaToZip(archive);
+
+        archive.finalize();
+      } catch (error) {
+        console.error("Error creating static product ZIP:", error);
+        reject(error);
+      }
+    })();
+  });
+
+  // Upload ZIP to Google Cloud Storage
+  const zipKey = `orders/static-${sessionId}-${Date.now()}.zip`;
+  await uploadToGCS(GCS_ASSETS_BUCKET, zipKey, zipBuffer, "application/zip");
+
+  // Generate signed URL
+  const downloadUrl = await getSignedUrl(GCS_ASSETS_BUCKET, zipKey, 7200);
+
+  console.log("Static product ZIP created:", downloadUrl);
+  return downloadUrl;
+}
+
+async function handlePackageProduct(items: PackageItem[], sessionId: string): Promise<string> {
+  console.log("=== HANDLING PACKAGE PRODUCT ===");
+
+  // For package products, items should contain the package information
+  // and a list of fonts included in the package
+  const packageInfo = items[0]; // Assuming first item contains package info
+  const packageFonts = packageInfo.fonts || []; // List of fonts in the package
+
+  console.log("Package info:", packageInfo);
+  console.log("Package fonts:", packageFonts);
+
+  // Create ZIP file similar to static but using package fonts
+  const zipBuffer = await new Promise<Buffer>((resolve, reject) => {
+    const chunks: Buffer[] = [];
+    const archive = archiver("zip", { zlib: { level: 9 } });
+
+    archive.on("data", (chunk) => chunks.push(chunk));
+    archive.on("end", () => resolve(Buffer.concat(chunks)));
+    archive.on("error", reject);
+
+    (async () => {
+      try {
+        // Group package fonts by family
+        const families = new Map<string, FontItem[]>();
+        for (const font of packageFonts) {
+          const familyId = slugify(font.family || font.fontFamilyId);
+          if (!families.has(familyId)) {
+            families.set(familyId, []);
+          }
+          families.get(familyId)!.push(font);
+        }
+
+        console.log("Processing package families:", Array.from(families.keys()));
+
+        // Process each family
+        for (const [familyId, familyItems] of families) {
+          console.log(`Processing package family: ${familyId} with ${familyItems.length} items`);
+
+          // Create family folder structure
+          await createFamilyFolder(archive, familyId, familyItems);
+        }
+
+        // Add EULA to root
+        await addEulaToZip(archive);
+
+        archive.finalize();
+      } catch (error) {
+        console.error("Error creating package product ZIP:", error);
+        reject(error);
+      }
+    })();
+  });
+
+  // Upload ZIP to Google Cloud Storage
+  const zipKey = `orders/package-${sessionId}-${Date.now()}.zip`;
+  await uploadToGCS(GCS_ASSETS_BUCKET, zipKey, zipBuffer, "application/zip");
+
+  // Generate signed URL
+  const downloadUrl = await getSignedUrl(GCS_ASSETS_BUCKET, zipKey, 7200);
+
+  console.log("Package product ZIP created:", downloadUrl);
+  return downloadUrl;
+}
+
+async function handleCustomProduct(sessionId: string, items: FontItem[]): Promise<string> {
+  console.log("=== HANDLING CUSTOM PRODUCT ===");
+
+  // Call the existing Google Cloud Run API for custom products
+  if (!process.env.FONT_WORKER_URL) {
+    throw new Error("FONT_WORKER_URL environment variable is not set");
+  }
+
+  const res = await fetch(`${process.env.FONT_WORKER_URL}/generate-order`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Worker-Auth": `Bearer ${process.env.WORKER_SHARED_SECRET!}`,
+    },
+    body: JSON.stringify({ sessionId, items }),
+  });
+
+  if (!res.ok) {
+    const msg = await res.text();
+    console.error("Custom product worker error:", msg);
+    throw new Error(`Custom product generation failed: ${msg}`);
+  }
+
+  const data = await res.json();
+  console.log("Custom product generated:", data.downloadUrl);
+  return data.downloadUrl;
+}
+
+async function createFamilyFolder(
+  archive: archiver.Archiver,
+  familyId: string,
+  familyItems: FontItem[],
+) {
+  console.log(`Creating family folder for: ${familyId}`);
+
+  // Add specimen PDF
+  try {
+    const specimenKey = `${familyId}/lo-ol_specimen-${familyId}.pdf`;
+    const specimenBuffer = await downloadFromGCS(GCS_ASSETS_BUCKET, specimenKey);
+    archive.append(specimenBuffer, { name: `${familyId}/specimen.pdf` });
+    console.log(`✅ Added specimen: ${familyId}/specimen.pdf`);
+  } catch (error) {
+    console.warn(`⚠️ Could not find specimen for ${familyId}:`, error);
+    // Add placeholder
+    archive.append("Specimen not available", { name: `${familyId}/specimen.txt` });
+  }
+
+  // Add trial font package
+  try {
+    const trialKey = `${familyId}/lo-ol_${familyId}-trial.zip`;
+    const trialBuffer = await downloadFromGCS(GCS_ASSETS_BUCKET, trialKey);
+    archive.append(trialBuffer, { name: `${familyId}/trial.zip` });
+    console.log(`✅ Added trial package: ${familyId}/trial.zip`);
+  } catch (error) {
+    console.warn(`⚠️ Could not find trial package for ${familyId}:`, error);
+    // Add placeholder
+    archive.append("Trial package not available", { name: `${familyId}/trial.txt` });
+  }
+
+  // Process each font item
+  for (const item of familyItems) {
+    const license = item.licenseType?.toLowerCase() || item.license?.toLowerCase() || "web";
+    const fontName = getFontFileName(familyId, item);
+
+    console.log(`Processing font: ${fontName} with license: ${license}`);
+
+    // Determine which extensions to include based on license
+    // Print licenses get OTF and TTF, Web licenses get WOFF and WOFF2
+    const isPrintLicense = license === "print" || license === "webandprint";
+    const extensions = isPrintLicense ? ["otf", "ttf"] : ["woff", "woff2"];
+
+    // Add each extension
+    for (const ext of extensions) {
+      try {
+        const fontKey = `${familyId}/${ext}/${fontName}.${ext}`;
+        console.log(`Trying to fetch font from assets bucket: ${fontKey}`);
+        const fontBuffer = await downloadFromGCS(GCS_ASSETS_BUCKET, fontKey);
+        archive.append(fontBuffer, { name: `${familyId}/${ext}/${fontName}.${ext}` });
+        console.log(`✅ Added ${ext}: ${familyId}/${ext}/${fontName}.${ext}`);
+      } catch (error) {
+        console.warn(`⚠️ Could not find ${ext} font for ${fontName}:`, error);
+        // Add placeholder
+        archive.append(`Font file not available: ${fontName}.${ext}`, {
+          name: `${familyId}/${ext}/${fontName}-error.txt`,
+        });
+      }
+    }
+  }
+}
+
+async function addEulaToZip(archive: archiver.Archiver) {
+  try {
+    const eulaKey = "lo-ol__EULA.pdf";
+    const eulaBuffer = await downloadFromGCS(GCS_ASSETS_BUCKET, eulaKey);
+    archive.append(eulaBuffer, { name: "EULA.pdf" });
+    console.log("✅ Added EULA.pdf to root");
+  } catch (error) {
+    console.warn("⚠️ Could not find EULA.pdf:", error);
+    // Add placeholder
+    archive.append("EULA not available", { name: "EULA.txt" });
+  }
+}
+
+function getFontFileName(familyId: string, item: FontItem): string {
+  // Use fontID directly if available (exact filename in bucket)
+  if (item.fontID) {
+    return item.fontID;
+  }
+
+  // Fallback to generated name if fontID not provided
+  const parts = [familyId];
+
+  // Map weight numbers to weight names
+  const weightMap: { [key: number]: string } = {
+    100: "thin",
+    200: "extralight",
+    300: "light",
+    400: "regular",
+    500: "medium",
+    600: "semibold",
+    700: "bold",
+    800: "extrabold",
+    900: "black",
+  };
+
+  // Add weight information
+  if (item.weightName) {
+    parts.push(slugify(item.weightName));
+  } else if (item.weight && weightMap[item.weight]) {
+    parts.push(weightMap[item.weight]);
+  }
+
+  // Add width information
+  if (item.widthName && item.widthName !== "Normal") {
+    parts.push(slugify(item.widthName));
+  }
+
+  // Add slant information
+  if (item.slantName && item.slantName !== "Normal") {
+    parts.push(slugify(item.slantName));
+  }
+
+  // Add italic information
+  if (item.isItalic) {
+    parts.push("italic");
+  }
+
+  return parts.join("-");
+}
+
+async function downloadFromGCS(bucket: string, fileName: string): Promise<Buffer> {
+  const storage = getStorage();
+  const file = storage.bucket(bucket).file(fileName);
+
+  try {
+    const [data] = await file.download();
+    return data;
+  } catch (error) {
+    throw new Error(`Failed to download ${bucket}/${fileName}: ${error}`);
+  }
+}
+
+async function uploadToGCS(bucket: string, fileName: string, buffer: Buffer, contentType: string) {
+  const storage = getStorage();
+  const file = storage.bucket(bucket).file(fileName);
+
+  await file.save(buffer, {
+    metadata: {
+      contentType: contentType,
+    },
+  });
+
+  console.log(`Uploaded to GCS: ${bucket}/${fileName}`);
+}
+
+async function getSignedUrl(
+  bucket: string,
+  fileName: string,
+  expiresInSeconds: number,
+): Promise<string> {
+  const storage = getStorage();
+  const file = storage.bucket(bucket).file(fileName);
+
+  const [signedUrl] = await file.getSignedUrl({
+    action: "read",
+    expires: Date.now() + expiresInSeconds * 1000,
+  });
+
+  return signedUrl;
 }

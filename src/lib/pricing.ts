@@ -4,7 +4,7 @@ export type UserTier = "1-4" | "5-10" | "11-20" | "21+";
 export const LICENSE_MULT: Record<LicenseType, number> = {
   Web: 1.0,
   Print: 1.0,
-  Both: 2.5, // Web + Desktop
+  Both: 2.5, // Web + Print
 };
 
 export const USER_TIER_MULT: Record<UserTier, number> = {

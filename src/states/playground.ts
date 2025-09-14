@@ -9,6 +9,7 @@ export interface TextBlock {
   width: number;
   slant: number;
   columns: 1 | 2 | 3;
+  textAlign?: "left" | "center" | "right";
 }
 
 interface PlaygroundState {
@@ -95,6 +96,7 @@ export const usePlaygroundStore = create<PlaygroundState>((set, get) => ({
       width: 100,
       slant: 0,
       columns,
+      textAlign: "left",
     };
 
     set({ activeBlocks: [...activeBlocks, newBlock] });

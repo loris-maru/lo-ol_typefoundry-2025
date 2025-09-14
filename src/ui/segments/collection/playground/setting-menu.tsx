@@ -1,62 +1,35 @@
 import { useCallback, useState } from "react";
+
+import Image from "next/image";
+
 import { useDropzone } from "react-dropzone";
-import { TypefaceSettings } from "@/types/playground";
+import { RiAlignLeft, RiAlignCenter, RiAlignRight } from "react-icons/ri";
+
+import { SettingMenuProps } from "@/types/playground";
 
 export default function SettingMenu({
   settings,
   onClose,
-  textColor,
-  setTextColor,
-  backgroundColor,
-  setBackgroundColor,
-  backgroundType,
-  setBackgroundType,
-  backgroundImage,
-  setBackgroundImage,
-  paddingTop,
-  setPaddingTop,
-  paddingRight,
-  setPaddingRight,
-  paddingBottom,
-  setPaddingBottom,
-  paddingLeft,
-  setPaddingLeft,
-}: {
-  settings: TypefaceSettings;
-  onClose?: () => void;
-  textColor?: string;
-  setTextColor?: (color: string) => void;
-  backgroundColor?: string;
-  setBackgroundColor?: (color: string) => void;
-  backgroundType?: "transparent" | "color" | "image";
-  setBackgroundType?: (type: "transparent" | "color" | "image") => void;
-  backgroundImage?: string | null;
-  setBackgroundImage?: (image: string | null) => void;
-  paddingTop?: number;
-  setPaddingTop?: (value: number) => void;
-  paddingRight?: number;
-  setPaddingRight?: (value: number) => void;
-  paddingBottom?: number;
-  setPaddingBottom?: (value: number) => void;
-  paddingLeft?: number;
-  setPaddingLeft?: (value: number) => void;
-}) {
-  const { lh, setLh } = settings;
+  textStyling,
+  background,
+  padding,
+}: SettingMenuProps) {
+  const { lh, setLh, textAlign, setTextAlign } = settings;
   const [isDragActive, setIsDragActive] = useState(false);
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
-      if (file && setBackgroundImage) {
+      if (file && background?.setBackgroundImage) {
         const reader = new FileReader();
         reader.onload = (e) => {
           const result = e.target?.result as string;
-          setBackgroundImage(result);
+          background.setBackgroundImage!(result);
         };
         reader.readAsDataURL(file);
       }
     },
-    [setBackgroundImage],
+    [background?.setBackgroundImage],
   );
 
   const { getRootProps, getInputProps, isDragReject } = useDropzone({
@@ -71,8 +44,8 @@ export default function SettingMenu({
   });
 
   const handleRemoveImage = () => {
-    if (setBackgroundImage) {
-      setBackgroundImage(null);
+    if (background?.setBackgroundImage) {
+      background.setBackgroundImage(null);
     }
   };
 
@@ -98,9 +71,6 @@ export default function SettingMenu({
         </button>
       )}
       <div className="space-y-3 text-sm font-normal">
-        <div className="mb-2 text-xs font-medium tracking-wider text-gray-600 uppercase">
-          Block Settings
-        </div>
         <label className="block">
           <span className="font-whisper mb-1 block">Line Height ({lh})</span>
           <input
@@ -110,12 +80,54 @@ export default function SettingMenu({
             step={0.1}
             value={lh}
             onChange={(e) => setLh(+e.target.value)}
-            className="w-full"
+            className="custom-slider w-full"
           />
         </label>
 
+        {/* Text Alignment */}
+        {setTextAlign && (
+          <div className="block">
+            <span className="font-whisper mb-2 block">Text Alignment</span>
+            <div className="flex gap-1 rounded-lg border border-gray-300 p-1">
+              <button
+                onClick={() => setTextAlign("left")}
+                className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm transition-colors ${
+                  textAlign === "left"
+                    ? "bg-blue-100 text-blue-700"
+                    : "text-gray-600 hover:bg-gray-100"
+                }`}
+                title="Align Left"
+              >
+                <RiAlignLeft className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setTextAlign("center")}
+                className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm transition-colors ${
+                  textAlign === "center"
+                    ? "bg-blue-100 text-blue-700"
+                    : "text-gray-600 hover:bg-gray-100"
+                }`}
+                title="Align Center"
+              >
+                <RiAlignCenter className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setTextAlign("right")}
+                className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm transition-colors ${
+                  textAlign === "right"
+                    ? "bg-blue-100 text-blue-700"
+                    : "text-gray-600 hover:bg-gray-100"
+                }`}
+                title="Align Right"
+              >
+                <RiAlignRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Background Type Selection */}
-        {setBackgroundType && (
+        {background?.setBackgroundType && (
           <div className="block">
             <span className="font-whisper mb-2 block">Background Type</span>
             <div className="space-y-3 rounded-xl border border-solid border-neutral-300 p-4">
@@ -124,32 +136,33 @@ export default function SettingMenu({
                   type="radio"
                   name="backgroundType"
                   value="transparent"
-                  checked={backgroundType === "transparent"}
-                  onChange={(e) => setBackgroundType(e.target.value as "transparent")}
+                  checked={background?.backgroundType === "transparent"}
+                  onChange={(e) => background?.setBackgroundType?.(e.target.value as "transparent")}
                   className="text-blue-600"
                 />
                 <span className="font-whisper text-sm">Transparent</span>
               </label>
 
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <label className="flex items-center gap-2">
                   <input
                     type="radio"
                     name="backgroundType"
                     value="color"
-                    checked={backgroundType === "color"}
-                    onChange={(e) => setBackgroundType(e.target.value as "color")}
+                    checked={background?.backgroundType === "color"}
+                    onChange={(e) => background?.setBackgroundType?.(e.target.value as "color")}
                     className="text-blue-600"
                   />
                   <span className="font-whisper text-sm">Color</span>
                 </label>
-                {backgroundType === "color" && setBackgroundColor && (
-                  <div className="ml-6">
+                {background?.backgroundType === "color" && background?.setBackgroundColor && (
+                  <div className="flex flex-row items-center justify-between">
+                    <span className="font-whisper block pl-6 text-sm text-gray-500">Select:</span>
                     <input
                       type="color"
-                      value={backgroundColor || "#ffffff"}
-                      onChange={(e) => setBackgroundColor(e.target.value)}
-                      className="h-8 w-full rounded border border-gray-300"
+                      value={background?.backgroundColor || "#ffffff"}
+                      onChange={(e) => background?.setBackgroundColor?.(e.target.value)}
+                      className="h-8 w-12 rounded border border-gray-300"
                     />
                   </div>
                 )}
@@ -161,18 +174,18 @@ export default function SettingMenu({
                     type="radio"
                     name="backgroundType"
                     value="image"
-                    checked={backgroundType === "image"}
-                    onChange={(e) => setBackgroundType(e.target.value as "image")}
+                    checked={background?.backgroundType === "image"}
+                    onChange={(e) => background?.setBackgroundType?.(e.target.value as "image")}
                     className="text-blue-600"
                   />
                   <span className="font-whisper text-sm">Image</span>
                 </label>
-                {backgroundType === "image" && setBackgroundImage && (
+                {background?.backgroundType === "image" && background?.setBackgroundImage && (
                   <div className="ml-6">
-                    {backgroundImage ? (
+                    {background?.backgroundImage ? (
                       <div className="group relative">
-                        <img
-                          src={backgroundImage}
+                        <Image
+                          src={background?.backgroundImage}
                           alt="Background preview"
                           className="h-20 w-full rounded border border-gray-300 object-cover"
                         />
@@ -226,70 +239,74 @@ export default function SettingMenu({
             </div>
           </div>
         )}
-        {setTextColor && (
-          <label className="block">
+        {textStyling?.setTextColor && (
+          <label className="flex flex-row items-center justify-between">
             <span className="font-whisper mb-1 block">Text Color</span>
             <input
               type="color"
-              value={textColor || "#000000"}
-              onChange={(e) => setTextColor(e.target.value)}
-              className="h-8 w-full rounded border border-gray-300"
+              value={textStyling?.textColor || "#000000"}
+              onChange={(e) => textStyling?.setTextColor?.(e.target.value)}
+              className="h-8 w-12 rounded border border-gray-300"
             />
           </label>
         )}
-        {setPaddingTop && (
+        {padding?.setPaddingTop && (
           <label className="block">
-            <span className="font-whisper mb-1 block">Padding Top ({paddingTop}px)</span>
+            <span className="font-whisper mb-1 block">Padding Top ({padding?.paddingTop}px)</span>
             <input
               type="range"
               min={0}
               max={100}
               step={1}
-              value={paddingTop || 0}
-              onChange={(e) => setPaddingTop(+e.target.value)}
-              className="w-full"
+              value={padding?.paddingTop || 0}
+              onChange={(e) => padding?.setPaddingTop?.(+e.target.value)}
+              className="custom-slider w-full"
             />
           </label>
         )}
-        {setPaddingRight && (
+        {padding?.setPaddingRight && (
           <label className="block">
-            <span className="font-whisper mb-1 block">Padding Right ({paddingRight}px)</span>
+            <span className="font-whisper mb-1 block">
+              Padding Right ({padding?.paddingRight}px)
+            </span>
             <input
               type="range"
               min={0}
               max={100}
               step={1}
-              value={paddingRight || 0}
-              onChange={(e) => setPaddingRight(+e.target.value)}
-              className="w-full"
+              value={padding?.paddingRight || 0}
+              onChange={(e) => padding?.setPaddingRight?.(+e.target.value)}
+              className="custom-slider w-full"
             />
           </label>
         )}
-        {setPaddingBottom && (
+        {padding?.setPaddingBottom && (
           <label className="block">
-            <span className="font-whisper mb-1 block">Padding Bottom ({paddingBottom}px)</span>
+            <span className="font-whisper mb-1 block">
+              Padding Bottom ({padding?.paddingBottom}px)
+            </span>
             <input
               type="range"
               min={0}
               max={100}
               step={1}
-              value={paddingBottom || 0}
-              onChange={(e) => setPaddingBottom(+e.target.value)}
-              className="w-full"
+              value={padding?.paddingBottom || 0}
+              onChange={(e) => padding?.setPaddingBottom?.(+e.target.value)}
+              className="custom-slider w-full"
             />
           </label>
         )}
-        {setPaddingLeft && (
+        {padding?.setPaddingLeft && (
           <label className="block">
-            <span className="font-whisper mb-1 block">Padding Left ({paddingLeft}px)</span>
+            <span className="font-whisper mb-1 block">Padding Left ({padding?.paddingLeft}px)</span>
             <input
               type="range"
               min={0}
               max={100}
               step={1}
-              value={paddingLeft || 0}
-              onChange={(e) => setPaddingLeft(+e.target.value)}
-              className="w-full"
+              value={padding?.paddingLeft || 0}
+              onChange={(e) => padding?.setPaddingLeft?.(+e.target.value)}
+              className="custom-slider w-full"
             />
           </label>
         )}

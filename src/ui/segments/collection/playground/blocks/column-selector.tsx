@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+
 import { typeface } from "@/types/typefaces";
 import TypeTesterBlock from "@/ui/segments/collection/playground/type-tester-block";
+
 import ImageColumn from "./image-column";
 
 interface ColumnSelectorProps {

@@ -1,5 +1,6 @@
 import { createClient } from "@sanity/client";
 import Stripe from "stripe";
+import slugify from "@/utils/slugify";
 
 // Use test key for development, fallback to live key
 const stripeKey = process.env.STRIPE_SECRET_KEY_DEV || process.env.STRIPE_SECRET_KEY;
@@ -58,9 +59,12 @@ export async function upsertOrderFromCheckoutSession(sessionId: string) {
 
     const read = (k: string) => (prodmeta as any)[k] ?? (pmeta as any)[k];
 
+    const typefaceId = read("typefaceId") ?? null;
+    const fontId = read("fontId") ?? null;
+
     return {
-      fontId: read("fontId") ?? null,
-      fontFamilyId: read("typefaceId") ?? null, // Changed from "fontFamilyId" to "typefaceId"
+      fontId: fontId,
+      fontFamilyId: typefaceId ? slugify(typefaceId) : null, // Slugify the typeface name
       licenseType: read("licenseType") ?? null,
       userTier: read("userTier") ?? null,
       qty: li.quantity ?? 1,
@@ -228,3 +232,26 @@ export { upsertOrderFromCheckoutSession as createOrderFromSession };
 
 // // Optional compatibility export if other files still import the old name
 // export { upsertOrderFromCheckoutSession as createOrderFromSession };
+
+export async function markOrderFulfilled(orderId: string, downloadUrl: string, expiresAt: string) {
+  try {
+    console.log(`Marking order ${orderId} as fulfilled`);
+
+    const result = await sanityWrite(async (client) => {
+      return await client
+        .patch(orderId)
+        .set({
+          downloadUrl,
+          expiresAt,
+          status: "fulfilled",
+        })
+        .commit();
+    });
+
+    console.log(`Order ${orderId} marked as fulfilled`);
+    return result;
+  } catch (error) {
+    console.error(`Error marking order ${orderId} as fulfilled:`, error);
+    throw error;
+  }
+}

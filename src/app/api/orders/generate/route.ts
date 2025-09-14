@@ -1,80 +1,48 @@
 import { NextResponse } from "next/server";
 
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2025-08-27.basil" });
-
 export async function POST(req: Request) {
   try {
-    const { sessionId, items } = await req.json();
+    const { sessionId, items, productType } = await req.json();
 
     console.log("=== ORDERS GENERATE API START ===");
-    console.log("Using Stripe key:", process.env.STRIPE_SECRET_KEY?.substring(0, 20) + "...");
     console.log("Session ID:", sessionId);
-    console.log("Worker URL:", process.env.FONT_WORKER_URL);
+    console.log("Items:", items);
 
     if (!sessionId || !Array.isArray(items) || items.length === 0) {
       return new NextResponse("Invalid payload", { status: 400 });
     }
 
-    let session;
-    try {
-      session = await stripe.checkout.sessions.retrieve(sessionId);
-    } catch (stripeError: unknown) {
-      console.error("Stripe session retrieval error:", stripeError);
-      if (
-        stripeError &&
-        typeof stripeError === "object" &&
-        "code" in stripeError &&
-        stripeError.code === "resource_missing"
-      ) {
-        const isLiveKey = process.env.STRIPE_SECRET_KEY?.startsWith("sk_live_");
-        const isTestSession = sessionId.startsWith("cs_test_");
+    // All Shop orders use "static" product type (pre-made files from bucket)
+    // Future "Custom Font" section will use "custom" product type
+    const determinedProductType = "static";
 
-        if (isLiveKey && isTestSession) {
-          return new NextResponse(
-            "Cannot use live Stripe key with test session. Please use test key or create live session.",
-            { status: 400 },
-          );
-        }
+    console.log("Determined Product Type:", determinedProductType);
 
-        return new NextResponse("Stripe session not found or expired", { status: 404 });
-      }
-      throw stripeError;
-    }
+    // Call the new Vercel API
+    const vercelApiUrl = process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}/api/generate-order`
+      : "http://localhost:3000/api/generate-order";
 
-    if (!session || session.payment_status !== "paid") {
-      return new NextResponse("Unpaid or invalid Stripe session", { status: 403 });
-    }
+    console.log("Calling Vercel API:", vercelApiUrl);
 
-    console.log("Session payment status:", session.payment_status);
-    console.log("Session amount total:", session.amount_total);
-
-    if (!process.env.FONT_WORKER_URL) {
-      console.error("FONT_WORKER_URL environment variable is not set");
-      return new NextResponse("Font worker URL not configured", { status: 500 });
-    }
-
-    const res = await fetch(`${process.env.FONT_WORKER_URL}/generate-order`, {
+    const res = await fetch(vercelApiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Worker-Auth": `Bearer ${process.env.WORKER_SHARED_SECRET!}`,
       },
-      body: JSON.stringify({ sessionId, items }),
+      body: JSON.stringify({ sessionId, items, productType: determinedProductType }),
     });
 
-    console.log("Worker response status:", res.status);
-    console.log("Worker response headers:", Object.fromEntries(res.headers.entries()));
+    console.log("Vercel API response status:", res.status);
 
     if (!res.ok) {
       const msg = await res.text();
-      console.error("Worker error response:", msg);
-      return new NextResponse(`Worker error: ${msg}`, { status: 500 });
+      console.error("Vercel API error response:", msg);
+      return new NextResponse(`Vercel API error: ${msg}`, { status: 500 });
     }
 
     const data = await res.json(); // { downloadUrl }
-    console.log("Worker response body:", data);
+    console.log("Vercel API response body:", data);
     return NextResponse.json(data);
   } catch (err) {
     console.error("Orders generate API error:", err);

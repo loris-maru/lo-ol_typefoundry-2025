@@ -34,7 +34,6 @@ export default function CartButton() {
   };
 
   const handleCheckout = async () => {
-
     if (cart.length === 0) {
       setError("Your cart is empty");
       return;
@@ -68,7 +67,7 @@ export default function CartButton() {
         }
 
         return {
-          fontId: item._key,
+          fontId: item.fontID, // Use the actual filename from Sanity
           fontFamilyId: item.family, // This might be the issue - using family name instead of ID
           licenseType,
           userTier,
@@ -100,7 +99,6 @@ export default function CartButton() {
       }
 
       const { id: sessionId, url: checkoutUrl } = await response.json();
-
 
       // Redirect to Stripe Checkout
       if (checkoutUrl) {

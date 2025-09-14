@@ -178,3 +178,33 @@ mux-player video {
   border: none;
   cursor: pointer;
 }
+
+/* Custom Slider Styles */
+.custom-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2px;
+  background: #000000;
+  outline: none;
+  border-radius: 1px;
+}
+
+.custom-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #000000;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
+
+.custom-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: #000000;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}

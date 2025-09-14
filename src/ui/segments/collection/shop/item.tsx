@@ -84,14 +84,14 @@ export default function SingleFontItem({
 
     // User count multiplier
     if (users[1] >= 5 && users[1] <= 20) {
-      multiplier *= 1.5;
+      multiplier *= 2;
     } else if (users[1] >= 21 && users[1] <= 100) {
-      multiplier *= 2.5;
+      multiplier *= 3;
     }
 
     // License type multiplier
-    if (license === "desktop & web") {
-      multiplier *= 1.5;
+    if (license === "web-print") {
+      multiplier *= 1.8;
     }
 
     return Math.round(price * multiplier);
@@ -101,6 +101,7 @@ export default function SingleFontItem({
 
   const item = {
     _key: generateCartKey(familyName),
+    fontID: content.fontID.current, // Use the actual filename from Sanity
     fullName: itemFullName(),
     license: license,
     users: users,

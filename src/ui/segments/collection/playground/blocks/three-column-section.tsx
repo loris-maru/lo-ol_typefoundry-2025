@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+
 import { typeface } from "@/types/typefaces";
+
 import ColumnSelector from "./column-selector";
 
 export default function ThreeColumnSection({ content }: { content: typeface }) {

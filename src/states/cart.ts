@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 
 export type SingleCartItem = {
   _key: string;
+  fontID: string; // Add fontID for the actual filename in bucket
   fullName: string;
   license: string;
   users: [number, number];

@@ -51,7 +51,7 @@ export default function PlaygroundHeader({ content }: { content: typeface }) {
         </div>
         <div>
           <p>Release: 2024</p>
-          <p>License: Desktop / Web / App</p>
+          <p>License: Print / Web / App</p>
         </div>
         <div>
           <p>Languages: Latin, Extended</p>

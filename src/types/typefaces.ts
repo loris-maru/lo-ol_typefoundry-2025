@@ -45,6 +45,10 @@ export type muxVideos = {
 export type singleFont = {
   _key: string;
   _type: string;
+  fontFullName: string;
+  fontID: {
+    current: string;
+  };
   weightName: string;
   weightValue: number;
   hasWidth: boolean;

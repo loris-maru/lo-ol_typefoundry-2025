@@ -3,6 +3,7 @@ import { createClient } from "@sanity/client";
 
 const projectId = process.env.SANITY_PROJECT_ID || "kszrpogt";
 const dataset = process.env.SANITY_DATASET || "production";
+const apiVersion = process.env.SANITY_API_VERSION || "2025-01-01";
 
 // Try multiple approaches for fetching data
 export async function sanityFetch<T>(query: string, params?: Record<string, unknown>): Promise<T> {
@@ -13,7 +14,7 @@ export async function sanityFetch<T>(query: string, params?: Record<string, unkn
       client: createClient({
         projectId,
         dataset,
-        apiVersion: "2024-08-01",
+        apiVersion,
         useCdn: false,
         perspective: "published",
       }),
@@ -23,7 +24,7 @@ export async function sanityFetch<T>(query: string, params?: Record<string, unkn
       client: createClient({
         projectId,
         dataset: "production",
-        apiVersion: "2024-08-01",
+        apiVersion,
         useCdn: false,
         perspective: "published",
       }),

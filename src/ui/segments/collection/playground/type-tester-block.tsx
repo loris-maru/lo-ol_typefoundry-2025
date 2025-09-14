@@ -6,9 +6,9 @@ import { motion } from "motion/react";
 
 import { TypefaceSettings } from "@/types/playground";
 import { typeface } from "@/types/typefaces";
+import SelectionSettingMenu from "@/ui/segments/collection/playground/selection-setting-menu";
 import SettingButton from "@/ui/segments/collection/playground/setting-button";
 import SettingMenu from "@/ui/segments/collection/playground/setting-menu";
-import SelectionSettingMenu from "@/ui/segments/collection/playground/selection-setting-menu";
 import { cn } from "@/utils/classNames";
 import slugify from "@/utils/slugify";
 
@@ -42,6 +42,7 @@ export default function TypeTesterBlock({
   const [opsz, setOpsz] = useState<number>(900);
   const [fontSize] = useState(defaultFontSize);
   const [italic, setItalic] = useState<boolean>(false);
+  const [textAlign, setTextAlign] = useState<"left" | "center" | "right">("left");
 
   // EDITABLE CONTENT
   const [editableContent, setEditableContent] = useState(defaultText);
@@ -96,7 +97,7 @@ export default function TypeTesterBlock({
     // Auto-expand height based on content
     el.style.height = "auto";
     el.style.height = `${el.scrollHeight}px`;
-  }, [minHeightPx, paddingTop, paddingBottom]);
+  }, [minHeightPx]);
 
   // Resize when content changes
   useLayoutEffect(() => {
@@ -401,6 +402,8 @@ export default function TypeTesterBlock({
     setItalic: setItalic, // Not used in block menu
     lh: lh,
     setLh: setLh,
+    textAlign: textAlign,
+    setTextAlign: setTextAlign,
   };
 
   const fontFamily = slugify(content.name);
@@ -432,6 +435,7 @@ export default function TypeTesterBlock({
                 lineHeight: lh,
                 minHeight: `${minHeightPx}px`,
                 color: textColor,
+                textAlign: textAlign,
                 backgroundColor:
                   backgroundType === "transparent"
                     ? "transparent"
@@ -474,6 +478,7 @@ export default function TypeTesterBlock({
               <div ref={selectionMenuRef}>
                 <SelectionSettingMenu
                   settings={selectionSettings}
+                  isOpen={menuOpen}
                   onClose={() => {
                     setMenuOpen(false);
                     setSelection(null);
@@ -485,22 +490,28 @@ export default function TypeTesterBlock({
             ) : (
               <SettingMenu
                 settings={blockSettings}
-                textColor={textColor}
-                setTextColor={setTextColor}
-                backgroundColor={backgroundColor}
-                setBackgroundColor={setBackgroundColor}
-                backgroundType={backgroundType}
-                setBackgroundType={setBackgroundType}
-                backgroundImage={backgroundImage}
-                setBackgroundImage={setBackgroundImage}
-                paddingTop={paddingTop}
-                setPaddingTop={setPaddingTop}
-                paddingRight={paddingRight}
-                setPaddingRight={setPaddingRight}
-                paddingBottom={paddingBottom}
-                setPaddingBottom={setPaddingBottom}
-                paddingLeft={paddingLeft}
-                setPaddingLeft={setPaddingLeft}
+                textStyling={{
+                  textColor,
+                  setTextColor,
+                }}
+                background={{
+                  backgroundColor,
+                  setBackgroundColor,
+                  backgroundType,
+                  setBackgroundType,
+                  backgroundImage,
+                  setBackgroundImage,
+                }}
+                padding={{
+                  paddingTop,
+                  setPaddingTop,
+                  paddingRight,
+                  setPaddingRight,
+                  paddingBottom,
+                  setPaddingBottom,
+                  paddingLeft,
+                  setPaddingLeft,
+                }}
                 onClose={() => {
                   setMenuOpen(false);
                 }}

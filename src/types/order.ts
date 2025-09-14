@@ -1,4 +1,4 @@
-export type LicenseType = "web" | "desktop" | "webAndDesktop";
+export type LicenseType = "web" | "print" | "webAndPrint";
 
 export type OrderedFont = {
   fontID: string;

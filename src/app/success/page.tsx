@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 
 import { useSearchParams } from "next/navigation";
 
-type LicenseType = "Web" | "Desktop" | "WebAndDesktop";
+type LicenseType = "Web" | "Print" | "WebAndPrint";
 type OrderedFont = {
   fontID: string;
   fontFamilyID: string;
