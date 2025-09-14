@@ -30,11 +30,17 @@ export default function VideoHero({
   });
 
   // Add fallback values and ensure transforms work in production
-  const width = useTransform(scrollYProgress, [0, 0.3, 0.6], ["100vw", "20vw", "16vw"]);
+  const width = useTransform(scrollYProgress, [0, 0.3, 0.6], ["100vw", "20vw", "16vw"], {
+    clamp: false,
+  });
 
-  const borderRadius = useTransform(scrollYProgress, [0, 0.3, 0.6], [0, 8, 14]);
+  const borderRadius = useTransform(scrollYProgress, [0, 0.3, 0.6], [0, 8, 14], {
+    clamp: false,
+  });
 
-  const height = useTransform(scrollYProgress, [0, 0.3, 0.6], ["100vh", "100vh", "40vh"]);
+  const height = useTransform(scrollYProgress, [0, 0.3, 0.6], ["100vh", "100vh", "40vh"], {
+    clamp: false,
+  });
   const scale = useTransform(scrollYProgress, [0.6, 0.9, 1], [1, 0.3, 0.1]);
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 1]);
 
@@ -60,12 +66,23 @@ export default function VideoHero({
   }
 
   if (!fontLoaded) {
-    return <div>Loading Font</div>;
+    return (
+      <section className="relative h-[260vh]">
+        <div className="pointer-events-none fixed inset-0 z-0 flex h-full w-full items-center justify-center">
+          <div className="relative h-screen w-screen overflow-hidden bg-black shadow-2xl">
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+              <div className="text-[32vw] leading-[0.9] text-white">Loading...</div>
+            </div>
+          </div>
+        </div>
+        <div className="h-[260vh]" />
+      </section>
+    );
   }
 
   return (
     <section ref={wrapperRef} className="relative h-[260vh]">
-      <div className="pointer-events-none fixed inset-0 z-0 flex items-center justify-center">
+      <div className="pointer-events-none fixed inset-0 z-0 flex h-full w-full items-center justify-center">
         {/* Background title behind the video */}
         <div className="pointer-events-none fixed inset-0 z-[-1] flex items-center justify-center">
           <div
@@ -94,7 +111,12 @@ export default function VideoHero({
         <motion.div
           style={{ width, height, scale, opacity, borderRadius }}
           className="relative overflow-hidden shadow-2xl will-change-transform"
-          initial={{ scale: 1, width: "100vw", height: "100vh" }}
+          initial={{
+            scale: 1,
+            width: "100vw",
+            height: "100vh",
+            borderRadius: 0,
+          }}
         >
           <motion.div
             className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center text-center"

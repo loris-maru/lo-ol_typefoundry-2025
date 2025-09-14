@@ -8,6 +8,15 @@ import Footer from "@/ui/segments/global/footer";
 export default async function Page({ params }: PageProps) {
   try {
     const { slug } = await params;
+
+    // Debug logging
+    console.log("Collection page params:", { slug });
+
+    if (!slug || slug === "null") {
+      console.error("Invalid slug received:", slug);
+      notFound();
+    }
+
     const typeface = await getTypefaceBySlug(slug);
     const allTypefaces = await getAllTypefaces();
 

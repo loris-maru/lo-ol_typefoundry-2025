@@ -19,6 +19,15 @@ export default async function RootLayout({
 }) {
   try {
     const { slug } = await params;
+
+    // Debug logging
+    console.log("Collection layout params:", { slug });
+
+    if (!slug || slug === "null") {
+      console.error("Invalid slug received in layout:", slug);
+      notFound();
+    }
+
     const typeface = await getTypefaceBySlug(slug);
     const allTypefaces = await getAllTypefaces();
 

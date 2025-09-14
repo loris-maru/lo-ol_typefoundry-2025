@@ -54,12 +54,37 @@ export default function CharacterSetPanel({ content }: { content: typeface }) {
 
   useEffect(() => {
     async function fetchCharSet() {
-      const response = await fetch(content.characterSetJSON);
-      const data = await response.json();
-      setLatinCharacterSet(data);
+      try {
+        if (!content.characterSetJSON) {
+          console.warn("No characterSetJSON URL provided");
+          return;
+        }
+
+        const response = await fetch(content.characterSetJSON);
+
+        if (!response.ok) {
+          throw new Error(
+            `Failed to fetch character set: ${response.status} ${response.statusText}`,
+          );
+        }
+
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          const text = await response.text();
+          console.error("Expected JSON but got:", contentType, text.substring(0, 200));
+          throw new Error("Response is not JSON");
+        }
+
+        const data = await response.json();
+        setLatinCharacterSet(data);
+      } catch (error) {
+        console.error("Error fetching character set:", error);
+        // Set empty character set as fallback
+        setLatinCharacterSet([]);
+      }
     }
 
-    fetchCharSet().catch(console.error);
+    fetchCharSet();
   }, [content.characterSetJSON]);
 
   return (

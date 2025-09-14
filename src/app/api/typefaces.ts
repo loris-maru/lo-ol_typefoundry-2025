@@ -16,18 +16,24 @@ export async function getAllTypefaces(): Promise<typeface[]> {
 
 export async function getTypefaceBySlug(slug: string): Promise<typeface | null> {
   try {
+    // Validate slug
+    if (!slug || slug === "null" || slug === "undefined") {
+      console.error("Invalid slug provided to getTypefaceBySlug:", slug);
+      return null;
+    }
+
     // Build proper query by replacing the array selector with single item filter
     const query = typefaces.replace(
       '*[_type == "typefaces"][]',
-      '*[_type == "typefaces" && slug.current == $slug][0]'
+      '*[_type == "typefaces" && slug.current == $slug][0]',
     );
 
     console.log(`Fetching typeface with slug: ${slug}`);
     console.log(`Using query: ${query}`);
-    
+
     const result = await sanityFetch<typeface>(query, { slug });
-    console.log(`Query result for ${slug}:`, result ? 'Found' : 'Not found');
-    
+    console.log(`Query result for ${slug}:`, result ? "Found" : "Not found");
+
     return result || null;
   } catch (error) {
     console.error(`Error in getTypefaceBySlug for slug ${slug}:`, error);
@@ -42,10 +48,10 @@ export async function getFeaturedTypefaces(limit: number = 6): Promise<typeface[
       "",
     )}`;
     console.log(`Fetching featured typefaces with limit: ${limit}`);
-    
+
     const result = await sanityFetchAll<typeface>(query);
     console.log(`Found ${result.length} featured typefaces`);
-    
+
     return result;
   } catch (error) {
     console.error("Error fetching featured typefaces:", error);

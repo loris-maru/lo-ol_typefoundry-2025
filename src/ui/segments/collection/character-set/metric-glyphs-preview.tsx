@@ -13,6 +13,11 @@ const loadOpentype = () => {
 async function loadFontMetrics(fontUrl: string, char: string, fontSizePx: number) {
   // Check if the font is WOFF2
   const response = await fetch(fontUrl);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch font: ${response.status} ${response.statusText}`);
+  }
+
   const buffer = await response.arrayBuffer();
   const view = new Uint8Array(buffer);
   const isWoff2 = view[0] === 0x77 && view[1] === 0x4f && view[2] === 0x46 && view[3] === 0x32; // "wOF2"
@@ -23,7 +28,6 @@ async function loadFontMetrics(fontUrl: string, char: string, fontSizePx: number
     await fontFace.load();
     document.fonts.add(fontFace);
 
-
     // Create a temporary element to measure the font
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d")!;
@@ -32,7 +36,6 @@ async function loadFontMetrics(fontUrl: string, char: string, fontSizePx: number
     const metrics = ctx.measureText(char);
     const ascent = metrics.actualBoundingBoxAscent || 0;
     const descent = metrics.actualBoundingBoxDescent || 0;
-
 
     // Don't clean up immediately - keep the font loaded for rendering
     // document.fonts.delete(fontFace);
@@ -125,6 +128,13 @@ export default function MetricGlyphPreview({
         // For WOFF2, we'll create a simple SVG path representation
         // For TTF/OTF, we'll use the opentype.js path generation
         const response = await fetch(fontUrl);
+
+        if (!response.ok) {
+          throw new Error(
+            `Failed to fetch font for path generation: ${response.status} ${response.statusText}`,
+          );
+        }
+
         const buffer = await response.arrayBuffer();
         const view = new Uint8Array(buffer);
         const isWoff2 =
