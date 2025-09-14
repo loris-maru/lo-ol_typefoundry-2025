@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
     );
     console.log(
       "Orders with stripeSessionId:",
-      ordersWithSessionId.map((o) => ({ id: o._id, sessionId: o.stripeSessionId })),
+      ordersWithSessionId.map((o: any) => ({ id: o._id, sessionId: o.stripeSessionId })),
     );
 
     if (!order) {
