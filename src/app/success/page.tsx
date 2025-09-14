@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, Suspense } from "react";
 
 import { useSearchParams } from "next/navigation";
 
@@ -18,7 +18,7 @@ type OrderedFont = {
   eula: string; // can be ""
 };
 
-export default function SuccessPage() {
+function SuccessPageContent() {
   const sp = useSearchParams();
   const sessionId = sp.get("session_id"); // from Stripe redirect
   const [isLoading, setIsLoading] = useState(false);
@@ -97,5 +97,24 @@ export default function SuccessPage() {
 
       {error && <p className="mt-4 text-red-400">{error}</p>}
     </main>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <main className="mx-auto max-w-2xl px-6 py-16">
+      <h1 className="text-3xl font-bold">Loading...</h1>
+      <div className="mt-2 animate-pulse">
+        <div className="h-4 w-64 bg-gray-300 rounded"></div>
+      </div>
+    </main>
+  );
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <SuccessPageContent />
+    </Suspense>
   );
 }
