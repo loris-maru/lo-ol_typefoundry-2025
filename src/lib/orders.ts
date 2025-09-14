@@ -237,16 +237,14 @@ export async function markOrderFulfilled(orderId: string, downloadUrl: string, e
   try {
     console.log(`Marking order ${orderId} as fulfilled`);
 
-    const result = await sanityWrite(async (client) => {
-      return await client
-        .patch(orderId)
-        .set({
-          downloadUrl,
-          expiresAt,
-          status: "fulfilled",
-        })
-        .commit();
-    });
+    const result = await sanityWrite
+      .patch(orderId)
+      .set({
+        downloadUrl,
+        expiresAt,
+        status: "fulfilled",
+      })
+      .commit();
 
     console.log(`Order ${orderId} marked as fulfilled`);
     return result;
