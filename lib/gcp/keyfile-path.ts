@@ -2,7 +2,7 @@ import "server-only";
 import fs from "node:fs";
 import path from "node:path";
 
-import { env } from "@/lib/env";
+import { env } from "../env";
 
 let realizedPath: string | null = null;
 
