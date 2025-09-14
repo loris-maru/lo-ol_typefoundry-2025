@@ -10,6 +10,9 @@ export function getTempKeyfilePath(): string {
   if (realizedPath) return realizedPath;
   const p = path.join("/tmp", "gcp-key.json");
   if (!fs.existsSync(p)) {
+    if (!env.GOOGLE_SERVICE_ACCOUNT_JSON) {
+      throw new Error("GOOGLE_SERVICE_ACCOUNT_JSON environment variable is not set");
+    }
     fs.writeFileSync(p, env.GOOGLE_SERVICE_ACCOUNT_JSON, { encoding: "utf8", mode: 0o600 });
   }
   realizedPath = p;
