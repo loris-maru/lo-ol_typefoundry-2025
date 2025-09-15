@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 
-import { motion, useInView } from "motion/react";
+import { motion, useInView, AnimatePresence } from "motion/react";
 import { Typewriter } from "motion-plus-react";
 
 import { typeface } from "@/types/typefaces";
@@ -10,13 +10,16 @@ import slugify from "@/utils/slugify";
 
 export default function PlaygroundHeader({ content }: { content: typeface }) {
   const headerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(headerRef, {
-    amount: 0.7,
-    once: false,
-  });
+  // Removed unused isInView variable
 
-  // State to control when Typewriter should start animating
+  // State to control typewriter animation
   const [shouldStartTypewriter, setShouldStartTypewriter] = useState(false);
+  const [isReversing, setIsReversing] = useState(false);
+  const [showText, setShowText] = useState(false);
+  const [displayText, setDisplayText] = useState("");
+
+  const fullText = `Normalize
+Font Spirit`;
 
   // Check if header has entered 80% of the screen
   const isInView80 = useInView(headerRef, {
@@ -24,14 +27,35 @@ export default function PlaygroundHeader({ content }: { content: typeface }) {
     once: false,
   });
 
-  // Start typewriter when 80% of header is in view
+  // Reverse typewriter effect
+  const reverseTypewriter = useCallback(() => {
+    let currentText = fullText;
+    const interval = setInterval(() => {
+      if (currentText.length > 0) {
+        currentText = currentText.slice(0, -1);
+        setDisplayText(currentText);
+      } else {
+        clearInterval(interval);
+        setShowText(false);
+        setShouldStartTypewriter(false);
+        setIsReversing(false);
+        setDisplayText("");
+      }
+    }, 50); // Adjust speed as needed
+  }, [fullText]);
+
+  // Handle typewriter animation states
   useEffect(() => {
     if (isInView80 && !shouldStartTypewriter) {
       setShouldStartTypewriter(true);
+      setIsReversing(false);
+      setShowText(true);
     } else if (!isInView80 && shouldStartTypewriter) {
-      setShouldStartTypewriter(false);
+      setIsReversing(true);
+      // Start reverse animation
+      reverseTypewriter();
     }
-  }, [isInView80, shouldStartTypewriter]);
+  }, [isInView80, shouldStartTypewriter, reverseTypewriter]);
 
   return (
     <motion.div
@@ -67,33 +91,45 @@ export default function PlaygroundHeader({ content }: { content: typeface }) {
           style={{
             fontFamily: slugify(content.name),
           }}
-          className="relative h-[52vh] overflow-hidden"
+          className="relative h-[500px] overflow-hidden"
         >
-          {shouldStartTypewriter ? (
-            <Typewriter
-              as="span"
-              className="absolute text-[14vw] leading-[1]"
-              style={{
-                fontVariationSettings: `'wght' 900, 'wdth' 900, 'opsz' 900, 'slnt' 0`,
-              }}
-              cursorStyle={{
-                fontVariationSettings: `'wght' 900, 'wdth' 900, 'opsz' 900`,
-              }}
-            >
-              {`Normalize
-Font Spirit`}
-            </Typewriter>
-          ) : (
-            <span
-              className="absolute text-[14vw] leading-[1]"
-              style={{
-                fontVariationSettings: `'wght' 900, 'wdth' 900, 'opsz' 900, 'slnt' 0`,
-              }}
-            >
-              {`Normalize
-Font Spirit`}
-            </span>
-          )}
+          <AnimatePresence mode="wait">
+            {showText && (
+              <motion.span
+                key="typewriter-text"
+                className="absolute text-[14vw] leading-[1]"
+                style={{
+                  fontVariationSettings: `'wght' 900, 'wdth' 900, 'opsz' 900, 'slnt' 0`,
+                }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                {shouldStartTypewriter && !isReversing ? (
+                  <Typewriter
+                    as="span"
+                    className="block"
+                    style={{
+                      fontVariationSettings: `'wght' 900, 'wdth' 900, 'opsz' 900, 'slnt' 0`,
+                    }}
+                    cursorStyle={{
+                      fontVariationSettings: `'wght' 900, 'wdth' 900, 'opsz' 900`,
+                    }}
+                  >
+                    {fullText}
+                  </Typewriter>
+                ) : isReversing ? (
+                  <span className="block">
+                    {displayText}
+                    <span className="animate-pulse">|</span>
+                  </span>
+                ) : (
+                  <span className="block opacity-0">{fullText}</span>
+                )}
+              </motion.span>
+            )}
+          </AnimatePresence>
         </div>
       </motion.div>
     </motion.div>

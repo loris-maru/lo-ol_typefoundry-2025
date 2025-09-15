@@ -7,9 +7,9 @@ import { motion, useScroll, useTransform } from "motion/react";
 import { typeface } from "@/types/typefaces";
 import AddBlock from "@/ui/segments/collection/playground/blocks/add-block";
 import OneColumnSection from "@/ui/segments/collection/playground/blocks/one-column-section";
+import SectionPlaceholder from "@/ui/segments/collection/playground/blocks/section-placeholder";
 import ThreeColumnSection from "@/ui/segments/collection/playground/blocks/three-column-section";
 import TwoColumnSection from "@/ui/segments/collection/playground/blocks/two-column-section";
-import SectionPlaceholder from "@/ui/segments/collection/playground/blocks/section-placeholder";
 import PlaygroundHeader from "@/ui/segments/collection/playground/header";
 
 export default function Playground({ content }: { content: typeface }) {

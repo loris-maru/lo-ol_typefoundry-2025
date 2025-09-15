@@ -25,13 +25,13 @@ importers:
         version: 7.17.1
       '@heroicons/react':
         specifier: ^2.2.0
-        version: 2.2.0(react@19.1.1)
+        version: 2.2.0(react@18.3.1)
       '@mux/mux-player-react':
         specifier: ^3.5.3
-        version: 3.6.0(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        version: 3.6.0(@types/react-dom@18.3.7(@types/react@18.3.24))(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@react-hooks-library/core':
         specifier: ^0.6.2
-        version: 0.6.2(react@19.1.1)
+        version: 0.6.2(react@18.3.1)
       '@sanity/client':
         specifier: ^7.10.0
         version: 7.11.1
@@ -55,16 +55,16 @@ importers:
         version: 6.8.6
       motion:
         specifier: ^12.23.12
-        version: 12.23.12(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        version: 12.23.12(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       motion-plus:
         specifier: ^1.5.1
-        version: 1.5.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        version: 1.5.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       motion-plus-react:
         specifier: ^1.5.1
-        version: 1.5.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        version: 1.5.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next:
         specifier: 15.5.2
-        version: 15.5.2(@opentelemetry/api@1.9.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        version: 15.5.2(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       opentype.js:
         specifier: ^1.3.4
         version: 1.3.4
@@ -72,20 +72,20 @@ importers:
         specifier: ^8.5.6
         version: 8.5.6
       react:
-        specifier: 19.1.1
-        version: 19.1.1
+        specifier: 18.3.1
+        version: 18.3.1
       react-dom:
-        specifier: 19.1.1
-        version: 19.1.1(react@19.1.1)
+        specifier: 18.3.1
+        version: 18.3.1(react@18.3.1)
       react-dropzone:
         specifier: ^14.3.8
-        version: 14.3.8(react@19.1.1)
+        version: 14.3.8(react@18.3.1)
       react-icons:
         specifier: ^5.5.0
-        version: 5.5.0(react@19.1.1)
+        version: 5.5.0(react@18.3.1)
       react-spinners:
         specifier: ^0.17.0
-        version: 0.17.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        version: 0.17.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       server-only:
         specifier: ^0.0.1
         version: 0.0.1
@@ -97,13 +97,13 @@ importers:
         version: 18.5.0(@types/node@24.3.1)
       swr:
         specifier: ^2.3.6
-        version: 2.3.6(react@19.1.1)
+        version: 2.3.6(react@18.3.1)
       tailwind-merge:
         specifier: ^3.3.1
         version: 3.3.1
       usehooks-ts:
         specifier: ^3.1.1
-        version: 3.1.1(react@19.1.1)
+        version: 3.1.1(react@18.3.1)
       woff2:
         specifier: ^1.0.0
         version: 1.0.0
@@ -112,7 +112,7 @@ importers:
         version: 4.1.5
       zustand:
         specifier: ^5.0.8
-        version: 5.0.8(@types/react@19.1.12)(react@19.1.1)(use-sync-external-store@1.5.0(react@19.1.1))
+        version: 5.0.8(@types/react@18.3.24)(react@18.3.1)(use-sync-external-store@1.5.0(react@18.3.1))
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3
@@ -130,11 +130,11 @@ importers:
         specifier: ^1.3.8
         version: 1.3.8
       '@types/react':
-        specifier: ^19
-        version: 19.1.12
+        specifier: ^18.3.24
+        version: 18.3.24
       '@types/react-dom':
-        specifier: ^19
-        version: 19.1.9(@types/react@19.1.12)
+        specifier: ^18.3.7
+        version: 18.3.7(@types/react@18.3.24)
       '@types/vimeo__player':
         specifier: ^2.18.3
         version: 2.18.3
@@ -1201,13 +1201,16 @@ packages:
   '@types/parse-json@4.0.2':
     resolution: {integrity: sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==}
 
-  '@types/react-dom@19.1.9':
-    resolution: {integrity: sha512-qXRuZaOsAdXKFyOhRBg6Lqqc0yay13vN7KrIg4L7N4aaHN68ma9OK3NE1BoDFgFOTfM7zg+3/8+2n8rLUH3OKQ==}
-    peerDependencies:
-      '@types/react': ^19.0.0
+  '@types/prop-types@15.7.15':
+    resolution: {integrity: sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==}
 
-  '@types/react@19.1.12':
-    resolution: {integrity: sha512-cMoR+FoAf/Jyq6+Df2/Z41jISvGZZ2eTlnsaJRptmZ76Caldwy1odD4xTr/gNV9VLj0AWgg/nmkevIyUfIIq5w==}
+  '@types/react-dom@18.3.7':
+    resolution: {integrity: sha512-MEe3UeoENYVFXzoXEWsvcpg6ZvlrFNlOQ7EOsvhI3CfAXwzPfO8Qwuxd40nepsYKqyyVQnTdEfv68q91yLcKrQ==}
+    peerDependencies:
+      '@types/react': ^18.0.0
+
+  '@types/react@18.3.24':
+    resolution: {integrity: sha512-0dLEBsA1kI3OezMBF8nSsb7Nk19ZnsyE1LLhB8r27KbgU5H4pvuqZLdtE+aUkJVoXgTVuA+iLIwmZ0TuK4tx6A==}
 
   '@types/readdir-glob@1.1.5':
     resolution: {integrity: sha512-raiuEPUYqXu+nvtY2Pe8s8FEmZ3x5yAH4VkLdihcPdalvsHltomrRC9BzuStrJ9yk06470hS0Crw0f1pXqD+Hg==}
@@ -3285,10 +3288,10 @@ packages:
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
-  react-dom@19.1.1:
-    resolution: {integrity: sha512-Dlq/5LAZgF0Gaz6yiqZCf6VCcZs1ghAJyrsu84Q/GT0gV+mCxbfmKNoGRKBYMJ8IEdGPqu49YWXD02GCknEDkw==}
+  react-dom@18.3.1:
+    resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
     peerDependencies:
-      react: ^19.1.1
+      react: ^18.3.1
 
   react-dropzone@14.3.8:
     resolution: {integrity: sha512-sBgODnq+lcA4P296DY4wacOZz3JFpD99fp+hb//iBO2HHnyeZU3FwWyXJ6salNpqQdsZrgMrotuko/BdJMV8Ug==}
@@ -3310,8 +3313,8 @@ packages:
       react: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  react@19.1.1:
-    resolution: {integrity: sha512-w8nqGImo45dmMIfljjMwOGtbmC/mk4CMYhWIicdSflH91J9TyCyczcPFXJzrZ/ZXcgGRFeP6BU0BEJTw6tZdfQ==}
+  react@18.3.1:
+    resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
     engines: {node: '>=0.10.0'}
 
   read-pkg-up@7.0.1:
@@ -3431,8 +3434,8 @@ packages:
     resolution: {integrity: sha512-x/+Cz4YrimQxQccJf5mKEbIa1NzeCRNI5Ecl/ekmlYaampdNLPalVyIcCZNNH3MvmqBugV5TMYZXv0ljslUlaw==}
     engines: {node: '>= 0.4'}
 
-  scheduler@0.26.0:
-    resolution: {integrity: sha512-NlHwttCI/l5gCPR3D1nNXtWABUmBwvZpEQiD4IXSbIDq8BzLIK/7Ir5gTFSGZDUu37K5cMNp0hFtzO38sC7gWA==}
+  scheduler@0.23.2:
+    resolution: {integrity: sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==}
 
   semver-compare@1.0.0:
     resolution: {integrity: sha512-YM3/ITh2MJ5MtzaM429anh+x2jiLVjqILF4m4oyQB18W7Ggea7BfqdH/wGMK7dDiMghv/6WG7znWMwUDzJiXow==}
@@ -4634,9 +4637,9 @@ snapshots:
       protobufjs: 7.5.4
       yargs: 17.7.2
 
-  '@heroicons/react@2.2.0(react@19.1.1)':
+  '@heroicons/react@2.2.0(react@18.3.1)':
     dependencies:
-      react: 19.1.1
+      react: 18.3.1
 
   '@humanfs/core@0.19.1': {}
 
@@ -4781,23 +4784,23 @@ snapshots:
     dependencies:
       mux-embed: 5.9.0
 
-  '@mux/mux-player-react@3.6.0(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@mux/mux-player-react@3.6.0(@types/react-dom@18.3.7(@types/react@18.3.24))(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@mux/mux-player': 3.6.0(react@19.1.1)
+      '@mux/mux-player': 3.6.0(react@18.3.1)
       '@mux/playback-core': 0.31.0
       prop-types: 15.8.1
-      react: 19.1.1
-      react-dom: 19.1.1(react@19.1.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
     optionalDependencies:
-      '@types/react': 19.1.12
-      '@types/react-dom': 19.1.9(@types/react@19.1.12)
+      '@types/react': 18.3.24
+      '@types/react-dom': 18.3.7(@types/react@18.3.24)
 
-  '@mux/mux-player@3.6.0(react@19.1.1)':
+  '@mux/mux-player@3.6.0(react@18.3.1)':
     dependencies:
       '@mux/mux-video': 0.27.0
       '@mux/playback-core': 0.31.0
-      media-chrome: 4.13.1(react@19.1.1)
-      player.style: 0.2.0(react@19.1.1)
+      media-chrome: 4.13.1(react@18.3.1)
+      player.style: 0.2.0(react@18.3.1)
     transitivePeerDependencies:
       - react
 
@@ -4904,10 +4907,10 @@ snapshots:
 
   '@protobufjs/utf8@1.1.0': {}
 
-  '@react-hooks-library/core@0.6.2(react@19.1.1)':
+  '@react-hooks-library/core@0.6.2(react@18.3.1)':
     dependencies:
       '@react-hooks-library/shared': 0.6.2
-      react: 19.1.1
+      react: 18.3.1
 
   '@react-hooks-library/shared@0.6.2': {}
 
@@ -5393,12 +5396,15 @@ snapshots:
 
   '@types/parse-json@4.0.2': {}
 
-  '@types/react-dom@19.1.9(@types/react@19.1.12)':
-    dependencies:
-      '@types/react': 19.1.12
+  '@types/prop-types@15.7.15': {}
 
-  '@types/react@19.1.12':
+  '@types/react-dom@18.3.7(@types/react@18.3.24)':
     dependencies:
+      '@types/react': 18.3.24
+
+  '@types/react@18.3.24':
+    dependencies:
+      '@types/prop-types': 15.7.15
       csstype: 3.1.3
 
   '@types/readdir-glob@1.1.5':
@@ -5890,9 +5896,9 @@ snapshots:
     dependencies:
       custom-media-element: 1.4.5
 
-  ce-la-react@0.3.1(react@19.1.1):
+  ce-la-react@0.3.1(react@18.3.1):
     dependencies:
-      react: 19.1.1
+      react: 18.3.1
 
   chalk@4.1.2:
     dependencies:
@@ -6671,14 +6677,14 @@ snapshots:
     dependencies:
       fetch-blob: 3.2.0
 
-  framer-motion@12.23.12(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
+  framer-motion@12.23.12(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       motion-dom: 12.23.12
       motion-utils: 12.23.6
       tslib: 2.8.1
     optionalDependencies:
-      react: 19.1.1
-      react-dom: 19.1.1(react@19.1.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   fs.realpath@1.0.0: {}
 
@@ -7304,9 +7310,9 @@ snapshots:
 
   math-intrinsics@1.1.0: {}
 
-  media-chrome@4.13.1(react@19.1.1):
+  media-chrome@4.13.1(react@18.3.1):
     dependencies:
-      ce-la-react: 0.3.1(react@19.1.1)
+      ce-la-react: 0.3.1(react@18.3.1)
     transitivePeerDependencies:
       - react
 
@@ -7369,9 +7375,9 @@ snapshots:
     dependencies:
       motion-utils: 12.23.6
 
-  motion-plus-dom@1.5.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
+  motion-plus-dom@1.5.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      motion: 12.23.12(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      motion: 12.23.12(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       motion-dom: 12.23.12
       motion-utils: 12.23.6
     transitivePeerDependencies:
@@ -7379,37 +7385,37 @@ snapshots:
       - react
       - react-dom
 
-  motion-plus-react@1.5.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
+  motion-plus-react@1.5.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      motion: 12.23.12(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      motion: 12.23.12(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       motion-dom: 12.23.12
-      motion-plus-dom: 1.5.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      motion-plus-dom: 1.5.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       motion-utils: 12.23.6
     optionalDependencies:
-      react: 19.1.1
-      react-dom: 19.1.1(react@19.1.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
     transitivePeerDependencies:
       - '@emotion/is-prop-valid'
 
-  motion-plus@1.5.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
+  motion-plus@1.5.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      motion-plus-dom: 1.5.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      motion-plus-react: 1.5.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      motion-plus-dom: 1.5.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      motion-plus-react: 1.5.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     optionalDependencies:
-      react: 19.1.1
-      react-dom: 19.1.1(react@19.1.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
     transitivePeerDependencies:
       - '@emotion/is-prop-valid'
 
   motion-utils@12.23.6: {}
 
-  motion@12.23.12(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
+  motion@12.23.12(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      framer-motion: 12.23.12(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      framer-motion: 12.23.12(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       tslib: 2.8.1
     optionalDependencies:
-      react: 19.1.1
-      react-dom: 19.1.1(react@19.1.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   ms@2.1.3: {}
 
@@ -7435,15 +7441,15 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  next@15.5.2(@opentelemetry/api@1.9.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
+  next@15.5.2(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@next/env': 15.5.2
       '@swc/helpers': 0.5.15
       caniuse-lite: 1.0.30001741
       postcss: 8.4.31
-      react: 19.1.1
-      react-dom: 19.1.1(react@19.1.1)
-      styled-jsx: 5.1.6(react@19.1.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      styled-jsx: 5.1.6(react@18.3.1)
     optionalDependencies:
       '@next/swc-darwin-arm64': 15.5.2
       '@next/swc-darwin-x64': 15.5.2
@@ -7637,9 +7643,9 @@ snapshots:
     dependencies:
       node-modules-regexp: 1.0.0
 
-  player.style@0.2.0(react@19.1.1):
+  player.style@0.2.0(react@18.3.1):
     dependencies:
-      media-chrome: 4.13.1(react@19.1.1)
+      media-chrome: 4.13.1(react@18.3.1)
     transitivePeerDependencies:
       - react
 
@@ -7714,30 +7720,33 @@ snapshots:
 
   queue-microtask@1.2.3: {}
 
-  react-dom@19.1.1(react@19.1.1):
+  react-dom@18.3.1(react@18.3.1):
     dependencies:
-      react: 19.1.1
-      scheduler: 0.26.0
+      loose-envify: 1.4.0
+      react: 18.3.1
+      scheduler: 0.23.2
 
-  react-dropzone@14.3.8(react@19.1.1):
+  react-dropzone@14.3.8(react@18.3.1):
     dependencies:
       attr-accept: 2.2.5
       file-selector: 2.1.2
       prop-types: 15.8.1
-      react: 19.1.1
+      react: 18.3.1
 
-  react-icons@5.5.0(react@19.1.1):
+  react-icons@5.5.0(react@18.3.1):
     dependencies:
-      react: 19.1.1
+      react: 18.3.1
 
   react-is@16.13.1: {}
 
-  react-spinners@0.17.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
+  react-spinners@0.17.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      react: 19.1.1
-      react-dom: 19.1.1(react@19.1.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
-  react@19.1.1: {}
+  react@18.3.1:
+    dependencies:
+      loose-envify: 1.4.0
 
   read-pkg-up@7.0.1:
     dependencies:
@@ -7893,7 +7902,9 @@ snapshots:
       es-errors: 1.3.0
       is-regex: 1.2.1
 
-  scheduler@0.26.0: {}
+  scheduler@0.23.2:
+    dependencies:
+      loose-envify: 1.4.0
 
   semver-compare@1.0.0: {}
 
@@ -8153,10 +8164,10 @@ snapshots:
 
   stubs@3.0.0: {}
 
-  styled-jsx@5.1.6(react@19.1.1):
+  styled-jsx@5.1.6(react@18.3.1):
     dependencies:
       client-only: 0.0.1
-      react: 19.1.1
+      react: 18.3.1
 
   supports-color@7.2.0:
     dependencies:
@@ -8164,11 +8175,11 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  swr@2.3.6(react@19.1.1):
+  swr@2.3.6(react@18.3.1):
     dependencies:
       dequal: 2.0.3
-      react: 19.1.1
-      use-sync-external-store: 1.5.0(react@19.1.1)
+      react: 18.3.1
+      use-sync-external-store: 1.5.0(react@18.3.1)
 
   synckit@0.11.11:
     dependencies:
@@ -8392,14 +8403,14 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
-  use-sync-external-store@1.5.0(react@19.1.1):
+  use-sync-external-store@1.5.0(react@18.3.1):
     dependencies:
-      react: 19.1.1
+      react: 18.3.1
 
-  usehooks-ts@3.1.1(react@19.1.1):
+  usehooks-ts@3.1.1(react@18.3.1):
     dependencies:
       lodash.debounce: 4.0.8
-      react: 19.1.1
+      react: 18.3.1
 
   util-deprecate@1.0.2: {}
 
@@ -8541,8 +8552,8 @@ snapshots:
 
   zod@4.1.5: {}
 
-  zustand@5.0.8(@types/react@19.1.12)(react@19.1.1)(use-sync-external-store@1.5.0(react@19.1.1)):
+  zustand@5.0.8(@types/react@18.3.24)(react@18.3.1)(use-sync-external-store@1.5.0(react@18.3.1)):
     optionalDependencies:
-      '@types/react': 19.1.12
-      react: 19.1.1
-      use-sync-external-store: 1.5.0(react@19.1.1)
+      '@types/react': 18.3.24
+      react: 18.3.1
+      use-sync-external-store: 1.5.0(react@18.3.1)

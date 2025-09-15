@@ -70,7 +70,7 @@ export default function FontList({
           </div>
 
           {/* Fonts in this group */}
-          <div className="grid grid-cols-6 gap-3">
+          <div className="grid grid-cols-6 gap-1">
             {fonts.map((font, fontIndex) => {
               const getFontName = (font: singleFont) => {
                 let name = font.weightName;

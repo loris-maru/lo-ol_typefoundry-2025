@@ -3,7 +3,7 @@ import { typeface } from "@/types/typefaces";
 export default function StoryBackground({ content }: { content: typeface }) {
   return (
     <>
-      <aside className="font-mayday relative z-10 flex w-full flex-row justify-between px-8 text-xl leading-none font-black tracking-[0.015em] uppercase">
+      <aside className="font-whisper relative z-10 flex w-full flex-row justify-between px-8 text-xl leading-none font-medium tracking-[0.015em] uppercase">
         <div>
           A serif
           <br />

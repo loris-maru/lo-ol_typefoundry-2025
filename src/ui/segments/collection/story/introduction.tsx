@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+
 import { motion, useScroll, useTransform, MotionValue } from "motion/react";
 import { Typewriter } from "motion-plus-react";
+
 import { cn } from "@/utils/classNames";
 import useWebFontPair from "@/utils/use-web-font-pair";
 
@@ -52,7 +54,7 @@ export default function Introduction({
   useEffect(() => {
     if (!scrollProgress) return;
 
-    const unsubscribe = scrollProgress.on("change", (latest) => {
+    const unsubscribe = scrollProgress.on("change", (latest: number) => {
       // Start typewriter when circle reaches fullscreen (0.15) and is visible
       if (latest >= 0.15) {
         setShouldStartTypewriter(true);
@@ -79,7 +81,7 @@ export default function Introduction({
   );
 
   const fontStyle = useMemo<React.CSSProperties>(() => {
-    const varSettings = [`'wght' ${currentWeight}`].join(", ");
+    const varSettings = [`'wght' ${currentWeight}, 'wdth' 900, 'opsz' 900, 'slnt' 0`].join(", ");
     return {
       fontFamily: `"${previewFamilyName}", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"`,
       fontVariationSettings: varSettings,
@@ -93,11 +95,6 @@ export default function Introduction({
   return (
     <section ref={containerRef} className="relative w-2/3 hyphens-auto">
       <motion.div style={{ scale, opacity }}>
-        <div className="mb-8 flex items-center justify-between gap-4">
-          {/* (Optional) Keep your external italic toggle handler */}
-          {typeof onItalicToggle === "function" && <div className="hidden" />}
-        </div>
-
         <div>
           {showSkeleton ? (
             <div className="animate-pulse space-y-3">
@@ -108,23 +105,36 @@ export default function Introduction({
           ) : fontError ? (
             <p className="text-sm text-red-600">Couldn’t load font preview.</p>
           ) : (
-            <div className="space-y-6">
-              {/* <p className="text-left text-[4.8vw] leading-tight text-white" style={fontStyle}>
-                {content?.description ?? `The quick brown fox jumps over the lazy dog. 0123456789`}
-              </p> */}
-
+            <div className="space-y-6 overflow-hidden">
               {shouldStartTypewriter ? (
                 <Typewriter
                   as="p"
                   className="text-left text-[4.8vw] leading-tight text-white"
-                  style={fontStyle}
+                  style={{
+                    ...fontStyle,
+                    display: "-webkit-box",
+                    WebkitLineClamp: 3,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                    maxHeight: "calc(3 * 1.4em)", // 3 lines with line-height of 1.2
+                  }}
                   cursorStyle={fontStyle}
                 >
                   {content?.description ??
                     `The quick brown fox jumps over the lazy dog. 0123456789`}
                 </Typewriter>
               ) : (
-                <p className="text-left text-[4.8vw] leading-tight text-white" style={fontStyle}>
+                <p
+                  className="text-left text-[4.8vw] leading-tight text-white"
+                  style={{
+                    ...fontStyle,
+                    display: "-webkit-box",
+                    WebkitLineClamp: 3,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                    maxHeight: "calc(3 * 1.2em)", // 3 lines with line-height of 1.2
+                  }}
+                >
                   {content?.description ??
                     `The quick brown fox jumps over the lazy dog. 0123456789`}
                 </p>

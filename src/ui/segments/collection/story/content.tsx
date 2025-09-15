@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+
 import { MotionValue } from "motion/react";
+
 import { typeface } from "@/types/typefaces";
 import FontList from "@/ui/segments/collection/story/font-list";
 import Introduction from "@/ui/segments/collection/story/introduction";
@@ -49,7 +51,14 @@ export default function StoryContent({
   return (
     <div className="relative flex h-screen w-screen flex-col justify-between bg-black p-8 text-white">
       <Introduction
-        content={content}
+        content={{
+          title: content.name,
+          subtitle: content.category,
+          description:
+            content.introduction?.[0]?.value ||
+            content.description ||
+            `The quick brown fox jumps over the lazy dog. 0123456789`,
+        }}
         familyName={slugify(content.name)}
         currentWeight={currentWeight}
         isItalic={isItalic}

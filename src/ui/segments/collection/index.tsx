@@ -7,16 +7,18 @@ import { AnimatePresence, motion } from "motion/react";
 import { useMediaQuery } from "usehooks-ts";
 
 import { typeface } from "@/types/typefaces";
+import CustomGeneration from "@/ui/segments/collection/custom";
 import DiscoverMoreCollections from "@/ui/segments/collection/discover-more";
 import VideoHero from "@/ui/segments/collection/hero";
 import CollectionHorizontal from "@/ui/segments/collection/horizontal-scroll-block";
 import Playground from "@/ui/segments/collection/playground";
 // adjust path if Playground is separate
-import ShopPackages from "@/ui/segments/collection/shop-package";
+// import ShopPackages from "@/ui/segments/collection/shop-package";
 import Footer from "@/ui/segments/global/footer";
 import slugify from "@/utils/slugify";
-import Story from "./story";
+
 import Loader from "./loader";
+import Story from "./story";
 
 export default function CollectionPage({
   content,
@@ -25,14 +27,10 @@ export default function CollectionPage({
   content: typeface;
   allTypefaces: typeface[];
 }) {
-
   // FONTS
   const fontName = slugify(content.name);
   const uprightFontUrl = content.varFont;
   const italicFontUrl = content.varFontItalic;
-
-  const uprightFontName = slugify(content.name);
-  const italicFontName = `${content.name}Italic`;
 
   const [videoLoaded, setVideoLoaded] = useState<boolean>(false);
   const [showLoader, setShowLoader] = useState<boolean>(true);
@@ -44,7 +42,7 @@ export default function CollectionPage({
   // Combined loading state - now properly tracks both video and font loading
   const isFullyLoaded = fontLoaded && videoLoaded;
 
-  // Progress animation
+  // Progress animation - single continuous increment from 0 to 100
   useEffect(() => {
     if (!isFullyLoaded) {
       const startTime = Date.now();
@@ -52,19 +50,12 @@ export default function CollectionPage({
 
       const animateProgress = () => {
         const elapsed = Date.now() - startTime;
-        const timeProgress = Math.min((elapsed / duration) * 80, 80); // Max 80% from time
+        const timeProgress = Math.min((elapsed / duration) * 100, 100); // 0 to 100% over 3 seconds
 
-        // Calculate actual loading progress
-        let actualProgress = 0;
-        if (fontLoaded) actualProgress += 40; // Font loading is 40% of progress
-        if (videoLoaded) actualProgress += 40; // Video loading is 40% of progress
-
-        // Combine time-based and actual loading progress
-        const totalProgress = Math.min(timeProgress + actualProgress, 100);
-        setProgress(totalProgress);
+        setProgress(timeProgress);
 
         // Continue animation if not fully loaded
-        if (totalProgress < 100 && !isFullyLoaded) {
+        if (timeProgress < 100 && !isFullyLoaded) {
           requestAnimationFrame(animateProgress);
         } else if (isFullyLoaded) {
           // When fully loaded, ensure we show 100%
@@ -138,10 +129,7 @@ export default function CollectionPage({
           {/* Horizontal scrolling section (Weights, Character Set, Font Info) */}
           <CollectionHorizontal content={content} />
 
-          {/* Shop Packages section - becomes fixed when scrolled to */}
-          <section className="relative h-screen w-screen bg-transparent">
-            <ShopPackages content={content} />
-          </section>
+          <CustomGeneration content={content} />
 
           {/* Spacer to maintain scroll position when ShopPackage becomes fixed */}
           <div className="h-screen w-full bg-transparent" />

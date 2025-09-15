@@ -1,10 +1,12 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { useRef, useEffect, useState } from "react";
+
+import { useMotionValue } from "motion/react";
+
 import { typeface } from "@/types/typefaces";
-import StoryBackground from "@/ui/segments/collection/story/background";
 import StoryContent from "@/ui/segments/collection/story/content";
+// import StoryBackground from "@/ui/segments/collection/story/background";
 
 type StoryProps = {
   uprightFontUrl: string;
@@ -12,74 +14,194 @@ type StoryProps = {
   content: typeface;
 };
 
-// Tunables
-const START_SIZE = "38vh";
-const TRACK_H = "600vh"; // increase to linger longer at full screen
-const LINGER_AT = 0.15; // reach full screen by 15% of the track, then hold
-
 export default function Story({ uprightFontUrl, italicFontUrl, content }: StoryProps) {
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const blobRef = useRef<HTMLDivElement | null>(null);
 
-  // Progress is 0 -> 1 from section start at viewport bottom with offset, to section end at viewport center
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end center"],
-  });
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isExpanded, setIsExpanded] = useState(false); // controls StoryContent visibility
+  const [isPinned, setIsPinned] = useState(false); // fixes blob+content at viewport center
 
-  // Size morph: circle (60vh) -> full screen (100vw x 100vh) - bidirectional
-  const width = useTransform(scrollYProgress, [0, LINGER_AT], ["60vh", "100vw"]);
-  const height = useTransform(scrollYProgress, [0, LINGER_AT], ["60vh", "100vh"]);
-  const borderRadius = useTransform(scrollYProgress, [0, LINGER_AT], ["9999px", "0px"]);
+  useEffect(() => {
+    const section = sectionRef.current!;
+    const blob = blobRef.current!;
+    let rafId = 0;
 
-  // Text crossfade: show "round" text first, then swap to "full" text - bidirectional
-  const roundTextOpacity = useTransform(scrollYProgress, [0, LINGER_AT - 0.05], [1, 0]);
-  // StoryContent only appears when circle reaches full size (100vw x 100vh)
-  const fullTextOpacity = useTransform(scrollYProgress, [LINGER_AT, LINGER_AT + 0.1], [0, 1]);
+    const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
+
+    // Tunables
+    const START_SIZE = 600; // px
+    const EXPAND_SPAN_VH = 80; // how much scroll (in vh) to go 600px -> 100vw/100vh
+    const LINGER_SPAN_VH = 50; // how long to keep it pinned at full size
+
+    const update = () => {
+      const vh = window.innerHeight;
+      const vw = window.innerWidth;
+
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.offsetHeight;
+      const sectionBottom = sectionTop + sectionHeight;
+      const y = window.scrollY;
+
+      // progress across the whole section (0→1), for your internal animations
+      const wholeProg = clamp((y - sectionTop) / (sectionHeight - vh), 0, 1);
+      setScrollProgress(wholeProg);
+
+      // PHASES
+      // 1) PRE: circle enters normally
+      const triggerY = sectionTop + sectionHeight / 2 - vh / 2; // center-align moment
+      // 2) EXPANDING (pinned): from triggerY to triggerY + EXPAND_SPAN
+      const expandEndY = triggerY + (EXPAND_SPAN_VH / 100) * vh;
+      // 3) LINGER (pinned): from expandEndY to expandEndY + LINGER_SPAN
+      const lingerEndY = expandEndY + (LINGER_SPAN_VH / 100) * vh;
+      // 4) POST: unpin + natural scroll again
+
+      let sizeProgress = 0;
+      let pinned = false;
+      let expanded = false;
+
+      if (y < triggerY) {
+        // PRE — circle not growing yet
+        sizeProgress = 0;
+        pinned = false;
+        expanded = false;
+      } else if (y >= triggerY && y < expandEndY) {
+        // EXPANDING — pin and interpolate 0→1
+        pinned = true;
+        const t = (y - triggerY) / (expandEndY - triggerY);
+        // slightly faster growth (front-loaded)
+        sizeProgress = clamp(t / 0.7, 0, 1);
+        expanded = sizeProgress >= 0.999;
+      } else if (y >= expandEndY && y < lingerEndY) {
+        // LINGER — fully expanded and still pinned
+        sizeProgress = 1;
+        pinned = true;
+        expanded = true;
+      } else {
+        // POST — release pin, remain full size so it scrolls up with the section
+        sizeProgress = 1;
+        pinned = false;
+        expanded = false; // hide StoryContent once released (change if you want it to stay)
+      }
+
+      // Apply size
+      const w = START_SIZE + (vw - START_SIZE) * sizeProgress;
+      const h = START_SIZE + (vh - START_SIZE) * sizeProgress;
+      blob.style.width = `${w}px`;
+      blob.style.height = `${h}px`;
+      blob.style.borderRadius = `${9999 - 9999 * sizeProgress}px`;
+
+      // Pinning styles (centered)
+      if (pinned) {
+        // fix to viewport center
+        blob.style.position = "fixed";
+        blob.style.left = "50%";
+        blob.style.top = "50%";
+        blob.style.transform = "translate(-50%, -50%)";
+      } else {
+        // back to section-centric absolute center (so it can scroll away)
+        blob.style.position = "absolute";
+        blob.style.left = "50%";
+        blob.style.top = "50%";
+        blob.style.transform = "translate(-50%, -50%)";
+      }
+
+      // UI flags
+      if (expanded !== isExpanded) setIsExpanded(expanded);
+      if (pinned !== isPinned) setIsPinned(pinned);
+
+      rafId = requestAnimationFrame(update);
+    };
+
+    let running = false;
+    const startLoop = () => {
+      if (!running) {
+        running = true;
+        rafId = requestAnimationFrame(update);
+      }
+    };
+    const stopLoop = () => {
+      if (running) {
+        running = false;
+        cancelAnimationFrame(rafId);
+      }
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting) startLoop();
+        else stopLoop();
+      },
+      { root: null, threshold: 0 },
+    );
+
+    io.observe(section);
+    update();
+
+    return () => {
+      io.disconnect();
+      stopLoop();
+    };
+  }, [isExpanded, isPinned]);
 
   return (
-    <section ref={sectionRef} className="relative bg-[#F5F5F5]">
-      {/* Tall scroll track to allow a longer full-screen linger */}
-      <div style={{ height: TRACK_H }}>
-        {/* Sticky viewport */}
-        <div className="sticky top-0 flex h-screen items-center justify-center">
-          {/* Background behind the expanding shape */}
-          <div className="pointer-events-none absolute inset-0 z-0 p-8">
-            <StoryBackground content={content} />
-          </div>
+    <section
+      ref={sectionRef}
+      className="relative min-h-[240vh] w-screen overflow-clip bg-neutral-50"
+    >
+      {/* Header */}
+      <header className="font-whisper sticky top-8 z-10 mx-auto flex w-full items-center justify-between gap-6 p-8 text-base tracking-wide text-black uppercase">
+        <span>Left meta</span>
+        <span>Center meta</span>
+        <span>Right meta</span>
+      </header>
 
-          {/* Expanding black shape (starts as a perfect circle) */}
-          <motion.div
-            id="circle-to-fullscreen"
-            className="z-10 grid h-[60vh] w-[60vh] flex-none place-items-center rounded-full bg-black will-change-[width,height,border-radius]"
-            initial={{ width: START_SIZE, height: START_SIZE, borderRadius: "9999px" }}
-            style={{ width, height, borderRadius }}
-          >
-            {/* Round-state text */}
-            <motion.p
-              style={{ opacity: roundTextOpacity }}
-              className="font-whisper font-regular px-6 text-left text-lg text-white"
-            >
-              What does
-              <br />
-              Lemanic
-              <br />
-              say?
-            </motion.p>
+      {/* Huge background word */}
+      <div className="sticky top-[25vh] z-0 mx-auto flex w-full items-center justify-center pt-8">
+        <h3
+          className="font-mayday text-[32vw] leading-none font-black tracking-tight text-neutral-200 uppercase select-none"
+          style={{ fontVariationSettings: `'wght' 900, 'wdth' 900, 'slnt' 0, 'opsz' 900` }}
+        >
+          story
+        </h3>
+      </div>
 
-            {/* Full-screen-state text (overlaid, fades in) */}
-            <motion.div
-              style={{ opacity: fullTextOpacity }}
-              className="absolute inset-0 z-10 flex items-center justify-center px-6 text-center text-xl text-white md:text-2xl lg:text-3xl"
-            >
-              <StoryContent
-                content={content}
-                uprightFontUrl={uprightFontUrl}
-                italicFontUrl={italicFontUrl}
-                scrollProgress={scrollYProgress}
-              />
-            </motion.div>
-          </motion.div>
-        </div>
+      {/* Animated black container */}
+      <div
+        ref={blobRef}
+        className="pointer-events-none z-20 bg-black"
+        style={{
+          position: "absolute",
+          left: "50%",
+          top: "30%",
+          transform: "translate(-50%, -50%)",
+          width: 600,
+          height: 600,
+          borderRadius: 99999,
+        }}
+        aria-hidden
+      />
+
+      {/* StoryContent — appears only while fully expanded & pinned */}
+      <div
+        className={`z-30 transition-opacity duration-400 ${
+          isExpanded ? "opacity-100" : "opacity-0"
+        }`}
+        style={{
+          position: isPinned ? "fixed" : "absolute",
+          inset: 0,
+          display: "grid",
+          placeItems: "center",
+          pointerEvents: isExpanded ? "auto" : "none",
+        }}
+      >
+        <StoryContent
+          content={content}
+          uprightFontUrl={uprightFontUrl}
+          italicFontUrl={italicFontUrl}
+          scrollProgress={useMotionValue(scrollProgress)}
+        />
       </div>
     </section>
   );
