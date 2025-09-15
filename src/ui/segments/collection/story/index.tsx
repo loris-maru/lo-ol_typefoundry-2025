@@ -21,6 +21,7 @@ export default function Story({ uprightFontUrl, italicFontUrl, content }: StoryP
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false); // controls StoryContent visibility
   const [isPinned, setIsPinned] = useState(false); // fixes blob+content at viewport center
+  const [showText, setShowText] = useState(false); // controls circle text visibility
 
   useEffect(() => {
     const section = sectionRef.current!;
@@ -33,6 +34,7 @@ export default function Story({ uprightFontUrl, italicFontUrl, content }: StoryP
     const START_SIZE = 600; // px
     const EXPAND_SPAN_VH = 80; // how much scroll (in vh) to go 600px -> 100vw/100vh
     const LINGER_SPAN_VH = 50; // how long to keep it pinned at full size
+    const TEXT_DISAPPEAR_AT = 0.5; // when to hide text during expansion (0.5 = midway)
 
     const update = () => {
       const vh = window.innerHeight;
@@ -40,7 +42,6 @@ export default function Story({ uprightFontUrl, italicFontUrl, content }: StoryP
 
       const sectionTop = section.offsetTop;
       const sectionHeight = section.offsetHeight;
-      const sectionBottom = sectionTop + sectionHeight;
       const y = window.scrollY;
 
       // progress across the whole section (0→1), for your internal animations
@@ -54,17 +55,19 @@ export default function Story({ uprightFontUrl, italicFontUrl, content }: StoryP
       const expandEndY = triggerY + (EXPAND_SPAN_VH / 100) * vh;
       // 3) LINGER (pinned): from expandEndY to expandEndY + LINGER_SPAN
       const lingerEndY = expandEndY + (LINGER_SPAN_VH / 100) * vh;
-      // 4) POST: unpin + natural scroll again
+      // 4) POST: keep fullscreen and content visible when scrolling down
 
       let sizeProgress = 0;
       let pinned = false;
       let expanded = false;
+      let showText = false;
 
       if (y < triggerY) {
         // PRE — circle not growing yet
         sizeProgress = 0;
         pinned = false;
         expanded = false;
+        showText = false;
       } else if (y >= triggerY && y < expandEndY) {
         // EXPANDING — pin and interpolate 0→1
         pinned = true;
@@ -72,16 +75,20 @@ export default function Story({ uprightFontUrl, italicFontUrl, content }: StoryP
         // slightly faster growth (front-loaded)
         sizeProgress = clamp(t / 0.7, 0, 1);
         expanded = sizeProgress >= 0.999;
+        // Show text when circle is at 600px, hide when midway through expansion
+        showText = sizeProgress < TEXT_DISAPPEAR_AT;
       } else if (y >= expandEndY && y < lingerEndY) {
         // LINGER — fully expanded and still pinned
         sizeProgress = 1;
         pinned = true;
         expanded = true;
+        showText = false; // Text hidden during linger
       } else {
-        // POST — release pin, remain full size so it scrolls up with the section
-        sizeProgress = 1;
-        pinned = false;
-        expanded = false; // hide StoryContent once released (change if you want it to stay)
+        // POST — keep fullscreen and content visible when scrolling down
+        sizeProgress = 1; // Keep at fullscreen
+        pinned = true; // Keep pinned
+        expanded = true; // Keep StoryContent visible
+        showText = false; // Text hidden in post phase
       }
 
       // Apply size
@@ -109,6 +116,7 @@ export default function Story({ uprightFontUrl, italicFontUrl, content }: StoryP
       // UI flags
       if (expanded !== isExpanded) setIsExpanded(expanded);
       if (pinned !== isPinned) setIsPinned(pinned);
+      setShowText(showText);
 
       rafId = requestAnimationFrame(update);
     };
@@ -148,7 +156,7 @@ export default function Story({ uprightFontUrl, italicFontUrl, content }: StoryP
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-[240vh] w-screen overflow-clip bg-neutral-50"
+      className="relative min-h-[440vh] w-screen overflow-clip bg-neutral-50"
     >
       {/* Header */}
       <header className="font-whisper sticky top-8 z-10 mx-auto flex w-full items-center justify-between gap-6 p-8 text-base tracking-wide text-black uppercase">
@@ -169,8 +177,9 @@ export default function Story({ uprightFontUrl, italicFontUrl, content }: StoryP
 
       {/* Animated black container */}
       <div
+        id="animated-black-container"
         ref={blobRef}
-        className="pointer-events-none z-20 bg-black"
+        className="pointer-events-none z-10 bg-black"
         style={{
           position: "absolute",
           left: "50%",
@@ -183,9 +192,31 @@ export default function Story({ uprightFontUrl, italicFontUrl, content }: StoryP
         aria-hidden
       />
 
+      {/* Circle text - appears when circle is 600px, disappears midway through expansion */}
+      <div
+        className={`pointer-events-none z-15 transition-opacity duration-300 ${
+          showText ? "opacity-100" : "opacity-0"
+        }`}
+        style={{
+          position: "absolute",
+          left: "50%",
+          top: "30%",
+          transform: "translate(-50%, -50%)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: 600,
+          height: 600,
+        }}
+      >
+        <p className="font-whisper px-8 text-left text-lg font-medium text-white">
+          A little about {content.name}
+        </p>
+      </div>
+
       {/* StoryContent — appears only while fully expanded & pinned */}
       <div
-        className={`z-30 transition-opacity duration-400 ${
+        className={`z-20 transition-opacity duration-400 ${
           isExpanded ? "opacity-100" : "opacity-0"
         }`}
         style={{

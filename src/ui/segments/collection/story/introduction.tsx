@@ -146,7 +146,7 @@ export default function Introduction({
                   id="weight-indicator"
                   className="font-whisper rounded-full border border-solid border-white px-6 py-2 text-base font-medium tracking-wider uppercase"
                 >
-                  Weight: {currentWeight}
+                  <span className="relative top-0.5 block">Weight: {currentWeight}</span>
                 </div>
                 {hasItalic && (
                   <div className="flex items-center gap-3">

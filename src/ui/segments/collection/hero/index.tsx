@@ -134,9 +134,11 @@ export default function VideoHero({
               {familyAbbreviation}
             </motion.div>
 
-            <div className="font-whisper mt-1 text-[22px] leading-[1] text-white">
-              <div className="mb-2">Discover a new</div>
-              <div>{content.category} typeface</div>
+            <div className="font-whisper mt-1 w-[360px] text-[22px] leading-[1] text-white">
+              <div className="leading-[1.25]">
+                Discover a new <br />
+                {content.category} typeface
+              </div>
             </div>
           </motion.div>
 

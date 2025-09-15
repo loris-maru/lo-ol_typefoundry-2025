@@ -29,7 +29,7 @@ export default function CollectionHorizontal({ content }: { content: typeface })
   );
 
   return (
-    <section ref={sectionRef} style={{ height: sectionHeight }} className="relative">
+    <section ref={sectionRef} style={{ height: sectionHeight }} className="relative z-30">
       {/* Sticky viewport that stays fixed after horizontal scroll */}
       <div className="sticky top-0 h-[100vh] w-[100vw] overflow-hidden">
         {/* Background track (horizontal) */}
