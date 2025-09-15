@@ -22,7 +22,7 @@ export default function WidthSlider({
         step={widthSettings.step}
         value={widthValue}
         onChange={(e) => setWidthValue(Number(e.target.value))}
-        className="slider-custom h-2 w-44 appearance-none rounded-full bg-white/20"
+        className="slider-custom h-2 w-44 appearance-none"
         aria-label="Width axis"
       />
       <span className="w-8 text-right text-sm text-white/60">{widthValue}</span>

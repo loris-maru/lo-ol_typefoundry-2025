@@ -67,7 +67,7 @@ export default function WeightCard({
 
   return (
     <div
-      className="relative overflow-hidden border border-solid border-white p-6"
+      className="relative overflow-hidden border border-solid border-neutral-500 p-6"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >

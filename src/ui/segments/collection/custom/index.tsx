@@ -37,7 +37,7 @@ export default function CustomGeneration({ content }: { content: typeface }) {
         <div className="block w-32">Your turn</div>
         <div className="block w-32">Test layouts</div>
       </div>
-      <TypeTesterCustomise content={content} />
+      <TypeTesterCustomise content={content} height={height} />
     </section>
   );
 }

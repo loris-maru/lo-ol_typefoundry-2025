@@ -208,3 +208,41 @@ mux-player video {
   border: none;
   cursor: pointer;
 }
+
+/* White Slider Styles */
+.slider-custom {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2px;
+  background: #ffffff;
+  outline: none;
+  border-radius: 1px;
+}
+
+.slider-custom::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #ffffff;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  margin-top: -9px;
+}
+
+.slider-custom::-moz-range-track {
+  background: #ffffff;
+  height: 2px;
+  border-radius: 1px;
+  border: none;
+}
+
+.slider-custom::-moz-range-thumb {
+  background: #ffffff;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
