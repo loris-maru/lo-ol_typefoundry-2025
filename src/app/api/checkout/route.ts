@@ -9,11 +9,10 @@ import Stripe from "stripe";
 import { z } from "zod";
 
 // Check if Stripe key is available
-// Use test key for development
-const stripeKey = process.env.STRIPE_SECRET_KEY_DEV || process.env.STRIPE_SECRET_KEY;
+const stripeKey = process.env.STRIPE_SECRET_KEY;
 
 if (!stripeKey) {
-  console.error("No Stripe secret key found (STRIPE_SECRET_KEY_DEV or STRIPE_SECRET_KEY)");
+  console.error("No Stripe secret key found (STRIPE_SECRET_KEY)");
 }
 
 const stripe = stripeKey ? new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" }) : null;
@@ -114,7 +113,7 @@ export async function POST(req: NextRequest) {
         {
           error: "Payment system not configured",
           details:
-            "Stripe secret key (STRIPE_SECRET_KEY_DEV or STRIPE_SECRET_KEY) is missing. Please contact support.",
+            "Stripe secret key (STRIPE_SECRET_KEY) is missing. Please contact support.",
         },
         { status: 500 },
       );

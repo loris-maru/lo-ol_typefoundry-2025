@@ -11,7 +11,7 @@ export default function SettingButton({
       aria-label="Toggle Settings Menu"
       type="button"
       onClick={() => setShowMenu(!showMenu)}
-      className="absolute top-4 right-4 z-20 flex h-8 w-8 items-center justify-center rounded-lg border border-black/10 bg-white transition-colors hover:bg-gray-50"
+      className="absolute top-0 right-0 z-20 flex h-8 w-8 items-center justify-center rounded-lg border border-black/10 bg-white transition-colors hover:bg-gray-50"
     >
       <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path

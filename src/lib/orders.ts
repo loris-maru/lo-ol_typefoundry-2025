@@ -2,11 +2,11 @@ import { createClient } from "@sanity/client";
 import Stripe from "stripe";
 import slugify from "@/utils/slugify";
 
-// Use test key for development, fallback to live key
-const stripeKey = process.env.STRIPE_SECRET_KEY_DEV || process.env.STRIPE_SECRET_KEY;
+// Use Stripe secret key
+const stripeKey = process.env.STRIPE_SECRET_KEY;
 
 if (!stripeKey) {
-  throw new Error("No Stripe secret key found (STRIPE_SECRET_KEY_DEV or STRIPE_SECRET_KEY)");
+  throw new Error("No Stripe secret key found (STRIPE_SECRET_KEY)");
 }
 
 export const stripe = new Stripe(stripeKey, {
