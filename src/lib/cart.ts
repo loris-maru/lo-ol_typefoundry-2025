@@ -15,6 +15,7 @@ export const CartItemSchema = z.object({
   opticalSize: z.number().nullable().optional(),
   isItalic: z.boolean().optional(),
   qty: z.number().int().min(1).default(1),
+  type: z.enum(["static", "package", "variable"]),
 });
 export type CartItem = z.infer<typeof CartItemSchema>;
 

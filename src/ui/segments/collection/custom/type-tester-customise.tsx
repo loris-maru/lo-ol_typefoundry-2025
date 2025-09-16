@@ -1,41 +1,54 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import { MotionValue, useMotionValueEvent } from "motion/react";
-import { RiAlignLeft, RiAlignCenter, RiAlignRight } from "react-icons/ri";
 
+import { useCartStore, SingleCartItem } from "@/states/cart";
 import { typeface } from "@/types/typefaces";
-import AddToCart from "@/ui/segments/collection/custom/add-to-cart";
-import CustomFontSettings from "@/ui/segments/collection/custom/custom-font-settings";
-import InputTextColor from "@/ui/segments/collection/custom/input-text-color";
-import InputBackground from "@/ui/segments/collection/custom/inputs-background";
-import { cn } from "@/utils/classNames";
+import CartList from "@/ui/segments/collection/custom/cart-list";
+import { generateCartKey } from "@/utils/generateCartKey";
 
-interface TypeTesterCustomiseProps {
+type TypeTesterCustomiseProps = {
   content: typeface;
   height: MotionValue<string>;
-}
+  textColor: string;
+  textAlign: "left" | "center" | "right";
+  backgroundType: "color" | "image";
+  backgroundColor: string;
+  backgroundImage: string | null;
+  lineHeight: number;
+  wght: number;
+  wdth: number;
+  slnt: number;
+  italic: boolean;
+  opsz: number;
+};
 
-export default function TypeTesterCustomise({ content, height }: TypeTesterCustomiseProps) {
-  // Design
-  const [textColor, setTextColor] = useState<string>("#000000");
-  const [backgroundType, setBackgroundType] = useState<"color" | "image">("color");
-  const [backgroundColor, setBackgroundColor] = useState<string>("#A8E2FB");
-  const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
-  // const [fontSize, setFontSize] = useState<number>(120);
-  const [textAlign, setTextAlign] = useState<"left" | "center" | "right">("left");
-  const [lineHeight, setLineHeight] = useState<number>(1.3);
+export default function TypeTesterCustomise({
+  content,
+  height,
+  textColor,
+  textAlign,
+  backgroundType,
+  backgroundColor,
+  backgroundImage,
+  lineHeight,
+  wght,
+  wdth,
+  slnt,
+  italic,
+  opsz,
+}: TypeTesterCustomiseProps) {
   const [customText, setCustomText] = useState<string>(`Customize ${content.name}`);
 
-  // Font Variation Settings
-  const [wght, setWght] = useState<number>(100);
-  const [wdth, setWdth] = useState<number>(100);
-  const [slnt, setSlnt] = useState<number>(0);
-  const [opsz, setOpsz] = useState<number>(900);
-  const [italic, setItalic] = useState<boolean>(false);
-
   const [showType, setShowType] = useState(false);
+
+  // Cart
+  const { addToCart, removeFromCart, cart } = useCartStore();
+
+  // Filter cart items for this specific font family
+  const customCartItems = cart.filter((item) => item.family === content.name);
 
   // Ref for the editable content
   const editableRef = useRef<HTMLDivElement>(null);
@@ -56,14 +69,26 @@ export default function TypeTesterCustomise({ content, height }: TypeTesterCusto
   const handleContentChange = (e: React.FormEvent<HTMLDivElement>) => {
     const newContent = e.currentTarget.textContent || "";
     setCustomText(newContent);
-  };
 
-  const handleFocus = () => {
-    // Handle focus event
-  };
+    // Force text direction on every input
+    if (editableRef.current) {
+      // Completely reset the element's direction
+      editableRef.current.setAttribute("dir", "ltr");
+      editableRef.current.setAttribute("lang", "en");
+      editableRef.current.style.direction = "ltr";
+      editableRef.current.style.textAlign = "left";
+      editableRef.current.style.unicodeBidi = "normal";
+      editableRef.current.style.writingMode = "horizontal-tb";
 
-  const handleBlur = () => {
-    // Handle blur event
+      // Force the text content to be LTR by replacing it
+      const textNode = editableRef.current.firstChild;
+      if (textNode && textNode.nodeType === Node.TEXT_NODE) {
+        const text = textNode.textContent || "";
+        if (text !== newContent) {
+          editableRef.current.textContent = newContent;
+        }
+      }
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -74,8 +99,88 @@ export default function TypeTesterCustomise({ content, height }: TypeTesterCusto
     }
   };
 
-  const handleClick = () => {
-    // Handle click event
+  const handleFocus = () => {
+    // Ensure cursor is positioned at the end when focused
+    if (editableRef.current) {
+      // Force text direction aggressively
+      editableRef.current.setAttribute("dir", "ltr");
+      editableRef.current.setAttribute("lang", "en");
+      editableRef.current.style.direction = "ltr";
+      editableRef.current.style.textAlign = "left";
+      editableRef.current.style.unicodeBidi = "normal";
+      editableRef.current.style.writingMode = "horizontal-tb";
+
+      const range = document.createRange();
+      const selection = window.getSelection();
+      range.selectNodeContents(editableRef.current);
+      range.collapse(false); // Collapse to end
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+    }
+  };
+
+  // Ensure text direction is always LTR
+  useEffect(() => {
+    if (editableRef.current) {
+      editableRef.current.setAttribute("dir", "ltr");
+      editableRef.current.setAttribute("lang", "en");
+      editableRef.current.style.direction = "ltr";
+      editableRef.current.style.textAlign = "left";
+      editableRef.current.style.unicodeBidi = "normal";
+      editableRef.current.style.writingMode = "horizontal-tb";
+    }
+  }, [customText]);
+
+  const fontID = () => {
+    let name = `${content.name}_wght${wght}`;
+
+    if (content.has_wdth) {
+      name += `_wdth${wdth}`;
+    }
+
+    if (content.has_slnt) {
+      name += `_slnt${slnt}`;
+    }
+
+    if (content.has_opsz) {
+      name += `_opsz${opsz}`;
+    }
+
+    if (italic) {
+      name += "_italic";
+    }
+
+    return name;
+  };
+
+  const handleAddToCart = () => {
+    const cartItem: SingleCartItem = {
+      _key: generateCartKey(content.name),
+      fontID: fontID(),
+      fullName: `${content.name} Custom`,
+      license: "Both",
+      users: [1, 4] as [number, number],
+      family: content.name,
+      weightName: "",
+      weightValue: wght,
+      widthName: "",
+      widthValue: wdth,
+      opticalSizeName: "",
+      opticalSizeValue: opsz,
+      slantName: "",
+      slantValue: slnt,
+      isItalic: italic,
+      hasSerif: false,
+      serifStyleValue: 0,
+      has_MONO: false,
+      monoStyleName: "",
+      monoStyleValue: 0,
+      has_STEN: false,
+      stencilStyleName: "",
+      stencilStyleValue: 0,
+      price: 60,
+    };
+    addToCart(cartItem);
   };
 
   return (
@@ -87,84 +192,7 @@ export default function TypeTesterCustomise({ content, height }: TypeTesterCusto
             transformOrigin: "center center",
           }}
           className="relative mx-auto w-full"
-          onMouseDown={(e) => {
-            console.log("Div mouse down:", e.target);
-          }}
         >
-          <div
-            className={cn(
-              "pointer-events-none relative z-20 flex h-full w-full flex-col justify-between p-6",
-              backgroundType === "image" && "border border-solid border-black",
-            )}
-          >
-            <div
-              id="global-settings-container"
-              className="font-whisper pointer-events-auto relative flex w-full flex-row items-start justify-between text-sm tracking-wider uppercase"
-            >
-              <InputTextColor value={textColor} onChange={setTextColor} />
-
-              {/* Text Alignment Controls */}
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setTextAlign("left")}
-                  className={`rounded p-2 transition-colors duration-200 ${
-                    textAlign === "left"
-                      ? "bg-black text-white"
-                      : "bg-transparent text-black hover:bg-gray-100"
-                  }`}
-                  aria-label="Align text left"
-                >
-                  <RiAlignLeft size={16} />
-                </button>
-                <button
-                  onClick={() => setTextAlign("center")}
-                  className={`rounded p-2 transition-colors duration-200 ${
-                    textAlign === "center"
-                      ? "bg-black text-white"
-                      : "bg-transparent text-black hover:bg-gray-100"
-                  }`}
-                  aria-label="Align text center"
-                >
-                  <RiAlignCenter size={16} />
-                </button>
-                <button
-                  onClick={() => setTextAlign("right")}
-                  className={`rounded p-2 transition-colors duration-200 ${
-                    textAlign === "right"
-                      ? "bg-black text-white"
-                      : "bg-transparent text-black hover:bg-gray-100"
-                  }`}
-                  aria-label="Align text right"
-                >
-                  <RiAlignRight size={16} />
-                </button>
-              </div>
-
-              <InputBackground
-                type={backgroundType}
-                colorValue={backgroundColor}
-                textColor={textColor}
-                backgroundImageValue={backgroundImage}
-                onTypeChange={setBackgroundType}
-                onColorChange={setBackgroundColor}
-                onImageChange={setBackgroundImage}
-              />
-            </div>
-            <div className="pointer-events-auto">
-              <CustomFontSettings
-                // fontSize={{ value: fontSize, setValue: setFontSize }}
-                lineHeight={{ value: lineHeight, setValue: setLineHeight }}
-                weight={{ value: wght, setValue: setWght }}
-                width={{ value: wdth, setValue: setWdth }}
-                slant={{ value: slnt, setValue: setSlnt }}
-                italic={{ value: italic, setValue: setItalic }}
-                opticalSize={{ value: opsz, setValue: setOpsz }}
-                textColor={textColor}
-                content={content}
-              />
-            </div>
-          </div>
-
           <div
             className="pointer-events-none absolute inset-0"
             style={{
@@ -181,7 +209,7 @@ export default function TypeTesterCustomise({ content, height }: TypeTesterCusto
           />
 
           {showType && (
-            <div className="absolute inset-0 z-30 flex w-full place-items-center items-center justify-center p-8">
+            <div className="pointer-events-none absolute inset-0 z-30 flex w-full place-items-center items-center justify-center p-8">
               <div className="relative w-full">
                 <div
                   ref={editableRef}
@@ -189,21 +217,21 @@ export default function TypeTesterCustomise({ content, height }: TypeTesterCusto
                   contentEditable
                   suppressContentEditableWarning
                   onInput={handleContentChange}
-                  onFocus={handleFocus}
-                  onBlur={handleBlur}
                   onKeyDown={handleKeyDown}
-                  onClick={handleClick}
-                  className="w-full cursor-text resize-none overflow-hidden border-0 whitespace-pre-wrap outline-none focus:ring-0"
+                  onFocus={handleFocus}
+                  className="pointer-events-auto w-full cursor-text resize-none overflow-hidden border-0 whitespace-pre-wrap outline-none focus:ring-0"
                   style={{
                     color: textColor,
                     fontSize: "7vw",
-                    lineHeight: "1.35",
+                    lineHeight: lineHeight,
                     fontFamily: content.name,
                     fontStyle: italic ? "italic" : "normal",
                     textAlign: textAlign,
                     fontVariationSettings: `'wght' ${wght}, 'wdth' ${wdth}, 'opsz' ${opsz}, 'slnt' ${slnt}`,
                     minHeight: "200px",
                   }}
+                  lang="en"
+                  spellCheck="false"
                 >
                   {customText}
                 </div>
@@ -211,10 +239,11 @@ export default function TypeTesterCustomise({ content, height }: TypeTesterCusto
             </div>
           )}
         </div>
-        <div className="relative flex w-full flex-row items-center justify-end gap-x-4 pt-6">
-          <div className="font-whisper text-base font-medium">CHF 60</div>
-          <AddToCart />
-        </div>
+        <CartList
+          customCartItems={customCartItems}
+          removeFromCart={removeFromCart}
+          handleAddToCart={handleAddToCart}
+        />
       </div>
     </div>
   );
