@@ -1,9 +1,10 @@
 "use client";
 
+import { useState } from "react";
+
+import { CartItem, CartPayload } from "@/lib/cart";
 import { LicenseType, UserTier } from "@/lib/pricing";
 import { useCartStore } from "@/states/cart";
-import { CartItem, CartPayload } from "@/lib/cart";
-import { useState } from "react";
 
 interface CartCheckoutProps {
   label?: string;
@@ -36,7 +37,6 @@ export default function CartCheckout({ label = "Checkout", className = "" }: Car
           license: item.license,
         })),
       );
-
       // Transform cart data to API format using your pricing types
       const cartItems: CartItem[] = cart.map((item) => {
         // Map license format using your LicenseType
@@ -98,6 +98,7 @@ export default function CartCheckout({ label = "Checkout", className = "" }: Car
           opticalSize: item.opticalSizeValue,
           isItalic: item.isItalic,
           qty: 1,
+          type: "static",
         };
       });
 

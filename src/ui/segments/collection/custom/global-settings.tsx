@@ -7,7 +7,7 @@ import InputBackground from "@/ui/segments/collection/custom/inputs-background";
 
 export default function GlobalSettings({ content, text, background, font }: GlobalSettingsProps) {
   return (
-    <div className="flex h-[60vh] flex-col justify-between gap-4">
+    <div className="flex h-[60vh] flex-col justify-between gap-4 pb-12">
       <div
         id="global-settings-container"
         className="font-whisper pointer-events-auto relative z-30 flex w-full flex-row items-start justify-between text-sm tracking-wider uppercase"
