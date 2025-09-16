@@ -27,17 +27,15 @@ export default function CustomGeneration({ content }: { content: typeface }) {
   const height = useTransform(animationProgress, [0, 1], ["0vh", "60vh"]);
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative z-40 min-h-screen w-screen bg-[#EFEFEF] p-8"
-      style={{ width: "100vw", minHeight: "100vh" }}
-    >
-      <div className="font-whisper mb-3 flex w-full flex-row justify-between text-base leading-none tracking-wide uppercase">
-        <div className="block w-32 whitespace-nowrap">Choose your weight</div>
-        <div className="block w-32">Your turn</div>
-        <div className="block w-32">Test layouts</div>
+    <section ref={sectionRef} className="relative z-40 h-[140vh] w-screen bg-[#EFEFEF]">
+      <div className="p-8">
+        <div className="font-whisper mb-3 flex w-full flex-row justify-between text-base leading-none tracking-wide uppercase">
+          <div className="block w-32 whitespace-nowrap">Choose your weight</div>
+          <div className="block w-32">Your turn</div>
+          <div className="block w-32">Test layouts</div>
+        </div>
+        <TypeTesterCustomise content={content} height={height} />
       </div>
-      <TypeTesterCustomise content={content} height={height} />
     </section>
   );
 }

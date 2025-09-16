@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 
 import { useFont } from "@react-hooks-library/core";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence } from "motion/react";
 import { useMediaQuery } from "usehooks-ts";
 
 import { typeface } from "@/types/typefaces";
+import CollectionsSlider from "@/ui/segments/collection/collections-slider";
 import CustomGeneration from "@/ui/segments/collection/custom";
-import DiscoverMoreCollections from "@/ui/segments/collection/discover-more";
 import VideoHero from "@/ui/segments/collection/hero";
 import CollectionHorizontal from "@/ui/segments/collection/horizontal-scroll-block";
 import Playground from "@/ui/segments/collection/playground";
@@ -20,13 +20,7 @@ import slugify from "@/utils/slugify";
 import Loader from "./loader";
 import Story from "./story";
 
-export default function CollectionPage({
-  content,
-  allTypefaces,
-}: {
-  content: typeface;
-  allTypefaces: typeface[];
-}) {
+export default function CollectionPage({ content }: { content: typeface }) {
   // FONTS
   const fontName = slugify(content.name);
   const uprightFontUrl = content.varFont;
@@ -132,12 +126,10 @@ export default function CollectionPage({
           <CustomGeneration content={content} />
 
           {/* Spacer to maintain scroll position when ShopPackage becomes fixed */}
-          <div className="h-screen w-full bg-transparent" />
+          {/* <div className="h-screen w-full bg-transparent" /> */}
 
-          {/* Discover More Collections section - scrolls over ShopPackage */}
-          <section className="relative z-30 h-screen w-full bg-transparent">
-            <DiscoverMoreCollections content={allTypefaces} />
-          </section>
+          {/* Collections Slider section */}
+          <CollectionsSlider />
 
           {/* Footer - positioned after all content with high z-index */}
           <div className="relative z-50 bg-black">

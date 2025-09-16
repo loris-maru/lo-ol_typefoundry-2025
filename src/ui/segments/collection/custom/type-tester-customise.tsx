@@ -216,119 +216,115 @@ export default function TypeTesterCustomise({ content, height }: TypeTesterCusto
   };
 
   return (
-    <div className="relative flex min-h-[80vh] w-full items-center justify-center">
-      <div className="relative w-full">
+    <div className="relative flex h-full w-full flex-col items-end pt-[40vh]">
+      <div
+        ref={containerRef}
+        style={{
+          height: `${blueContainerHeight}vh`,
+          transformOrigin: "center center",
+        }}
+        className="relative mx-auto w-full"
+      >
         <div
-          ref={containerRef}
-          style={{
-            height: `${blueContainerHeight}vh`,
-            transformOrigin: "center center",
-          }}
-          className="relative mx-auto w-full"
+          className={cn(
+            "pointer-events-none relative z-20 flex h-full w-full flex-col justify-between p-6",
+            backgroundType === "image" && "border border-solid border-black",
+          )}
         >
-          <div
-            className={cn(
-              "pointer-events-none relative z-20 flex h-full w-full flex-col justify-between p-6",
-              backgroundType === "image" && "border border-solid border-black",
-            )}
-          >
-            {showGlobalSettings && (
-              <div
-                style={{
-                  opacity: showGlobalSettings ? 1 : 0,
-                  transition: "opacity 0.5s ease-in-out",
+          {showGlobalSettings && (
+            <div
+              style={{
+                opacity: showGlobalSettings ? 1 : 0,
+                transition: "opacity 0.5s ease-in-out",
+              }}
+            >
+              <GlobalSettings
+                content={content}
+                text={{
+                  color: textColor,
+                  align: textAlign,
+                  setColor: setTextColor,
+                  setAlign: setTextAlign,
                 }}
-              >
-                <GlobalSettings
-                  content={content}
-                  text={{
-                    color: textColor,
-                    align: textAlign,
-                    setColor: setTextColor,
-                    setAlign: setTextAlign,
-                  }}
-                  background={{
-                    type: backgroundType,
-                    color: backgroundColor || "",
-                    image: backgroundImage || "",
-                    setType: setBackgroundType,
-                    setColor: setBackgroundColor,
-                    setImage: setBackgroundImage,
-                  }}
-                  font={{
-                    lineHeight: { value: lineHeight, setValue: setLineHeight },
-                    weight: { value: wght, setValue: setWght },
-                    width: { value: wdth, setValue: setWdth },
-                    slant: { value: slnt, setValue: setSlnt },
-                    italic: { value: italic, setValue: setItalic },
-                    opticalSize: { value: opsz, setValue: setOpsz },
-                  }}
-                />
-              </div>
-            )}
-          </div>
-
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{
-              backgroundColor: backgroundType === "color" ? backgroundColor : undefined,
-              backgroundImage:
-                backgroundType === "image" && backgroundImage
-                  ? `url(${backgroundImage})`
-                  : undefined,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-            }}
-            id="blue-container-tester"
-          />
-
-          {showType && (
-            <div className="pointer-events-none absolute inset-0 z-30 flex w-full place-items-center items-center justify-center p-8">
-              <div className="relative w-full">
-                <div
-                  ref={editableRef}
-                  id="editable-content"
-                  contentEditable
-                  suppressContentEditableWarning
-                  onInput={handleContentChange}
-                  onKeyDown={handleKeyDown}
-                  onFocus={handleFocus}
-                  className="pointer-events-auto w-full cursor-text resize-none overflow-hidden border-0 whitespace-pre-wrap outline-none focus:ring-0"
-                  style={{
-                    color: textColor,
-                    fontSize: "7vw",
-                    lineHeight: lineHeight,
-                    fontFamily: content.name,
-                    fontStyle: italic ? "italic" : "normal",
-                    textAlign: textAlign,
-                    fontVariationSettings: `'wght' ${wght}, 'wdth' ${wdth}, 'opsz' ${opsz}, 'slnt' ${slnt}`,
-                    minHeight: "200px",
-                  }}
-                  lang="en"
-                  spellCheck="false"
-                >
-                  {customText}
-                </div>
-              </div>
+                background={{
+                  type: backgroundType,
+                  color: backgroundColor || "",
+                  image: backgroundImage || "",
+                  setType: setBackgroundType,
+                  setColor: setBackgroundColor,
+                  setImage: setBackgroundImage,
+                }}
+                font={{
+                  lineHeight: { value: lineHeight, setValue: setLineHeight },
+                  weight: { value: wght, setValue: setWght },
+                  width: { value: wdth, setValue: setWdth },
+                  slant: { value: slnt, setValue: setSlnt },
+                  italic: { value: italic, setValue: setItalic },
+                  opticalSize: { value: opsz, setValue: setOpsz },
+                }}
+              />
             </div>
           )}
         </div>
-        {showCartList && (
-          <div
-            style={{
-              opacity: showCartList ? 1 : 0,
-              transition: "opacity 0.5s ease-in-out",
-            }}
-          >
-            <CartList
-              customCartItems={customCartItems}
-              removeFromCart={removeFromCart}
-              handleAddToCart={handleAddToCart}
-            />
+
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundColor: backgroundType === "color" ? backgroundColor : undefined,
+            backgroundImage:
+              backgroundType === "image" && backgroundImage ? `url(${backgroundImage})` : undefined,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+          id="blue-container-tester"
+        />
+
+        {showType && (
+          <div className="pointer-events-none absolute inset-0 z-30 flex w-full place-items-center items-center justify-center p-8">
+            <div className="relative w-full">
+              <div
+                ref={editableRef}
+                id="editable-content"
+                contentEditable
+                suppressContentEditableWarning
+                onInput={handleContentChange}
+                onKeyDown={handleKeyDown}
+                onFocus={handleFocus}
+                className="pointer-events-auto w-full cursor-text resize-none overflow-hidden border-0 whitespace-pre-wrap outline-none focus:ring-0"
+                style={{
+                  color: textColor,
+                  fontSize: "7vw",
+                  lineHeight: lineHeight,
+                  fontFamily: content.name,
+                  fontStyle: italic ? "italic" : "normal",
+                  textAlign: textAlign,
+                  fontVariationSettings: `'wght' ${wght}, 'wdth' ${wdth}, 'opsz' ${opsz}, 'slnt' ${slnt}`,
+                  minHeight: "200px",
+                }}
+                lang="en"
+                spellCheck="false"
+              >
+                {customText}
+              </div>
+            </div>
           </div>
         )}
       </div>
+      {showCartList && (
+        <div
+          style={{
+            opacity: showCartList ? 1 : 0,
+            transition: "opacity 0.5s ease-in-out",
+          }}
+        >
+          <CartList
+            customCartItems={customCartItems}
+            removeFromCart={removeFromCart}
+            handleAddToCart={handleAddToCart}
+          />
+        </div>
+      )}
     </div>
   );
 }

@@ -130,7 +130,7 @@ export default function CartButton() {
         height: cartOpen ? "600px" : "64px",
         right: cartOpen ? "16px" : "16px",
         top: cartOpen ? "16px" : "16px",
-        zIndex: cartOpen ? 100 : 40,
+        zIndex: cartOpen ? 100 : 60,
       }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
     >
