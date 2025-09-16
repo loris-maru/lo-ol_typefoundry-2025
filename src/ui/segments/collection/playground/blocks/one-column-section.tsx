@@ -1,15 +1,14 @@
 "use client";
 
 import { useState } from "react";
+
 import { typeface } from "@/types/typefaces";
-import ColumnSelector from "./column-selector";
+import ColumnSelector from "@/ui/segments/collection/playground/blocks/column-selector";
+import defaultTexts from "@/ui/segments/collection/playground/CONTENT";
 
 export default function OneColumnSection({ content }: { content: typeface }) {
   const [columnTypes, setColumnTypes] = useState<("text" | "image")[]>(["text"]);
   const [imageUrls, setImageUrls] = useState<(string | null)[]>([null]);
-
-  const text =
-    "Our goal is to connect both typographic cultures and share our knowledge of calligraphy, sketching, exploration and type design.";
 
   const handleColumnTypeChange = (columnIndex: number, type: "text" | "image") => {
     setColumnTypes((prev) => {
@@ -34,7 +33,7 @@ export default function OneColumnSection({ content }: { content: typeface }) {
           content={content}
           columns={1}
           columnIndex={0}
-          defaultText={text}
+          defaultText={defaultTexts.one[0]}
           defaultFontSize={64}
           defaultWeight={900}
           defaultLineHeight={1.1}

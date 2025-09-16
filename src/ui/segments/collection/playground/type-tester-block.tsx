@@ -260,18 +260,14 @@ export default function TypeTesterBlock({
       return;
     }
 
-    // Find the selected text in the editable content and wrap it with a span
     const editableElement = editableRef.current;
-    const textContent = editableElement.textContent || "";
 
-    if (selection.start >= 0 && selection.end <= textContent.length) {
-      // Create a new content with the selected text wrapped in a span
-      const beforeText = textContent.substring(0, selection.start);
-      const selectedText = textContent.substring(selection.start, selection.end);
-      const afterText = textContent.substring(selection.end);
+    // Check if there's already a highlighted span for the selection
+    const existingHighlight = editableElement.querySelector(".selection-highlight") as HTMLElement;
 
-      // Create the span with the current selection settings
-      const span = document.createElement("span");
+    if (existingHighlight) {
+      // Update the existing highlighted span with new font settings
+      console.log("Updating existing highlighted span");
 
       // Build fontVariationSettings string with only available axes
       let fontVariationSettings = `'wght' ${selectionWght}`;
@@ -286,53 +282,102 @@ export default function TypeTesterBlock({
         fontVariationSettings += `, 'opsz' ${selectionOpsz}`;
       }
 
-      span.style.fontVariationSettings = fontVariationSettings;
+      existingHighlight.style.fontVariationSettings = fontVariationSettings;
 
       // Handle italic - use separate font family for italic
       if (selectionItalic && content.has_italic) {
         // Use italic font family
-        span.style.fontFamily = italicFontFamily;
-        span.style.fontStyle = "normal"; // Reset fontStyle since we're using a different font family
+        existingHighlight.style.fontFamily = italicFontFamily;
+        existingHighlight.style.fontStyle = "normal"; // Reset fontStyle since we're using a different font family
       } else {
         // Use regular font family
-        span.style.fontFamily = fontFamily;
-        span.style.fontStyle = "normal";
+        existingHighlight.style.fontFamily = fontFamily;
+        existingHighlight.style.fontStyle = "normal";
       }
-      span.textContent = selectedText;
 
-      console.log("Content axes available:", {
-        has_wdth: content.has_wdth,
-        has_slnt: content.has_slnt,
-        has_opsz: content.has_opsz,
-        has_italic: content.has_italic,
-      });
-      console.log("Selection values:", {
-        selectionWght,
-        selectionWdth,
-        selectionSlnt,
-        selectionOpsz,
-        selectionItalic,
-      });
-      console.log("Italic handling:", {
-        selectionItalic,
-        has_italic: content.has_italic,
-        has_slnt: content.has_slnt,
-        fontFamily: selectionItalic && content.has_italic ? italicFontFamily : fontFamily,
-        finalFontStyle: "normal",
-      });
-      console.log(
-        "Created span with styles:",
-        span.style.fontVariationSettings,
-        span.style.fontStyle,
-      );
-      console.log("Text parts:", { beforeText, selectedText, afterText });
+      // Ensure the highlight background is maintained
+      existingHighlight.style.backgroundColor = "#dbeafe";
+      existingHighlight.style.padding = "2px 4px";
+      existingHighlight.style.borderRadius = "2px";
+      existingHighlight.className = "selection-highlight";
 
-      // Update the content
-      editableElement.innerHTML = beforeText + span.outerHTML + afterText;
-
-      console.log("Updated content with styled span");
+      console.log("Updated existing highlight with new font settings and maintained background");
     } else {
-      console.log("Selection range is invalid for current content");
+      // No existing highlight, create new styled span (fallback)
+      console.log("No existing highlight found, creating new styled span");
+
+      const textContent = editableElement.textContent || "";
+
+      if (selection.start >= 0 && selection.end <= textContent.length) {
+        // Create a new content with the selected text wrapped in a span
+        const beforeText = textContent.substring(0, selection.start);
+        const selectedText = textContent.substring(selection.start, selection.end);
+        const afterText = textContent.substring(selection.end);
+
+        // Create the span with the current selection settings
+        const span = document.createElement("span");
+
+        // Build fontVariationSettings string with only available axes
+        let fontVariationSettings = `'wght' ${selectionWght}`;
+
+        if (content.has_wdth) {
+          fontVariationSettings += `, 'wdth' ${selectionWdth}`;
+        }
+        if (content.has_slnt) {
+          fontVariationSettings += `, 'slnt' ${selectionSlnt}`;
+        }
+        if (content.has_opsz) {
+          fontVariationSettings += `, 'opsz' ${selectionOpsz}`;
+        }
+
+        span.style.fontVariationSettings = fontVariationSettings;
+
+        // Handle italic - use separate font family for italic
+        if (selectionItalic && content.has_italic) {
+          // Use italic font family
+          span.style.fontFamily = italicFontFamily;
+          span.style.fontStyle = "normal"; // Reset fontStyle since we're using a different font family
+        } else {
+          // Use regular font family
+          span.style.fontFamily = fontFamily;
+          span.style.fontStyle = "normal";
+        }
+        span.textContent = selectedText;
+
+        console.log("Content axes available:", {
+          has_wdth: content.has_wdth,
+          has_slnt: content.has_slnt,
+          has_opsz: content.has_opsz,
+          has_italic: content.has_italic,
+        });
+        console.log("Selection values:", {
+          selectionWght,
+          selectionWdth,
+          selectionSlnt,
+          selectionOpsz,
+          selectionItalic,
+        });
+        console.log("Italic handling:", {
+          selectionItalic,
+          has_italic: content.has_italic,
+          has_slnt: content.has_slnt,
+          fontFamily: selectionItalic && content.has_italic ? italicFontFamily : fontFamily,
+          finalFontStyle: "normal",
+        });
+        console.log(
+          "Created span with styles:",
+          span.style.fontVariationSettings,
+          span.style.fontStyle,
+        );
+        console.log("Text parts:", { beforeText, selectedText, afterText });
+
+        // Update the content
+        editableElement.innerHTML = beforeText + span.outerHTML + afterText;
+
+        console.log("Updated content with styled span");
+      } else {
+        console.log("Selection range is invalid for current content");
+      }
     }
   };
 

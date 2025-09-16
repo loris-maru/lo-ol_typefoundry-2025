@@ -1,5 +1,7 @@
 import { create } from "zustand";
 
+import defaultTexts from "@/ui/segments/collection/playground/CONTENT";
+
 export interface TextBlock {
   id: number;
   text: string;
@@ -23,7 +25,7 @@ export const usePlaygroundStore = create<PlaygroundState>((set, get) => ({
   activeBlocks: [
     {
       id: 1,
-      text: "Our goal is to connect both typographic cultures and share our knowledge of calligraphy, sketching, exploration and type design.",
+      text: defaultTexts.one[0],
       fontSize: 80,
       leading: 1.5,
       weight: 400,
@@ -33,7 +35,7 @@ export const usePlaygroundStore = create<PlaygroundState>((set, get) => ({
     },
     {
       id: 2,
-      text: "Typefaces and the technologies used to bring them to life on screen are already incredibly advanced and have been mastered by many designers, but we've made the decision to inject strong personalities, into our type projects. However, we are trying to step away, as far as possible, from projects in which the designer's personality enters into the work.",
+      text: defaultTexts.two[0],
       fontSize: 42,
       leading: 1.4,
       weight: 600,
@@ -43,7 +45,7 @@ export const usePlaygroundStore = create<PlaygroundState>((set, get) => ({
     },
     {
       id: 3,
-      text: "We hope that our website gives you a glimpse of a future where type design fully embraces digital. Of course, this is just the beginning, and we are just two explorers finding our way in a new world of type, deeply passionate about creating a new type family. We believe that our website demonstrates the passion we have for our work, through typefaces, work in progress, and experimentation.",
+      text: defaultTexts.two[1],
       fontSize: 42,
       leading: 1.4,
       weight: 600,
@@ -53,7 +55,7 @@ export const usePlaygroundStore = create<PlaygroundState>((set, get) => ({
     },
     {
       id: 4,
-      text: "The Eiger village of Grindelwald in the Bernese Oberland lies embedded in a welcoming and green hollow, surrounded by a commanding mountainscape with the Eiger north face and the Wetterhorn. This mountainscape and the numerous lookout points and activities make Grindelwald one of the most popular and cosmopolitan holiday and excursion destinations in Switzerland, and the largest ski resort in the Jungfrau region.",
+      text: defaultTexts.three[0],
       fontSize: 18,
       leading: 1.6,
       weight: 300,
@@ -63,7 +65,7 @@ export const usePlaygroundStore = create<PlaygroundState>((set, get) => ({
     },
     {
       id: 5,
-      text: "The Eiger village of Grindelwald in the Bernese Oberland lies embedded in a welcoming and green hollow, surrounded by a commanding mountainscape with the Eiger north face and the Wetterhorn. This mountainscape and the numerous lookout points and activities make Grindelwald one of the most popular and cosmopolitan holiday and excursion destinations in Switzerland, and the largest ski resort in the Jungfrau region.",
+      text: defaultTexts.three[1],
       fontSize: 18,
       leading: 1.6,
       weight: 300,
@@ -73,7 +75,7 @@ export const usePlaygroundStore = create<PlaygroundState>((set, get) => ({
     },
     {
       id: 6,
-      text: "The Eiger village of Grindelwald in the Bernese Oberland lies embedded in a welcoming and green hollow, surrounded by a commanding mountainscape with the Eiger north face and the Wetterhorn. This mountainscape and the numerous lookout points and activities make Grindelwald one of the most popular and cosmopolitan holiday and excursion destinations in Switzerland, and the largest ski resort in the Jungfrau region.",
+      text: defaultTexts.three[2],
       fontSize: 18,
       leading: 1.6,
       weight: 300,
