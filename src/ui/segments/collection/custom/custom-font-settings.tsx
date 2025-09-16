@@ -31,6 +31,7 @@ type CustomFontSettingsProps = {
     has_wdth: boolean;
     has_slnt: boolean;
     has_opsz: boolean;
+    has_italic: boolean;
   };
 };
 
@@ -90,13 +91,15 @@ export default function CustomFontSettings({
       })}
 
       {/* Boolean toggle */}
-      <ToggleVariable
-        label="Italic"
-        checked={italic.value}
-        onChange={italic.setValue}
-        theme={textColor}
-        className="w-1/4"
-      />
+      {content.has_italic && (
+        <ToggleVariable
+          label="Italic"
+          checked={italic.value}
+          onChange={italic.setValue}
+          theme={textColor}
+          className="w-1/4"
+        />
+      )}
     </div>
   );
 }
