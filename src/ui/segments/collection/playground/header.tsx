@@ -91,7 +91,7 @@ Font Spirit`;
           style={{
             fontFamily: slugify(content.name),
           }}
-          className="relative h-[52vh] overflow-hidden"
+          className="relative h-[56vh] overflow-hidden"
         >
           <AnimatePresence mode="wait">
             {showText && (

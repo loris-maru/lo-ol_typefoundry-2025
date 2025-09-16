@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react";
 
 import { useInView, useMotionValue, useTransform, animate } from "motion/react";
+import { FiPlus } from "react-icons/fi";
 
 import { typeface } from "@/types/typefaces";
 import TypeTesterCustomise from "@/ui/segments/collection/custom/type-tester-customise";

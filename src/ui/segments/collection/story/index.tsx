@@ -6,6 +6,7 @@ import { useMotionValue } from "motion/react";
 
 import { typeface } from "@/types/typefaces";
 import StoryContent from "@/ui/segments/collection/story/content";
+import { cn } from "@/utils/classNames";
 // import StoryBackground from "@/ui/segments/collection/story/background";
 
 type StoryProps = {
@@ -34,7 +35,7 @@ export default function Story({ uprightFontUrl, italicFontUrl, content }: StoryP
     const START_SIZE = 600; // px
     const EXPAND_SPAN_VH = 80; // how much scroll (in vh) to go 600px -> 100vw/100vh
     const LINGER_SPAN_VH = 50; // how long to keep it pinned at full size
-    const TEXT_DISAPPEAR_AT = 0.5; // when to hide text during expansion (0.5 = midway)
+    const TEXT_DISAPPEAR_AT = 0.99; // when to hide text during expansion (0.99 = 99% through expansion, right before StoryContent)
 
     const update = () => {
       const vh = window.innerHeight;
@@ -75,8 +76,14 @@ export default function Story({ uprightFontUrl, italicFontUrl, content }: StoryP
         // slightly faster growth (front-loaded)
         sizeProgress = clamp(t / 0.7, 0, 1);
         expanded = sizeProgress >= 0.999;
-        // Show text when circle is at 600px, hide when midway through expansion
+        // Show text when circle is at 600px, hide when 80% through expansion
         showText = sizeProgress < TEXT_DISAPPEAR_AT;
+        // Debug logging - only log when text visibility changes
+        if (showText !== sizeProgress < TEXT_DISAPPEAR_AT) {
+          console.log(
+            `Text visibility changed: expansion ${(sizeProgress * 100).toFixed(1)}%, showText: ${showText}`,
+          );
+        }
       } else if (y >= expandEndY && y < lingerEndY) {
         // LINGER — fully expanded and still pinned
         sizeProgress = 1;
@@ -179,7 +186,7 @@ export default function Story({ uprightFontUrl, italicFontUrl, content }: StoryP
       <div
         id="animated-black-container"
         ref={blobRef}
-        className="pointer-events-none z-10 bg-black"
+        className="pointer-events-none z-10 flex items-center bg-black"
         style={{
           position: "absolute",
           left: "50%",
@@ -190,13 +197,20 @@ export default function Story({ uprightFontUrl, italicFontUrl, content }: StoryP
           borderRadius: 99999,
         }}
         aria-hidden
-      />
+      >
+        <div className="font-whisper pl-[80px] text-left text-2xl leading-[1.4] font-normal text-white">
+          <div>A little about</div>
+          <div>the collection</div>
+          <div>{content.name}</div>
+        </div>
+      </div>
 
-      {/* Circle text - appears when circle is 600px, disappears midway through expansion */}
+      {/* Circle text - appears when circle is 600px, disappears at 99% expansion (right before StoryContent) */}
       <div
-        className={`pointer-events-none z-15 transition-opacity duration-300 ${
-          showText ? "opacity-100" : "opacity-0"
-        }`}
+        className={cn(
+          "pointer-events-none z-20 transition-opacity duration-300",
+          showText ? "opacity-100" : "opacity-0",
+        )}
         style={{
           position: "absolute",
           left: "50%",
@@ -208,11 +222,7 @@ export default function Story({ uprightFontUrl, italicFontUrl, content }: StoryP
           width: 600,
           height: 600,
         }}
-      >
-        <p className="font-whisper px-8 text-left text-lg font-medium text-white">
-          A little about {content.name}
-        </p>
-      </div>
+      ></div>
 
       {/* StoryContent — appears only while fully expanded & pinned */}
       <div

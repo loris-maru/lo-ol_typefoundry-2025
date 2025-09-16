@@ -80,15 +80,17 @@ export default function CharacterGrid({
 
   return (
     <div
-      className={`relative h-full w-full overflow-hidden rounded-2xl p-8 ${
-        isInverted ? "bg-white" : "bg-transparent"
-      }`}
+      className={cn(
+        "relative h-full w-full overflow-hidden rounded-2xl p-8",
+        isInverted ? "bg-white" : "bg-transparent",
+      )}
     >
       {/* Character Grid */}
       <div
-        className={`relative grid w-full grid-cols-8 grid-rows-10 ${
-          isInverted ? "text-black" : "text-white"
-        }`}
+        className={cn(
+          "relative grid w-full grid-cols-8 grid-rows-8",
+          isInverted ? "text-black" : "text-white",
+        )}
         id="character-grid"
       >
         {currentPageCharacters.map((character: CharacterSetProps, index) => (

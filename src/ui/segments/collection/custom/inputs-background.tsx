@@ -2,22 +2,22 @@
 
 import { useState, useRef, useCallback } from "react";
 
-import Image from "next/image";
-
 import { cn } from "@/utils/classNames";
 
-interface InputBackgroundProps {
+export type InputBackgroundProps = {
   type: "color" | "image";
   colorValue: string;
+  textColor: string;
   backgroundImageValue: string | null;
   onTypeChange: (type: "color" | "image") => void;
   onColorChange: (color: string) => void;
   onImageChange: (image: string | null) => void;
-}
+};
 
 export default function InputBackground({
   type,
   colorValue,
+  textColor,
   backgroundImageValue,
   onTypeChange,
   onColorChange,
@@ -76,16 +76,22 @@ export default function InputBackground({
   }, []);
 
   return (
-    <div className="font-whisper flex flex-col items-end gap-3 text-sm text-black">
+    <div
+      className="font-whisper flex flex-col items-end gap-3 text-sm"
+      style={{ color: textColor }}
+    >
       <div className="flex flex-row items-center">
         <div className="mr-2 block">Background</div>
-        <div className="flex flex-row items-center gap-x-px border border-solid border-black p-2">
+        <div
+          className="flex flex-row items-center gap-x-px rounded-sm border border-solid p-2"
+          style={{ borderColor: textColor }}
+        >
           <button
             type="button"
             name="background-color-button"
             aria-label="Select color background mode"
             onClick={() => onTypeChange("color")}
-            className="font-whisper text-base tracking-wide uppercase"
+            className="font-whisper text-sm tracking-wide uppercase"
           >
             Color
           </button>
@@ -97,13 +103,15 @@ export default function InputBackground({
               name="background-type-toggle"
               aria-label={`Switch to ${type === "color" ? "image" : "color"} background mode`}
               onClick={() => onTypeChange(type === "color" ? "image" : "color")}
-              className="relative flex h-8 w-14 items-center rounded-sm border border-solid border-black bg-transparent"
+              className="relative flex h-8 w-14 items-center rounded-sm border border-solid bg-transparent"
+              style={{ borderColor: textColor }}
             >
               <span
                 className={cn(
-                  "inline-block h-6 w-6 transform rounded-sm bg-black transition-transform",
+                  "rounded-smtransition-transform inline-block h-6 w-6 transform",
                   type === "image" ? "translate-x-[26px]" : "translate-x-[3px]",
                 )}
+                style={{ backgroundColor: textColor }}
               />
             </button>
           </div>
@@ -113,7 +121,7 @@ export default function InputBackground({
             name="background-image-button"
             aria-label="Select image background mode"
             onClick={() => onTypeChange("image")}
-            className="font-whisper text-base tracking-wide uppercase"
+            className="font-whisper text-sm tracking-wide uppercase"
           >
             Image
           </button>
@@ -122,7 +130,7 @@ export default function InputBackground({
 
       {/* Color Selection */}
       {type === "color" && (
-        <div className="flex w-full flex-row items-center gap-3 pl-[104px]">
+        <div className="flex w-full flex-row items-center justify-between gap-3 pl-[104px]">
           <span className="block">{colorValue}</span>
           <input
             type="color"
@@ -130,7 +138,8 @@ export default function InputBackground({
             aria-label="Choose background color"
             value={colorValue}
             onChange={(e) => onColorChange(e.target.value)}
-            className="h-8 w-full cursor-pointer rounded-sm border border-solid border-black"
+            className="h-8 w-8 cursor-pointer rounded-sm border border-solid"
+            style={{ borderColor: textColor }}
           />
         </div>
       )}
@@ -168,7 +177,7 @@ export default function InputBackground({
 
             {backgroundImageValue ? (
               <div className="relative h-full w-full">
-                <Image
+                <img
                   src={backgroundImageValue}
                   alt="Background preview"
                   className="h-full w-full object-cover"
