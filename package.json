@@ -15,7 +15,8 @@
     "check:deps": "depcheck",
     "check:files": "unimported",
     "check:exports": "ts-prune",
-    "check:unused": "pnpm check:deps && pnpm check:files && pnpm check:exports"
+    "check:unused": "pnpm check:deps && pnpm check:files && pnpm check:exports",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.887.0",

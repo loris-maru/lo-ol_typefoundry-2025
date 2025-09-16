@@ -18,7 +18,7 @@ export default function CartList({
       className="relative z-10 flex w-full flex-row items-center justify-between gap-x-4 pt-6"
     >
       {/* Cart Items List */}
-      <div className="flex max-h-32 flex-col gap-y-2 overflow-y-auto">
+      <div className="flex flex-row gap-x-2">
         {customCartItems.map((item) => (
           <button
             key={item._key}

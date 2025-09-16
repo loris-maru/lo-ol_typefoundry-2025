@@ -124,12 +124,13 @@ export default function CartButton() {
 
   return (
     <motion.nav
-      className="fixed top-4 right-4 z-40"
+      className="fixed"
       animate={{
         width: cartOpen ? "400px" : "64px",
         height: cartOpen ? "600px" : "64px",
         right: cartOpen ? "16px" : "16px",
-        top: cartOpen ? 0 : "16px",
+        top: cartOpen ? "16px" : "16px",
+        zIndex: cartOpen ? 100 : 40,
       }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
     >
@@ -163,28 +164,20 @@ export default function CartButton() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, delay: 0.3 }}
           >
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="font-whisper text-xl font-medium">Cart</h2>
-              <button
-                onClick={handleClearCart}
-                className="text-sm text-gray-400 transition-colors hover:text-white"
-              >
-                Clear All
-              </button>
-            </div>
+            <h2 className="font-whisper mb-6 text-xl font-medium">Cart</h2>
 
             <div className="flex-1 space-y-4 overflow-y-auto">
               {cart.map((item) => (
-                <div key={item._key} className="rounded-lg border border-gray-700 bg-gray-900 p-4">
+                <div key={item._key} className="rounded-lg border border-neutral-600 p-4">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <h3 className="font-medium text-white">
+                      <h3 className="font-whisper text-xl font-medium text-white">
                         {item.family} {item.weightName}
                       </h3>
-                      <p className="mt-1 text-sm text-gray-400">
+                      <p className="font-whisper mt-1 text-sm text-gray-400">
                         License: {item.license || "Not selected"}
                       </p>
-                      <p className="text-sm text-gray-400">
+                      <p className="font-whisper text-sm text-gray-400">
                         Users: {item.users[0]}-{item.users[1]}
                       </p>
                       {item.widthName && (
@@ -201,10 +194,10 @@ export default function CartButton() {
                       {item.isItalic && <p className="text-sm text-gray-400">Italic</p>}
                     </div>
                     <div className="ml-4 text-right">
-                      <p className="font-medium text-white">${item.price}</p>
+                      <p className="font-whisper text-xl font-medium text-white">${item.price}</p>
                       <button
                         onClick={() => handleRemoveItem(item._key)}
-                        className="mt-2 text-sm text-red-400 transition-colors hover:text-red-300"
+                        className="font-whisper mt-2 text-sm text-red-400 transition-colors hover:text-red-300"
                       >
                         Remove
                       </button>
@@ -222,8 +215,8 @@ export default function CartButton() {
               )}
 
               <div className="mb-4 flex items-center justify-between">
-                <span className="text-lg font-medium">Total:</span>
-                <span className="text-xl font-bold">
+                <span className="font-whisper text-xl font-medium">Total:</span>
+                <span className="font-whisper text-xl font-medium">
                   ${cart.reduce((sum, item) => sum + item.price, 0)}
                 </span>
               </div>
@@ -233,7 +226,7 @@ export default function CartButton() {
                 aria-label="Checkout"
                 onClick={handleCheckout}
                 disabled={isLoading || cart.length === 0}
-                className="w-full cursor-pointer rounded-lg bg-white px-6 py-3 font-medium text-black transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+                className="font-whisper w-full cursor-pointer rounded-full bg-white px-6 py-4 text-2xl font-medium text-black transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isLoading ? "Processing..." : "Checkout"}
               </button>
