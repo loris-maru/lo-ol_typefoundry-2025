@@ -77,6 +77,7 @@ export default function CartButton() {
           opticalSize: item.opticalSizeValue,
           isItalic: item.isItalic,
           qty: 1,
+          type: "static",
         };
       });
 

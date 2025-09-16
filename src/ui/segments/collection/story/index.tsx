@@ -163,7 +163,7 @@ export default function Story({ uprightFontUrl, italicFontUrl, content }: StoryP
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-[440vh] w-screen overflow-clip bg-neutral-50"
+      className="relative min-h-[440vh] w-screen overflow-clip bg-[#F5F5F5]"
     >
       {/* Header */}
       <header className="font-whisper sticky top-8 z-10 mx-auto flex w-full items-center justify-between gap-6 p-8 text-base tracking-wide text-black uppercase">
