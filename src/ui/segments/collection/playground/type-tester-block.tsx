@@ -463,6 +463,7 @@ export default function TypeTesterBlock({
           <div className="relative">
             <div
               ref={editableRef}
+              id="editable-content"
               contentEditable
               suppressContentEditableWarning
               onInput={handleContentChange}

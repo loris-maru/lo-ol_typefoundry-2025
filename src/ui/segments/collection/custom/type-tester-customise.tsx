@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 
-import { motion, MotionValue, useMotionValueEvent } from "motion/react";
+import { MotionValue, useMotionValueEvent } from "motion/react";
 import { RiAlignLeft, RiAlignCenter, RiAlignRight } from "react-icons/ri";
 
 import { typeface } from "@/types/typefaces";
@@ -37,6 +37,9 @@ export default function TypeTesterCustomise({ content, height }: TypeTesterCusto
 
   const [showType, setShowType] = useState(false);
 
+  // Ref for the editable content
+  const editableRef = useRef<HTMLDivElement>(null);
+
   // Listen to height changes and show/hide typewriter accordingly
   useMotionValueEvent(height, "change", (latest) => {
     const heightValue = parseFloat(latest);
@@ -49,25 +52,54 @@ export default function TypeTesterCustomise({ content, height }: TypeTesterCusto
     }
   });
 
+  // Event handlers following the same pattern as type-tester-block
+  const handleContentChange = (e: React.FormEvent<HTMLDivElement>) => {
+    const newContent = e.currentTarget.textContent || "";
+    setCustomText(newContent);
+  };
+
+  const handleFocus = () => {
+    // Handle focus event
+  };
+
+  const handleBlur = () => {
+    // Handle blur event
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    // Handle Enter key to create new lines
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      document.execCommand("insertLineBreak");
+    }
+  };
+
+  const handleClick = () => {
+    // Handle click event
+  };
+
   return (
     <div className="relative flex min-h-[80vh] w-full items-center justify-center">
       <div className="relative w-full">
-        <motion.div
+        <div
           style={{
-            height,
+            height: "60vh",
             transformOrigin: "center center",
           }}
           className="relative mx-auto w-full"
+          onMouseDown={(e) => {
+            console.log("Div mouse down:", e.target);
+          }}
         >
           <div
             className={cn(
-              "relative z-20 flex h-full w-full flex-col justify-between p-6",
+              "pointer-events-none relative z-20 flex h-full w-full flex-col justify-between p-6",
               backgroundType === "image" && "border border-solid border-black",
             )}
           >
             <div
               id="global-settings-container"
-              className="font-whisper relative flex w-full flex-row items-start justify-between text-sm tracking-wider uppercase"
+              className="font-whisper pointer-events-auto relative flex w-full flex-row items-start justify-between text-sm tracking-wider uppercase"
             >
               <InputTextColor value={textColor} onChange={setTextColor} />
 
@@ -118,21 +150,23 @@ export default function TypeTesterCustomise({ content, height }: TypeTesterCusto
                 onImageChange={setBackgroundImage}
               />
             </div>
-            <CustomFontSettings
-              // fontSize={{ value: fontSize, setValue: setFontSize }}
-              lineHeight={{ value: lineHeight, setValue: setLineHeight }}
-              weight={{ value: wght, setValue: setWght }}
-              width={{ value: wdth, setValue: setWdth }}
-              slant={{ value: slnt, setValue: setSlnt }}
-              italic={{ value: italic, setValue: setItalic }}
-              opticalSize={{ value: opsz, setValue: setOpsz }}
-              textColor={textColor}
-              content={content}
-            />
+            <div className="pointer-events-auto">
+              <CustomFontSettings
+                // fontSize={{ value: fontSize, setValue: setFontSize }}
+                lineHeight={{ value: lineHeight, setValue: setLineHeight }}
+                weight={{ value: wght, setValue: setWght }}
+                width={{ value: wdth, setValue: setWdth }}
+                slant={{ value: slnt, setValue: setSlnt }}
+                italic={{ value: italic, setValue: setItalic }}
+                opticalSize={{ value: opsz, setValue: setOpsz }}
+                textColor={textColor}
+                content={content}
+              />
+            </div>
           </div>
 
           <div
-            className="absolute inset-0"
+            className="pointer-events-none absolute inset-0"
             style={{
               backgroundColor: backgroundType === "color" ? backgroundColor : undefined,
               backgroundImage:
@@ -147,29 +181,36 @@ export default function TypeTesterCustomise({ content, height }: TypeTesterCusto
           />
 
           {showType && (
-            <div className="absolute inset-0 z-10 flex w-full place-items-center items-center justify-center p-8">
-              <div
-                className="w-full resize-none border-none bg-transparent text-center outline-none"
-                id="custom-text-visualiser-container"
-                style={{
-                  color: textColor,
-                  fontSize: "7vw",
-                  lineHeight: "1.35",
-                  fontFamily: content.name,
-                  fontStyle: italic ? "italic" : "normal",
-                  textAlign: textAlign,
-                  fontVariationSettings: `'wght' ${wght}, 'wdth' ${wdth}, 'opsz' ${opsz}, 'slnt' ${slnt}`,
-                  minHeight: "200px",
-                }}
-                contentEditable
-                suppressContentEditableWarning
-                onInput={(e) => setCustomText(e.currentTarget.textContent || "")}
-                onBlur={(e) => setCustomText(e.currentTarget.textContent || "")}
-                dangerouslySetInnerHTML={{ __html: customText }}
-              />
+            <div className="absolute inset-0 z-30 flex w-full place-items-center items-center justify-center p-8">
+              <div className="relative w-full">
+                <div
+                  ref={editableRef}
+                  id="editable-content"
+                  contentEditable
+                  suppressContentEditableWarning
+                  onInput={handleContentChange}
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
+                  onKeyDown={handleKeyDown}
+                  onClick={handleClick}
+                  className="w-full cursor-text resize-none overflow-hidden border-0 whitespace-pre-wrap outline-none focus:ring-0"
+                  style={{
+                    color: textColor,
+                    fontSize: "7vw",
+                    lineHeight: "1.35",
+                    fontFamily: content.name,
+                    fontStyle: italic ? "italic" : "normal",
+                    textAlign: textAlign,
+                    fontVariationSettings: `'wght' ${wght}, 'wdth' ${wdth}, 'opsz' ${opsz}, 'slnt' ${slnt}`,
+                    minHeight: "200px",
+                  }}
+                >
+                  {customText}
+                </div>
+              </div>
             </div>
           )}
-        </motion.div>
+        </div>
         <div className="relative flex w-full flex-row items-center justify-end gap-x-4 pt-6">
           <div className="font-whisper text-base font-medium">CHF 60</div>
           <AddToCart />

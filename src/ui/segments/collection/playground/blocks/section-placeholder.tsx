@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+
 import { RiDeleteBin6Line } from "react-icons/ri";
+
 import { typeface } from "@/types/typefaces";
 import TypeTesterBlock from "@/ui/segments/collection/playground/type-tester-block";
+
 import ImageColumn from "./image-column";
 
 interface SectionPlaceholderProps {

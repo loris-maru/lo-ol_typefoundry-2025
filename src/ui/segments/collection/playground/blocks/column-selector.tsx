@@ -62,13 +62,6 @@ export default function ColumnSelector({
     <div className={`${getColumnClass()} relative`}>
       {/* Type selector button */}
       <div className="absolute top-2 right-2 z-10">
-        {/* <button
-          onClick={() => setShowTypeSelector(!showTypeSelector)}
-          className="rounded border border-gray-300 bg-white px-3 py-1 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50"
-        >
-          {columnType === "text" ? "📝 Text" : "🖼️ Image"}
-        </button> */}
-
         {showTypeSelector && (
           <div className="absolute top-8 right-0 z-20 rounded border border-gray-300 bg-white py-1 shadow-lg">
             <button

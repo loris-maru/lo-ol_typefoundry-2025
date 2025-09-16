@@ -140,7 +140,8 @@ export default function SelectionSettingMenu({
       } else {
         // Fallback: remove any existing highlights but preserve font styling
         const highlightedSpans = document.querySelectorAll(".selection-highlight");
-        highlightedSpans.forEach((span) => {
+        highlightedSpans.forEach((element: Element) => {
+          const span = element as HTMLSpanElement;
           const parent = span.parentNode;
           if (parent) {
             // Create a new span with the same font styling but without the highlight background
